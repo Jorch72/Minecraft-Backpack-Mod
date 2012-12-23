@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-public class BackpackInventory extends InventoryBasic {
+public class InventoryBackpack extends InventoryBasic {
 	// the title of the backpack
 	private String inventoryTitle;
 
@@ -26,14 +26,14 @@ public class BackpackInventory extends InventoryBasic {
 	 * @param is
 	 *            The ItemStack which holds the backpack.
 	 */
-	public BackpackInventory(EntityPlayer player, ItemStack is) {
+	public InventoryBackpack(EntityPlayer player, ItemStack is) {
 		super("", getInventorySize(is));
 
 		playerEntity = player;
 		originalIS = is;
 
 		// check if inventory exists if not create one
-		if(!hasInventory(is.getTagCompound())) {
+		if (!hasInventory(is.getTagCompound())) {
 			createInventory();
 		}
 
@@ -47,7 +47,7 @@ public class BackpackInventory extends InventoryBasic {
 	public void onInventoryChanged() {
 		super.onInventoryChanged();
 		// if reading from NBT don't write
-		if(!reading) {
+		if (!reading) {
 			saveInventory();
 		}
 	}
@@ -67,7 +67,6 @@ public class BackpackInventory extends InventoryBasic {
 	 */
 	@Override
 	public void closeChest() {
-		dropContainedBackpacks();
 		saveInventory();
 	}
 
@@ -108,15 +107,12 @@ public class BackpackInventory extends InventoryBasic {
 	 */
 	private void createInventory() {
 		NBTTagCompound tag;
-		if(originalIS.hasTagCompound()) {
+		if (originalIS.hasTagCompound()) {
 			tag = originalIS.getTagCompound();
 		} else {
 			tag = new NBTTagCompound();
 		}
-		// new String so that a new String object is created
-		// so that title == title is false
-		// needed for two new created backpacks
-		setInvName(new String(originalIS.getItemName()));
+		setInvName(originalIS.getItemName());
 		writeToNBT(tag);
 		originalIS.setTagCompound(tag);
 	}
@@ -135,65 +131,7 @@ public class BackpackInventory extends InventoryBasic {
 	 * Searches the backpack in players inventory and saves NBT data in it.
 	 */
 	private void setNBT() {
-		// get players inventory
-		ItemStack[] inventory = playerEntity.inventory.mainInventory;
-		ItemStack itemStack;
-		// iterate over all items in player inventory
-		for(int i = 0; i < inventory.length; i++) {
-			// get ItemStack at slot i
-			itemStack = inventory[i];
-			// check if slot is not null and ItemStack is equal to original
-			if(itemStack != null && isItemStackEqual(itemStack)) {
-				// save new data in ItemStack
-				itemStack.setTagCompound(originalIS.getTagCompound());
-				break;
-			}
-		}
-	}
-
-	/**
-	 * Checks if ItemStack is equal to the original ItemStack.
-	 * 
-	 * @param itemStack
-	 *            The ItemStack to check.
-	 * @return true if equal otherwise false.
-	 */
-	private boolean isItemStackEqual(ItemStack itemStack) {
-		// check if ItemStack is a BackpackItem and normal properties are equal
-		if(itemStack.getItem() instanceof ItemBackpack && itemStack.isItemEqual(originalIS)) {
-			// never opened backpacks have no NBT so make sure it is there
-			if(itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("Inventory")) {
-				// check if NBT data is equal too
-				return isTagCompoundEqual(itemStack);
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Checks if ItemStacks NBT data is equal to original ItemStacks NBT data.
-	 * 
-	 * @param itemStack
-	 *            The ItemStack to check.
-	 * @return true if equal otherwise false.
-	 */
-	private boolean isTagCompoundEqual(ItemStack itemStack) {
-		NBTTagCompound itemStackTag = itemStack.getTagCompound().getCompoundTag("display");
-		NBTTagCompound origItemStackTag = originalIS.getTagCompound().getCompoundTag("display");
-
-		// check if title is unequal
-		if(itemStackTag.getString("Name") == origItemStackTag.getString("Name")) {
-			return true;
-		}
-
-		// TODO: still there for compatibility
-		itemStackTag = itemStack.getTagCompound().getCompoundTag("Inventory");
-		if(itemStackTag.getString("title") == origItemStackTag.getString("Name")) {
-			return true;
-		}
-
-		// title is unequal
-		return false;
+		playerEntity.getCurrentEquippedItem().setTagCompound(originalIS.getTagCompound());
 	}
 
 	/**
@@ -213,19 +151,6 @@ public class BackpackInventory extends InventoryBasic {
 	}
 
 	/**
-	 * Drops Backpacks on the ground which are in this backpack
-	 */
-	private void dropContainedBackpacks() {
-		for(int i = 0; i < getSizeInventory(); i++) {
-			ItemStack item = getStackInSlot(i);
-			if(item != null && item.getItem() instanceof ItemBackpack) {
-				playerEntity.dropPlayerItem(getStackInSlot(i));
-				setInventorySlotContents(i, null);
-			}
-		}
-	}
-
-	/**
 	 * Writes a NBT Node with inventory.
 	 * 
 	 * @param outerTag
@@ -233,7 +158,7 @@ public class BackpackInventory extends InventoryBasic {
 	 * @return The written NBT Node.
 	 */
 	private NBTTagCompound writeToNBT(NBTTagCompound outerTag) {
-		if(outerTag == null) {
+		if (outerTag == null) {
 			return null;
 		}
 		// save name in display->Name
@@ -242,8 +167,8 @@ public class BackpackInventory extends InventoryBasic {
 		outerTag.setCompoundTag("display", name);
 
 		NBTTagList itemList = new NBTTagList();
-		for(int i = 0; i < getSizeInventory(); i++) {
-			if(getStackInSlot(i) != null) {
+		for (int i = 0; i < getSizeInventory(); i++) {
+			if (getStackInSlot(i) != null) {
 				NBTTagCompound slotEntry = new NBTTagCompound();
 				slotEntry.setByte("Slot", (byte) i);
 				getStackInSlot(i).writeToNBT(slotEntry);
@@ -264,24 +189,24 @@ public class BackpackInventory extends InventoryBasic {
 	 *            The NBT Node to read from.
 	 */
 	private void readFromNBT(NBTTagCompound outerTag) {
-		if(outerTag == null) {
+		if (outerTag == null) {
 			return;
 		}
 
 		reading = true;
 		// TODO for backwards compatibility
-		if(outerTag.getCompoundTag("Inventory").hasKey("title")) {
+		if (outerTag.getCompoundTag("Inventory").hasKey("title")) {
 			setInvName(outerTag.getCompoundTag("Inventory").getString("title"));
 		} else {
 			setInvName(outerTag.getCompoundTag("display").getString("Name"));
 		}
 
 		NBTTagList itemList = outerTag.getCompoundTag("Inventory").getTagList("Items");
-		for(int i = 0; i < itemList.tagCount(); i++) {
+		for (int i = 0; i < itemList.tagCount(); i++) {
 			NBTTagCompound slotEntry = (NBTTagCompound) itemList.tagAt(i);
 			int j = slotEntry.getByte("Slot") & 0xff;
 
-			if(j >= 0 && j < getSizeInventory()) {
+			if (j >= 0 && j < getSizeInventory()) {
 				setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(slotEntry));
 			}
 		}

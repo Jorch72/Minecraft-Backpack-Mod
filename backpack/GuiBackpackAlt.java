@@ -9,7 +9,7 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 
 import org.lwjgl.input.Keyboard;
 
-public class BackpackGui extends GuiScreen {
+public class GuiBackpackAlt extends GuiScreen {
 	private String TITLE = "Rename your backpack";
 	EntityPlayer entityPlayer;
 
@@ -24,7 +24,7 @@ public class BackpackGui extends GuiScreen {
 	 *            The player who sends the package with the new name to the
 	 *            server.
 	 */
-	public BackpackGui(EntityPlayer player) {
+	public GuiBackpackAlt(EntityPlayer player) {
 		entityPlayer = player;
 	}
 

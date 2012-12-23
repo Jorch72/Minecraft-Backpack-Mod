@@ -136,23 +136,14 @@ public class ItemBackpack extends Item {
 		if(world.isRemote) {
 			// display rename GUI if player is sneaking
 			if(player.isSneaking() && is.getItemDamage() != ItemBackpack.ENDERBACKPACK) {
-				FMLCommonHandler.instance().showGuiScreen(new BackpackGui(player));
+				player.openGui(Backpack.instance, 2, world, 0, 0, 0);
 			}
 			return is;
 		}
 
 		// when the player is not sneaking
 		if(!player.isSneaking()) {
-			// get the inventory
-			IInventory inv;
-			if(is.getItemDamage() == ItemBackpack.ENDERBACKPACK) {
-				inv = player.getInventoryEnderChest();
-			} else {
-				inv = new BackpackInventory(player, is);
-			}
-
-			// open the GUI for a chest based on the loaded inventory
-			player.displayGUIChest(inv);
+			player.openGui(Backpack.instance, 1, world, 0, 0, 0);
 		}
 		return is;
 	}
@@ -185,5 +176,26 @@ public class ItemBackpack extends Item {
 
 		// return index 0 of backpackNames array as fallback
 		return backpackNames[16];
+	}
+	
+	/**
+	 * Returns the IInventory of the current equipped backpack or the ender backpack.
+	 * @param player The player who holds the backpack.
+	 * @return An IInventory with the content of the backpack.
+	 */
+	public static IInventory getBackpackInv(EntityPlayer player) {
+		ItemStack backpack;
+		IInventory inventoryBackpack = null;
+		
+		if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemBackpack) {
+			backpack = player.getCurrentEquippedItem();
+			if(backpack.getItemDamage() == ItemBackpack.ENDERBACKPACK) {
+				inventoryBackpack = player.getInventoryEnderChest();
+			} else {
+				inventoryBackpack = new InventoryBackpack(player, backpack);
+			}
+		}
+		
+		return inventoryBackpack;
 	}
 }

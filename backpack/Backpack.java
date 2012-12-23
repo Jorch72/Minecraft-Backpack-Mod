@@ -19,7 +19,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "Backpack", name = "Backpack", version = "1.5.5")
+@Mod(modid = "Backpack", name = "Backpack", version = "1.5.6")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"BackpackRename"}, packetHandler = BackpackPacketHandler.class)
 public class Backpack {
 	// the id of the backpack items
@@ -74,8 +74,8 @@ public class Backpack {
 		// register recipes
 		registerRecipes();
 
-		// register GuiHandler for backpack name change
-		NetworkRegistry.instance().registerGuiHandler(this, new BackpackGuiHandler());
+		// register GuiHandler
+		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 	}
 
 	@PostInit

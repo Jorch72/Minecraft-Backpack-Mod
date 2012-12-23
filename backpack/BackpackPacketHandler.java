@@ -39,7 +39,7 @@ public class BackpackPacketHandler implements IPacketHandler {
 
 		if(entityPlayer.getCurrentEquippedItem() != null) {
 			ItemStack is = entityPlayer.getCurrentEquippedItem();
-			BackpackInventory inv = new BackpackInventory(entityPlayer, is);
+			InventoryBackpack inv = new InventoryBackpack(entityPlayer, is);
 			// set new name
 			inv.setInvName(name);
 			// save the new data
