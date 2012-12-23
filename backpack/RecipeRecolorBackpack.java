@@ -2,12 +2,12 @@ package backpack;
 
 import java.util.ArrayList;
 
-import net.minecraft.src.IRecipe;
-import net.minecraft.src.InventoryCrafting;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemDye;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.World;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.world.World;
 
 public class RecipeRecolorBackpack implements IRecipe {
 	ArrayList<Integer> allowedDyes = new ArrayList<Integer>();
