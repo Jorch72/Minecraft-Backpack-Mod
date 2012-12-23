@@ -106,7 +106,7 @@ public class BackpackGui extends GuiScreen {
 		// enable ok button when GuiTextField content is greater than 0 chars
 		((GuiButton) controlList.get(0)).enabled = txt_backpackName.getText().trim().length() > 0;
 		// perform click event on ok button when Enter is pressed
-		if(c == '\n') {
+		if(c == '\n' || c == '\r') {
 			actionPerformed((GuiButton) controlList.get(0));
 		}
 		// perform click event on cancel button when Esc is pressed
