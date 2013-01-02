@@ -15,16 +15,19 @@ public class ContainerBackpack extends Container {
 		backpackInventory.openChest();
 		int offset = (numRows - 4) * 18;
 
-		for (int x = 0; x < 9; ++x) for (int y = 0; y < this.numRows; ++y) {
-			this.addSlotToContainer(new SlotBackpack(backpackInventory, x + y * 9, 8 + x * 18, 18 + y * 18));
+		// backpack
+		for (int row = 0; row < this.numRows; ++row) for (int col = 0; col < 9; ++col) {
+			this.addSlotToContainer(new SlotBackpack(backpackInventory, col + row * 9, 8 + col * 18, 18 + row * 18));
 		}
 
-		for (int x = 0; x < 9; ++x) for (int y = 0; y < 3; ++y) {
-			this.addSlotToContainer(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 103 + y * 18 + offset));
+		// inventory
+		for (int row = 0; row < 3; ++row) for (int col = 0; col < 9; ++col) {
+			this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 103 + row * 18 + offset));
 		}
 
-		for (int y = 0; y < 9; ++y) {
-			this.addSlotToContainer(new Slot(playerInventory, y, 8 + y * 18, 161 + offset));
+		// hot bar
+		for (int col = 0; col < 9; ++col) {
+			this.addSlotToContainer(new Slot(playerInventory, col, 8 + col * 18, 161 + offset));
 		}
 		openedBackpack = backpack;
 	}
