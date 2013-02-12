@@ -131,7 +131,9 @@ public class InventoryBackpack extends InventoryBasic {
 	 * Searches the backpack in players inventory and saves NBT data in it.
 	 */
 	private void setNBT() {
-		playerEntity.getCurrentEquippedItem().setTagCompound(originalIS.getTagCompound());
+		if(playerEntity.getCurrentEquippedItem() != null) {
+			playerEntity.getCurrentEquippedItem().setTagCompound(originalIS.getTagCompound());
+		}
 	}
 
 	/**
