@@ -5,12 +5,14 @@ import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.IArmorTextureProvider;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemBackpack extends Item {
+public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
 	// the names of all backpacks
 	static final String[] backpackNames = {
 			"Black Backpack", "Red Backpack", "Green Backpack", "Brown Backpack", "Blue Backpack",
@@ -29,7 +31,7 @@ public class ItemBackpack extends Item {
 	 *            The item id.
 	 */
 	protected ItemBackpack(int id) {
-		super(id);
+		super(id, Backpack.backpackMaterial, 0, 1);
 		setIconIndex(0);
 		setMaxStackSize(1);
 		setHasSubtypes(true);
@@ -197,5 +199,20 @@ public class ItemBackpack extends Item {
 		}
 		
 		return inventoryBackpack;
+	}
+	
+	/**
+	 * Override ItemArmor implementation with default from Item so that the correct
+	 * color is rendered.
+	 */
+	@Override
+	@SideOnly(Side.CLIENT)
+    public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
+        return 16777215;
+    }
+	
+	@Override
+	public String getArmorTextureFile(ItemStack itemstack) {
+		return CommonProxy.ARMOR_PNG;
 	}
 }

@@ -7,6 +7,7 @@ import cpw.mods.fml.common.network.IGuiHandler;
 
 public class CommonProxy implements IGuiHandler {
 	public static String ITEMS_PNG = "/gfx/backpack/items.png";
+	public static String ARMOR_PNG = "/gfx/backpack/armor.png";
 
 	public void registerRenderers() {
 		// Nothing here as this is the server side proxy

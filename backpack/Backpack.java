@@ -1,9 +1,11 @@
 package backpack;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.Property;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -19,7 +21,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "Backpack", name = "Backpack", version = "1.5.7")
+@Mod(modid = "Backpack", name = "Backpack", version = "1.6.7")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"BackpackRename"}, packetHandler = BackpackPacketHandler.class)
 public class Backpack {
 	// the id of the backpack items
@@ -30,6 +32,8 @@ public class Backpack {
 	public static Item backpack;
 	public static Item boundLeather;
 	public static Item tannedLeather;
+	
+	public static EnumArmorMaterial backpackMaterial = EnumHelper.addArmorMaterial("backpackMaterial", -1, new int[]{0,  0, 0, 0}, 0);
 	
 	protected Property enderRecipe;
 	protected static Integer sizeM;
