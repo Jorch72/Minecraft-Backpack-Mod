@@ -22,7 +22,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = "Backpack", name = "Backpack", version = "1.6.8")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"BackpackRename"}, packetHandler = BackpackPacketHandler.class)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"BackpackRename", "OpenBackpack"}, packetHandler = BackpackPacketHandler.class)
 public class Backpack {
 	// the id of the backpack items
 	protected static Property backpackId;
@@ -80,6 +80,8 @@ public class Backpack {
 
 		// register GuiHandler
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
+		
+		proxy.registerKeyBinding();
 	}
 
 	@PostInit

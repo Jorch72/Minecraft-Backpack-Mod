@@ -16,10 +16,14 @@ public class CommonProxy implements IGuiHandler {
 	// returns an instance of the Container
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		ItemStack backpack;
 		switch(ID) {
 			case 1:
-				ItemStack backpack = player.getCurrentEquippedItem();
-				return new ContainerBackpack(player.inventory, ItemBackpack.getBackpackInv(player), backpack);
+				backpack = player.getCurrentEquippedItem();
+				return new ContainerBackpack(player.inventory, ItemBackpack.getBackpackInv(player, false), backpack);
+			case 2:
+				backpack = player.inventory.armorInventory[2];
+				return new ContainerBackpack(player.inventory, ItemBackpack.getBackpackInv(player, true), backpack);
 		}
 		return null;
 	}
@@ -27,13 +31,21 @@ public class CommonProxy implements IGuiHandler {
 	// returns an instance of the GUI
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		ItemStack backpack;
 		switch(ID) {
 			case 1:
-				ItemStack backpack = player.getCurrentEquippedItem();
-				return new GuiBackpack(player.inventory, ItemBackpack.getBackpackInv(player));
+				backpack = player.getCurrentEquippedItem();
+				return new GuiBackpack(player.inventory, ItemBackpack.getBackpackInv(player, false));
 			case 2:
+				backpack = player.inventory.armorInventory[2];
+				return  new GuiBackpack(player.inventory, ItemBackpack.getBackpackInv(player, true));
+			case 3:
 				return new GuiBackpackAlt(player);
 		}
 		return null;
+	}
+
+	public void registerKeyBinding() {
+		// Nothing here as this is the server side proxy
 	}
 }

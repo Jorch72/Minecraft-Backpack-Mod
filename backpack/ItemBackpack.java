@@ -23,6 +23,8 @@ public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
 
 	// the damage of an magic backpack
 	public static final int ENDERBACKPACK = 31999;
+	
+	protected boolean weared = false;
 
 	/**
 	 * Creates an instance of the backpack item and sets some default values.
@@ -138,16 +140,25 @@ public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
 		if(world.isRemote) {
 			// display rename GUI if player is sneaking
 			if(player.isSneaking() && is.getItemDamage() != ItemBackpack.ENDERBACKPACK) {
-				player.openGui(Backpack.instance, 2, world, 0, 0, 0);
+				player.openGui(Backpack.instance, 3, world, 0, 0, 0);
 			}
 			return is;
 		}
 
 		// when the player is not sneaking
 		if(!player.isSneaking()) {
-			player.openGui(Backpack.instance, 1, world, 0, 0, 0);
+			if(((ItemBackpack)is.getItem()).isWeared()) {
+				((ItemBackpack)is.getItem()).setWeared(false);
+				player.openGui(Backpack.instance, 2, world, 0, 0, 0);
+			} else {
+				player.openGui(Backpack.instance, 1, world, 0, 0, 0);
+			}
 		}
 		return is;
+	}
+	
+	public static void tryOpen(ItemStack is, EntityPlayer player) {
+		is.getItem().onItemRightClick(is, player.worldObj, player);
 	}
 
 	/**
@@ -185,20 +196,35 @@ public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
 	 * @param player The player who holds the backpack.
 	 * @return An IInventory with the content of the backpack.
 	 */
-	public static IInventory getBackpackInv(EntityPlayer player) {
-		ItemStack backpack;
+	public static IInventory getBackpackInv(EntityPlayer player, boolean wearedBackpack) {
+		ItemStack backpack = null;
 		IInventory inventoryBackpack = null;
 		
-		if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemBackpack) {
-			backpack = player.getCurrentEquippedItem();
-			if(backpack.getItemDamage() == ItemBackpack.ENDERBACKPACK) {
-				inventoryBackpack = player.getInventoryEnderChest();
-			} else {
-				inventoryBackpack = new InventoryBackpack(player, backpack);
+		if(wearedBackpack) {
+			if(player.inventory.armorInventory[2] != null && player.inventory.armorInventory[2].getItem() instanceof ItemBackpack) {
+				backpack = player.inventory.armorInventory[2];
+			}
+		} else {
+			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemBackpack) {
+				backpack = player.getCurrentEquippedItem();
 			}
 		}
 		
+		if(backpack.getItemDamage() == ItemBackpack.ENDERBACKPACK) {
+			inventoryBackpack = player.getInventoryEnderChest();
+		} else {
+			inventoryBackpack = new InventoryBackpack(player, backpack, wearedBackpack);
+		}
+		
 		return inventoryBackpack;
+	}
+	
+	public void setWeared(boolean weared) {
+		this.weared = weared;
+	}
+	
+	public boolean isWeared() {
+		return this.weared;
 	}
 	
 	/**

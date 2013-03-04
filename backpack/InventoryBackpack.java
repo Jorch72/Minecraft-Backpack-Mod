@@ -17,6 +17,9 @@ public class InventoryBackpack extends InventoryBasic {
 
 	// if class is reading from NBT tag
 	private boolean reading = false;
+	
+	// if backpack is weared or current item
+	private boolean wearedBackpack;
 
 	/**
 	 * Takes a player and an ItemStack.
@@ -26,11 +29,12 @@ public class InventoryBackpack extends InventoryBasic {
 	 * @param is
 	 *            The ItemStack which holds the backpack.
 	 */
-	public InventoryBackpack(EntityPlayer player, ItemStack is) {
+	public InventoryBackpack(EntityPlayer player, ItemStack is, boolean weared) {
 		super("", getInventorySize(is));
 
 		playerEntity = player;
 		originalIS = is;
+		wearedBackpack = weared;
 
 		// check if inventory exists if not create one
 		if (!hasInventory(is.getTagCompound())) {
@@ -131,8 +135,14 @@ public class InventoryBackpack extends InventoryBasic {
 	 * Searches the backpack in players inventory and saves NBT data in it.
 	 */
 	private void setNBT() {
-		if(playerEntity.getCurrentEquippedItem() != null) {
-			playerEntity.getCurrentEquippedItem().setTagCompound(originalIS.getTagCompound());
+		if(wearedBackpack) {
+			if(playerEntity.inventory.armorInventory[2] != null) {
+				playerEntity.inventory.armorInventory[2].setTagCompound(originalIS.getTagCompound());
+			}
+		} else {
+			if(playerEntity.getCurrentEquippedItem() != null) {
+				playerEntity.getCurrentEquippedItem().setTagCompound(originalIS.getTagCompound());
+			}
 		}
 	}
 

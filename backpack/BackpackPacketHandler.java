@@ -1,5 +1,6 @@
 package backpack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
@@ -22,6 +23,14 @@ public class BackpackPacketHandler implements IPacketHandler {
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player) {
 		if(packet.channel.equals("BackpackRename")) {
 			handlePacket(packet, (EntityPlayer) player);
+		} else if(packet.channel.equals("OpenBackpack")) {
+			EntityPlayer entityPlayer = (EntityPlayer) player;
+			
+			if(!entityPlayer.worldObj.isRemote) {
+				ItemStack backpack = entityPlayer.inventory.armorInventory[2];
+				((ItemBackpack)backpack.getItem()).setWeared(true);
+				ItemBackpack.tryOpen(backpack, entityPlayer);
+			}
 		}
 	}
 
@@ -39,7 +48,7 @@ public class BackpackPacketHandler implements IPacketHandler {
 
 		if(entityPlayer.getCurrentEquippedItem() != null) {
 			ItemStack is = entityPlayer.getCurrentEquippedItem();
-			InventoryBackpack inv = new InventoryBackpack(entityPlayer, is);
+			InventoryBackpack inv = new InventoryBackpack(entityPlayer, is, false);
 			// set new name
 			inv.setInvName(name);
 			// save the new data
