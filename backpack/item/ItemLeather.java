@@ -1,12 +1,14 @@
-package backpack;
+package backpack.item;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import backpack.Backpack;
+import backpack.proxy.CommonProxy;
 
 public class ItemLeather extends Item {
 
-	protected ItemLeather(int id) {
+	public ItemLeather(int id) {
 		super(id);
 		setIconIndex(128);
 		setMaxStackSize(64);
@@ -33,7 +35,7 @@ public class ItemLeather extends Item {
 	 */
 	@Override
 	public int getIconFromDamage(int damage) {
-		if(shiftedIndex == Backpack.boundLeather.shiftedIndex) {
+		if(itemID == Backpack.boundLeather.itemID) {
 			return 128;
 		} else {
 			return 129;
@@ -49,7 +51,7 @@ public class ItemLeather extends Item {
 	 */
 	@Override
 	public String getItemNameIS(ItemStack itemstack) {
-		if(shiftedIndex == Backpack.boundLeather.shiftedIndex) {
+		if(itemID == Backpack.boundLeather.itemID) {
 			return "Bound Leather";
 		} else {
 			return "Tanned Leather";

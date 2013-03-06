@@ -1,4 +1,4 @@
-package backpack;
+package backpack.gui;
 
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiButton;
@@ -9,9 +9,13 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 
 import org.lwjgl.input.Keyboard;
 
+import backpack.misc.Constants;
+
+import cpw.mods.fml.common.network.PacketDispatcher;
+
 public class GuiBackpackAlt extends GuiScreen {
 	private String TITLE = "Rename your backpack";
-	EntityPlayer entityPlayer;
+	//EntityPlayer entityPlayer;
 
 	private GuiTextField txt_backpackName;
 	private GuiButton btn_ok, btn_cancel;
@@ -25,7 +29,7 @@ public class GuiBackpackAlt extends GuiScreen {
 	 *            server.
 	 */
 	public GuiBackpackAlt(EntityPlayer player) {
-		entityPlayer = player;
+		//entityPlayer = player;
 	}
 
 	/**
@@ -178,12 +182,15 @@ public class GuiBackpackAlt extends GuiScreen {
 		// create packet set channel to send to, data as byte array and length
 		// of the data
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "BackpackRename";
+		packet.channel = Constants.CHANNEL_RENAME;
 		packet.data = name.getBytes();
 		packet.length = name.getBytes().length;
-
+		
+		// send the packet to the server
+		PacketDispatcher.sendPacketToServer(packet);
+		// TODO testen und removen
 		// send the packet via players send queue
-		((EntityClientPlayerMP) entityPlayer).sendQueue.addToSendQueue(packet);
+		//((EntityClientPlayerMP) entityPlayer).sendQueue.addToSendQueue(packet);
 	}
 
 }

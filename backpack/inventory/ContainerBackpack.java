@@ -1,10 +1,13 @@
-package backpack;
+package backpack.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import backpack.item.ItemBackpack;
+import backpack.misc.Constants;
+import backpack.util.NBTUtil;
 
 public class ContainerBackpack extends Container {
 	private int numRows;
@@ -37,10 +40,17 @@ public class ContainerBackpack extends Container {
 	 */
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		if(player.getCurrentEquippedItem() == null) {
-			return false;
+		if(NBTUtil.getBoolean(openedBackpack, Constants.WEARED_BACKPACK_OPEN)) {
+			if(player.getCurrentArmor(2).isItemEqual(openedBackpack)) {
+				return true;
+			}
 		}
-		return player.getCurrentEquippedItem().isItemEqual(openedBackpack);
+		if(player.getCurrentEquippedItem() != null) {
+			if(player.getCurrentEquippedItem().isItemEqual(openedBackpack)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -73,6 +83,20 @@ public class ContainerBackpack extends Container {
         }
 
         return returnStack;
+    }
+	
+	@Override
+    public void onCraftGuiClosed(EntityPlayer player) {
+        super.onCraftGuiClosed(player);
+
+        if (!player.worldObj.isRemote) {
+            ItemStack itemStack = player.getCurrentArmor(2);
+            if (itemStack != null) {
+                if (NBTUtil.hasTag(itemStack, Constants.WEARED_BACKPACK_OPEN)) {
+                	NBTUtil.removeTag(itemStack, Constants.WEARED_BACKPACK_OPEN);
+                }
+            }
+        }
     }
 
 }

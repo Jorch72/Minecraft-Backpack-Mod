@@ -1,14 +1,16 @@
-package backpack;
+package backpack.util;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import backpack.inventory.InventoryBackpack;
+import backpack.item.ItemBackpack;
+import backpack.misc.Constants;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 
-public class BackpackPacketHandler implements IPacketHandler {
+public class PacketHandlerBackpack implements IPacketHandler {
 	/**
 	 * Handles incoming packets.
 	 * 
@@ -21,15 +23,14 @@ public class BackpackPacketHandler implements IPacketHandler {
 	 */
 	@Override
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player) {
-		if(packet.channel.equals("BackpackRename")) {
+		if(packet.channel.equals(Constants.CHANNEL_RENAME)) {
 			handlePacket(packet, (EntityPlayer) player);
-		} else if(packet.channel.equals("OpenBackpack")) {
+		} else if(packet.channel.equals(Constants.CHANNEL_OPEN)) {
 			EntityPlayer entityPlayer = (EntityPlayer) player;
-			
+
 			if(!entityPlayer.worldObj.isRemote) {
-				ItemStack backpack = entityPlayer.inventory.armorInventory[2];
-				((ItemBackpack)backpack.getItem()).setWeared(true);
-				ItemBackpack.tryOpen(backpack, entityPlayer);
+				ItemStack backpack = entityPlayer.getCurrentArmor(2);
+				((ItemBackpack)backpack.getItem()).doKeyBindingAction(entityPlayer, backpack);
 			}
 		}
 	}
@@ -48,7 +49,7 @@ public class BackpackPacketHandler implements IPacketHandler {
 
 		if(entityPlayer.getCurrentEquippedItem() != null) {
 			ItemStack is = entityPlayer.getCurrentEquippedItem();
-			InventoryBackpack inv = new InventoryBackpack(entityPlayer, is, false);
+			InventoryBackpack inv = new InventoryBackpack(entityPlayer, is);
 			// set new name
 			inv.setInvName(name);
 			// save the new data

@@ -1,8 +1,9 @@
-package backpack;
+package backpack.inventory;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import backpack.item.ItemBackpack;
 
 public class SlotBackpack extends Slot {
 	public SlotBackpack(IInventory inventory, int slotIndex, int xPos, int yPos) {

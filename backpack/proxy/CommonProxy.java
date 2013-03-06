@@ -1,8 +1,13 @@
-package backpack;
+package backpack.proxy;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import backpack.gui.GuiBackpack;
+import backpack.gui.GuiBackpackAlt;
+import backpack.inventory.ContainerBackpack;
+import backpack.item.ItemBackpack;
+import backpack.misc.Constants;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class CommonProxy implements IGuiHandler {
@@ -18,11 +23,11 @@ public class CommonProxy implements IGuiHandler {
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		ItemStack backpack;
 		switch(ID) {
-			case 1:
+			case Constants.GUI_ID_BACKPACK:
 				backpack = player.getCurrentEquippedItem();
 				return new ContainerBackpack(player.inventory, ItemBackpack.getBackpackInv(player, false), backpack);
-			case 2:
-				backpack = player.inventory.armorInventory[2];
+			case Constants.GUI_ID_WEARED_BACKPACK:
+				backpack = player.getCurrentArmor(2);
 				return new ContainerBackpack(player.inventory, ItemBackpack.getBackpackInv(player, true), backpack);
 		}
 		return null;
@@ -33,18 +38,18 @@ public class CommonProxy implements IGuiHandler {
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		ItemStack backpack;
 		switch(ID) {
-			case 1:
+			case Constants.GUI_ID_BACKPACK:
 				backpack = player.getCurrentEquippedItem();
 				return new GuiBackpack(player.inventory, ItemBackpack.getBackpackInv(player, false));
-			case 2:
-				backpack = player.inventory.armorInventory[2];
+			case Constants.GUI_ID_WEARED_BACKPACK:
+				backpack = player.getCurrentArmor(2);
 				return  new GuiBackpack(player.inventory, ItemBackpack.getBackpackInv(player, true));
-			case 3:
+			case Constants.GUI_ID_RENAME_BACKPACK:
 				return new GuiBackpackAlt(player);
 		}
 		return null;
 	}
-
+	
 	public void registerKeyBinding() {
 		// Nothing here as this is the server side proxy
 	}

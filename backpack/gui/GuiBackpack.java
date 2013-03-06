@@ -1,11 +1,22 @@
-package backpack;
+package backpack.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import backpack.inventory.ContainerBackpack;
+import backpack.misc.Constants;
+import backpack.util.NBTUtil;
+
+@SideOnly(Side.CLIENT)
 public class GuiBackpack extends GuiContainer {
 	private IInventory upperInventory;
     private IInventory lowerInventory;
@@ -40,5 +51,20 @@ public class GuiBackpack extends GuiContainer {
         int var6 = (height - ySize) / 2;
         this.drawTexturedModalRect(var5, var6, 0, 0, xSize, inventoryRows * 18 + 17);
         this.drawTexturedModalRect(var5, var6 + inventoryRows * 18 + 17, 0, 126, xSize, 96);
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+		if (this.mc.thePlayer != null) {
+			EntityPlayer player = this.mc.thePlayer;
+
+            ItemStack itemStack = player.getCurrentArmor(2);
+            if (itemStack != null) {
+                if (NBTUtil.hasTag(itemStack, Constants.WEARED_BACKPACK_OPEN)) {
+                	NBTUtil.removeTag(itemStack, Constants.WEARED_BACKPACK_OPEN);
+                }
+            }
+		}
 	}
 }

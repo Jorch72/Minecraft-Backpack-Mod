@@ -1,4 +1,4 @@
-package backpack;
+package backpack.item;
 
 import java.util.List;
 
@@ -9,30 +9,22 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IArmorTextureProvider;
+import backpack.Backpack;
+import backpack.inventory.InventoryBackpack;
+import backpack.misc.Constants;
+import backpack.proxy.CommonProxy;
+import backpack.util.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
-	// the names of all backpacks
-	static final String[] backpackNames = {
-			"Black Backpack", "Red Backpack", "Green Backpack", "Brown Backpack", "Blue Backpack",
-			"Purple Backpack", "Cyan Backpack", "Light Gray Backpack", "Gray Backpack",
-			"Pink Backpack", "Lime Green Backpack", "Yellow Backpack", "Light Blue Backpack",
-			"Magenta Backpack", "Orange Backpack", "White Backpack", "Backpack", "Ender Backpack"
-	};
-
-	// the damage of an magic backpack
-	public static final int ENDERBACKPACK = 31999;
-	
-	protected boolean weared = false;
-
 	/**
 	 * Creates an instance of the backpack item and sets some default values.
 	 * 
 	 * @param id
 	 *            The item id.
 	 */
-	protected ItemBackpack(int id) {
+	public ItemBackpack(int id) {
 		super(id, Backpack.backpackMaterial, 0, 1);
 		setIconIndex(0);
 		setMaxStackSize(1);
@@ -66,7 +58,7 @@ public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
 		if(damage >= 32 && damage < 49) {
 			return damage;
 		}
-		if(damage == ENDERBACKPACK) {
+		if(damage == Constants.ENDERBACKPACK) {
 			return 17;
 		}
 		return 0;
@@ -90,8 +82,8 @@ public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
 		for(int i = 32; i < 49; i++) {
 			subItems.add(new ItemStack(itemId, 1, i));
 		}
-		if(itemId == Backpack.backpack.shiftedIndex) {
-			subItems.add(new ItemStack(itemId, 1, ENDERBACKPACK));
+		if(itemId == Backpack.backpack.itemID) {
+			subItems.add(new ItemStack(itemId, 1, Constants.ENDERBACKPACK));
 		}
 	}
 
@@ -104,22 +96,20 @@ public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
 	 */
 	@Override
 	public String getItemNameIS(ItemStack itemstack) {
-		if(itemstack.getTagCompound() != null) {
-			if(itemstack.getTagCompound().hasKey("display")) {
-				return itemstack.getTagCompound().getCompoundTag("display").getString("Name");
-			}
+		if(NBTUtil.hasTag(itemstack, "display")) {
+			return NBTUtil.getCompoundTag(itemstack, "display").getString("Name");
 		}
 		int dmg = itemstack.getItemDamage();
 		if(dmg >= 0 && dmg < 17) {
-			return backpackNames[itemstack.getItemDamage()];
+			return Constants.BACKPACK_NAMES[itemstack.getItemDamage()];
 		}
 		if(dmg >= 32 && dmg < 49) {
-			return "Big " + backpackNames[itemstack.getItemDamage() - 32];
+			return "Big " + Constants.BACKPACK_NAMES[itemstack.getItemDamage() - 32];
 		}
-		if(itemstack.getItemDamage() == ENDERBACKPACK) {
-			return backpackNames[17];
+		if(itemstack.getItemDamage() == Constants.ENDERBACKPACK) {
+			return Constants.BACKPACK_NAMES[17];
 		}
-		return backpackNames[16];
+		return Constants.BACKPACK_NAMES[16];
 	}
 
 	/**
@@ -139,26 +129,22 @@ public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
 		// if world.isRemote than we are on the client side
 		if(world.isRemote) {
 			// display rename GUI if player is sneaking
-			if(player.isSneaking() && is.getItemDamage() != ItemBackpack.ENDERBACKPACK) {
-				player.openGui(Backpack.instance, 3, world, 0, 0, 0);
+			if(player.isSneaking() && is.getItemDamage() != Constants.ENDERBACKPACK) {
+				player.openGui(Backpack.instance, Constants.GUI_ID_RENAME_BACKPACK, world, 0, 0, 0);
 			}
 			return is;
 		}
 
 		// when the player is not sneaking
 		if(!player.isSneaking()) {
-			if(((ItemBackpack)is.getItem()).isWeared()) {
-				((ItemBackpack)is.getItem()).setWeared(false);
-				player.openGui(Backpack.instance, 2, world, 0, 0, 0);
-			} else {
-				player.openGui(Backpack.instance, 1, world, 0, 0, 0);
-			}
+			player.openGui(Backpack.instance, Constants.GUI_ID_BACKPACK, world, 0, 0, 0);
 		}
 		return is;
 	}
 	
-	public static void tryOpen(ItemStack is, EntityPlayer player) {
-		is.getItem().onItemRightClick(is, player.worldObj, player);
+	public void doKeyBindingAction(EntityPlayer player, ItemStack itemStack) {
+		NBTUtil.setBoolean(itemStack, Constants.WEARED_BACKPACK_OPEN, true);
+		player.openGui(Backpack.instance, Constants.GUI_ID_WEARED_BACKPACK, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
 	}
 
 	/**
@@ -169,26 +155,24 @@ public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
 	@Override
 	public String getItemDisplayName(ItemStack itemstack) {
 		// it ItemStack has a NBTTagCompound load name from inventory title.
-		if(itemstack.hasTagCompound()) {
-			if(itemstack.getTagCompound().hasKey("Inventory")) {
-				return itemstack.getTagCompound().getCompoundTag("Inventory").getString("title");
-			}
+		if(NBTUtil.hasTag(itemstack, "display")) {
+			return NBTUtil.getCompoundTag(itemstack, "display").getString("Name");
 		}
 		// else if damage is between 0 and 15 return name from backpackNames array
 		int dmg = itemstack.getItemDamage();
 		if(dmg >= 0 && dmg < 17) {
-			return backpackNames[itemstack.getItemDamage()];
+			return Constants.BACKPACK_NAMES[itemstack.getItemDamage()];
 		}
 		if(dmg >= 32 && dmg < 49) {
-			return "Big " + backpackNames[itemstack.getItemDamage() - 32];
+			return "Big " + Constants.BACKPACK_NAMES[itemstack.getItemDamage() - 32];
 		}
 		// else if damage is equal to ENDERBACKPACK then return backpackNames index 16
-		if(itemstack.getItemDamage() == ENDERBACKPACK) {
-			return backpackNames[17];
+		if(itemstack.getItemDamage() == Constants.ENDERBACKPACK) {
+			return Constants.BACKPACK_NAMES[17];
 		}
 
 		// return index 0 of backpackNames array as fallback
-		return backpackNames[16];
+		return Constants.BACKPACK_NAMES[16];
 	}
 	
 	/**
@@ -196,35 +180,31 @@ public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
 	 * @param player The player who holds the backpack.
 	 * @return An IInventory with the content of the backpack.
 	 */
-	public static IInventory getBackpackInv(EntityPlayer player, boolean wearedBackpack) {
-		ItemStack backpack = null;
+	public static IInventory getBackpackInv(EntityPlayer player, boolean weared) {
+		ItemStack backpack;
 		IInventory inventoryBackpack = null;
 		
-		if(wearedBackpack) {
-			if(player.inventory.armorInventory[2] != null && player.inventory.armorInventory[2].getItem() instanceof ItemBackpack) {
-				backpack = player.inventory.armorInventory[2];
+		if(weared) {
+			if(player.getCurrentArmor(2) != null && player.getCurrentArmor(2).getItem() instanceof ItemBackpack) {
+				backpack = player.getCurrentArmor(2);
+				if(backpack.getItemDamage() == Constants.ENDERBACKPACK) {
+					inventoryBackpack = player.getInventoryEnderChest();
+				} else {
+					inventoryBackpack = new InventoryBackpack(player, backpack);
+				}
 			}
 		} else {
 			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemBackpack) {
 				backpack = player.getCurrentEquippedItem();
+				if(backpack.getItemDamage() == Constants.ENDERBACKPACK) {
+					inventoryBackpack = player.getInventoryEnderChest();
+				} else {
+					inventoryBackpack = new InventoryBackpack(player, backpack);
+				}
 			}
 		}
 		
-		if(backpack.getItemDamage() == ItemBackpack.ENDERBACKPACK) {
-			inventoryBackpack = player.getInventoryEnderChest();
-		} else {
-			inventoryBackpack = new InventoryBackpack(player, backpack, wearedBackpack);
-		}
-		
 		return inventoryBackpack;
-	}
-	
-	public void setWeared(boolean weared) {
-		this.weared = weared;
-	}
-	
-	public boolean isWeared() {
-		return this.weared;
 	}
 	
 	/**
