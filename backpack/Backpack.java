@@ -25,7 +25,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 @Mod(modid = "Backpack", name = "Backpack", version = "1.7.8")
 @NetworkMod(
 		clientSideRequired = true, 
-		serverSideRequired = false, 
+		serverSideRequired = true, 
 		channels = {Constants.CHANNEL_RENAME, Constants.CHANNEL_OPEN}, 
 		packetHandler = PacketHandlerBackpack.class
 		)
@@ -35,7 +35,7 @@ public class Backpack {
 	public static Item boundLeather;
 	public static Item tannedLeather;
 	
-	public static EnumArmorMaterial backpackMaterial = EnumHelper.addArmorMaterial("backpackMaterial", -1, new int[]{0,  0, 0, 0}, 0);
+	public static EnumArmorMaterial backpackMaterial = EnumHelper.addArmorMaterial("backpackMaterial", -1, new int[]{0, 0, 0, 0}, 0);
 
 	@Instance("Backpack")
 	public static Backpack instance;

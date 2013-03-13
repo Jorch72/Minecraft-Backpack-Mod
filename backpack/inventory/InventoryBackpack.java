@@ -5,7 +5,6 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import backpack.Backpack;
 import backpack.item.ItemBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
@@ -32,7 +31,7 @@ public class InventoryBackpack extends InventoryBasic {
 	 *            The ItemStack which holds the backpack.
 	 */
 	public InventoryBackpack(EntityPlayer player, ItemStack is) {
-		super("", getInventorySize(is));
+		super("", false, getInventorySize(is));
 
 		playerEntity = player;
 		originalIS = is;
@@ -108,7 +107,7 @@ public class InventoryBackpack extends InventoryBasic {
 	 * Creates the Inventory Tag in the NBT with an empty inventory.
 	 */
 	private void createInventory() {
-		setInvName(originalIS.getItemName());
+		setInvName(originalIS.getDisplayName());
 		writeToNBT();
 	}
 

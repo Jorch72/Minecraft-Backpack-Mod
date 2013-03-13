@@ -11,13 +11,6 @@ import backpack.misc.Constants;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class CommonProxy implements IGuiHandler {
-	public static String ITEMS_PNG = "/gfx/backpack/items.png";
-	public static String ARMOR_PNG = "/gfx/backpack/armor.png";
-
-	public void registerRenderers() {
-		// Nothing here as this is the server side proxy
-	}
-
 	// returns an instance of the Container
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -26,7 +19,7 @@ public class CommonProxy implements IGuiHandler {
 			case Constants.GUI_ID_BACKPACK:
 				backpack = player.getCurrentEquippedItem();
 				return new ContainerBackpack(player.inventory, ItemBackpack.getBackpackInv(player, false), backpack);
-			case Constants.GUI_ID_WEARED_BACKPACK:
+			case Constants.GUI_ID_BACKPACK_WEARED:
 				backpack = player.getCurrentArmor(2);
 				return new ContainerBackpack(player.inventory, ItemBackpack.getBackpackInv(player, true), backpack);
 		}
@@ -41,7 +34,7 @@ public class CommonProxy implements IGuiHandler {
 			case Constants.GUI_ID_BACKPACK:
 				backpack = player.getCurrentEquippedItem();
 				return new GuiBackpack(player.inventory, ItemBackpack.getBackpackInv(player, false));
-			case Constants.GUI_ID_WEARED_BACKPACK:
+			case Constants.GUI_ID_BACKPACK_WEARED:
 				backpack = player.getCurrentArmor(2);
 				return  new GuiBackpack(player.inventory, ItemBackpack.getBackpackInv(player, true));
 			case Constants.GUI_ID_RENAME_BACKPACK:

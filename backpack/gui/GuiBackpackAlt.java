@@ -47,7 +47,7 @@ public class GuiBackpackAlt extends GuiScreen {
 	public void initGui() {
 		Keyboard.enableRepeatEvents(false);
 		// clear control list
-		controlList.clear();
+		buttonList.clear();
 
 		// create button for ok and disable it at the beginning
 		int posX = width / 2 + 100 - 80;
@@ -61,8 +61,8 @@ public class GuiBackpackAlt extends GuiScreen {
 		btn_cancel = new GuiButton(1, posX, posY, 60, 20, "Cancel");
 
 		// add buttons to control list
-		controlList.add(btn_ok);
-		controlList.add(btn_cancel);
+		buttonList.add(btn_ok);
+		buttonList.add(btn_cancel);
 
 		// create text field
 		posX = width / 2 - 100;
@@ -108,14 +108,14 @@ public class GuiBackpackAlt extends GuiScreen {
 		// add char to GuiTextField
 		txt_backpackName.textboxKeyTyped(c, i);
 		// enable ok button when GuiTextField content is greater than 0 chars
-		((GuiButton) controlList.get(0)).enabled = txt_backpackName.getText().trim().length() > 0;
+		((GuiButton) buttonList.get(0)).enabled = txt_backpackName.getText().trim().length() > 0;
 		// perform click event on ok button when Enter is pressed
 		if(c == '\n' || c == '\r') {
-			actionPerformed((GuiButton) controlList.get(0));
+			actionPerformed((GuiButton) buttonList.get(0));
 		}
 		// perform click event on cancel button when Esc is pressed
 		if(Integer.valueOf(c) == 27) {
-			actionPerformed((GuiButton) controlList.get(1));
+			actionPerformed((GuiButton) buttonList.get(1));
 		}
 	}
 
@@ -162,10 +162,7 @@ public class GuiBackpackAlt extends GuiScreen {
 	 * screen.
 	 */
 	protected void drawGuiBackground() {
-		// get id of the texture
-		int i = mc.renderEngine.getTexture("/gfx/backpack/guibackpack.png");
-		// bind texture to render engine by id
-		mc.renderEngine.bindTexture(i);
+        mc.renderEngine.func_98187_b("/mods/backpack/textures/gui/guiBackpackAlt.png");
 		// calculate position and draw texture
 		int j = (width - 100) / 2;
 		int k = (height - 50) / 2;
