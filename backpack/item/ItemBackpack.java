@@ -19,7 +19,7 @@ import backpack.util.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemBackpack extends ItemArmor {
+public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
 	protected Icon[] icons;
 	/**
 	 * Creates an instance of the backpack item and sets some default values.
@@ -223,4 +223,9 @@ public class ItemBackpack extends ItemArmor {
     public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
         return 16777215;
     }
+
+	@Override
+	public String getArmorTextureFile(ItemStack itemstack) {
+		return CommonProxy.ARMOR_PNG;
+	}
 }

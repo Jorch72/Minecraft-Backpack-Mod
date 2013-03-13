@@ -11,6 +11,8 @@ import backpack.misc.Constants;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class CommonProxy implements IGuiHandler {
+	public static String ARMOR_PNG = "/mods/backpack/textures/armor/backpack.png";
+
 	// returns an instance of the Container
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
