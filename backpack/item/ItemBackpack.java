@@ -58,7 +58,8 @@ public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
     /**
      * Gets the icon from the registry.
      */
-	public void func_94581_a(IconRegister iconRegister) {
+    @Override
+	public void updateIcons(IconRegister iconRegister) {
 		icons = new Icon[35];
 		
         for (int i = 0; i < 35; ++i) {
@@ -77,7 +78,7 @@ public class ItemBackpack extends ItemArmor implements IArmorTextureProvider {
         	if(i == 34) {
         		name += "_big";
         	}
-            icons[i] = iconRegister.func_94245_a(name);
+            icons[i] = iconRegister.registerIcon(name);
         }
     }
 

@@ -45,7 +45,7 @@ public class GuiBackpack extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.func_98187_b("/gui/container.png");
+        mc.renderEngine.bindTexture("/gui/container.png");
         int var5 = (width - xSize) / 2;
         int var6 = (height - ySize) / 2;
         this.drawTexturedModalRect(var5, var6, 0, 0, xSize, inventoryRows * 18 + 17);

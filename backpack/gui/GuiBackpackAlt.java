@@ -162,7 +162,7 @@ public class GuiBackpackAlt extends GuiScreen {
 	 * screen.
 	 */
 	protected void drawGuiBackground() {
-        mc.renderEngine.func_98187_b("/mods/backpack/textures/gui/guiBackpackAlt.png");
+        mc.renderEngine.bindTexture("/mods/backpack/textures/gui/guiBackpackAlt.png");
 		// calculate position and draw texture
 		int j = (width - 100) / 2;
 		int k = (height - 50) / 2;

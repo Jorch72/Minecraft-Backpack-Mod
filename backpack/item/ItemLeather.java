@@ -37,10 +37,11 @@ public class ItemLeather extends Item {
     /**
      * Gets the icon from the registry.
      */
-	public void func_94581_a(IconRegister iconRegister) {
+    @Override
+	public void updateIcons(IconRegister iconRegister) {
 		icons = new Icon[2];
-        icons[0] = iconRegister.func_94245_a("backpack:leatherBound");
-        icons[1] = iconRegister.func_94245_a("backpack:leatherTanned");
+        icons[0] = iconRegister.registerIcon("backpack:leatherBound");
+        icons[1] = iconRegister.registerIcon("backpack:leatherTanned");
     }
 	
 	/**
