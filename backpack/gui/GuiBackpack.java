@@ -1,5 +1,6 @@
 package backpack.gui;
 
+import invtweaks.api.ContainerGUI;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -14,6 +15,7 @@ import backpack.util.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+@ContainerGUI
 @SideOnly(Side.CLIENT)
 public class GuiBackpack extends GuiContainer {
     private IInventory upperInventory;
