@@ -108,7 +108,7 @@ public class InventoryBackpack extends InventoryBasic {
      * Creates the Inventory Tag in the NBT with an empty inventory.
      */
     private void createInventory() {
-        setInvName(originalIS.getDisplayName());
+        setInvName(new String(originalIS.getDisplayName()));
         writeToNBT();
     }
 
@@ -129,8 +129,9 @@ public class InventoryBackpack extends InventoryBasic {
         if(!NBTUtil.getBoolean(originalIS, Constants.WEARED_BACKPACK_OPEN)) {
             for(ItemStack itemStack : playerEntity.inventory.mainInventory) {
                 if(itemStack != null && itemStack.getItem() instanceof ItemBackpack) {
-                    if(itemStack.isItemEqual(originalIS)) {
+                    if(itemStack.getDisplayName() == originalIS.getDisplayName()) {
                         itemStack.setTagCompound(originalIS.getTagCompound());
+                        break;
                     }
                 }
             }
