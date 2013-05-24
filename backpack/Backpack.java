@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.EnumHelper;
 import backpack.item.ItemBackpack;
 import backpack.item.ItemLeather;
+import backpack.item.ItemWorkbenchBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import backpack.proxy.CommonProxy;
@@ -22,7 +23,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
-@Mod(modid = "Backpack", name = "Backpack", version = "1.8.11")
+@Mod(modid = "Backpack", name = "Backpack", version = "1.9.11")
 @NetworkMod(
         clientSideRequired = true,
         serverSideRequired = true,
@@ -34,6 +35,7 @@ public class Backpack {
     public static Item backpack;
     public static Item boundLeather;
     public static Item tannedLeather;
+    public static Item workbenchBackpack;
 
     public static EnumArmorMaterial backpackMaterial = EnumHelper.addArmorMaterial("backpackMaterial", 0, new int[] { 0, 0, 0, 0 }, 0);
 
@@ -55,6 +57,7 @@ public class Backpack {
         // create an instance of the backpack item with the id loaded from the
         // configuration file
         backpack = new ItemBackpack(ConfigurationBackpack.BACKPACK_ID);
+        workbenchBackpack = new ItemWorkbenchBackpack(ConfigurationBackpack.WORKBENCHBACKPACK_ID);
         boundLeather = new ItemLeather(ConfigurationBackpack.BOUND_LEATHER_ID);
         tannedLeather = new ItemLeather(ConfigurationBackpack.TANNED_LEATHER_ID);
 

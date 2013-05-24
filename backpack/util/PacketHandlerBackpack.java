@@ -5,7 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import backpack.inventory.InventoryBackpack;
-import backpack.item.ItemBackpack;
 import backpack.misc.Constants;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
@@ -30,7 +29,7 @@ public class PacketHandlerBackpack implements IPacketHandler {
 
             if(!entityPlayer.worldObj.isRemote) {
                 ItemStack backpack = entityPlayer.getCurrentArmor(2);
-                ((ItemBackpack) backpack.getItem()).doKeyBindingAction(entityPlayer, backpack);
+                ((IHasKeyBinding) backpack.getItem()).doKeyBindingAction(entityPlayer, backpack);
             }
         }
     }
@@ -49,6 +48,7 @@ public class PacketHandlerBackpack implements IPacketHandler {
 
         if(entityPlayer.getCurrentEquippedItem() != null) {
             ItemStack is = entityPlayer.getCurrentEquippedItem();
+
             InventoryBackpack inv = new InventoryBackpack(entityPlayer, is);
             // set new name
             inv.setInvName(name);

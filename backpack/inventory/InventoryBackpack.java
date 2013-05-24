@@ -5,22 +5,23 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import backpack.item.ItemBackpack;
+import backpack.Backpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
+import backpack.util.IBackpack;
 import backpack.util.NBTUtil;
 
 public class InventoryBackpack extends InventoryBasic {
     // the title of the backpack
-    private String inventoryTitle;
+    protected String inventoryTitle;
 
     // an instance of the player to get the inventory
-    private EntityPlayer playerEntity;
+    protected EntityPlayer playerEntity;
     // the original ItemStack to compare with the player inventory
-    private ItemStack originalIS;
+    protected ItemStack originalIS;
 
     // if class is reading from NBT tag
-    private boolean reading = false;
+    protected boolean reading = false;
 
     /**
      * Takes a player and an ItemStack.
@@ -91,7 +92,11 @@ public class InventoryBackpack extends InventoryBasic {
      * @return The number of slots the inventory has.
      */
     protected static int getInventorySize(ItemStack is) {
-        return 9 * (is.getItemDamage() > 17 ? ConfigurationBackpack.BACKPACK_SIZE_L : ConfigurationBackpack.BACKPACK_SIZE_M);
+        if(is.itemID == Backpack.backpack.itemID) {
+            return 9 * (is.getItemDamage() > 17 ? ConfigurationBackpack.BACKPACK_SIZE_L : ConfigurationBackpack.BACKPACK_SIZE_M);
+        } else {
+            return 9 * (is.getItemDamage() == 18 ? 0 : 2);
+        }
     }
 
     /**
@@ -100,14 +105,14 @@ public class InventoryBackpack extends InventoryBasic {
      * @return True when the NBT is not null and the NBT has key "Inventory"
      *         otherwise false.
      */
-    private boolean hasInventory() {
+    protected boolean hasInventory() {
         return NBTUtil.hasTag(originalIS, "Inventory");
     }
 
     /**
      * Creates the Inventory Tag in the NBT with an empty inventory.
      */
-    private void createInventory() {
+    protected void createInventory() {
         setInvName(new String(originalIS.getDisplayName()));
         writeToNBT();
     }
@@ -125,10 +130,10 @@ public class InventoryBackpack extends InventoryBasic {
     /**
      * Searches the backpack in players inventory and saves NBT data in it.
      */
-    private void setNBT() {
+    protected void setNBT() {
         if(!NBTUtil.getBoolean(originalIS, Constants.WEARED_BACKPACK_OPEN)) {
             for(ItemStack itemStack : playerEntity.inventory.mainInventory) {
-                if(itemStack != null && itemStack.getItem() instanceof ItemBackpack) {
+                if(itemStack != null && itemStack.getItem() instanceof IBackpack) {
                     if(itemStack.getDisplayName() == originalIS.getDisplayName()) {
                         itemStack.setTagCompound(originalIS.getTagCompound());
                         break;
@@ -161,7 +166,7 @@ public class InventoryBackpack extends InventoryBasic {
      *            The NBT Node to write to.
      * @return The written NBT Node.
      */
-    private void writeToNBT() {
+    protected void writeToNBT() {
         // save name in display->Name
         NBTTagCompound name = new NBTTagCompound();
         name.setString("Name", getInvName());
@@ -189,7 +194,7 @@ public class InventoryBackpack extends InventoryBasic {
      * @param outerTag
      *            The NBT Node to read from.
      */
-    private void readFromNBT() {
+    protected void readFromNBT() {
         reading = true;
         // TODO for backwards compatibility
         if(NBTUtil.getCompoundTag(originalIS, "Inventory").hasKey("title")) {

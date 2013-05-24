@@ -4,12 +4,12 @@ import java.util.EnumSet;
 
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
 import org.lwjgl.input.Keyboard;
 
-import backpack.item.ItemBackpack;
 import backpack.misc.Constants;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
@@ -40,7 +40,8 @@ public class KeyHandlerBackpack extends KeyHandler {
                     ItemStack backpack = player.getCurrentArmor(2);
 
                     if(backpack != null) {
-                        if(backpack.getItem() instanceof ItemBackpack) {
+                        Item item = backpack.getItem();
+                        if(item instanceof IBackpack) {
                             if(player.worldObj.isRemote) {
                                 String data = String.valueOf(1);
                                 Packet250CustomPayload packet = new Packet250CustomPayload();
@@ -49,7 +50,7 @@ public class KeyHandlerBackpack extends KeyHandler {
                                 packet.length = data.getBytes().length;
                                 PacketDispatcher.sendPacketToServer(packet);
                             } else {
-                                ((ItemBackpack) backpack.getItem()).doKeyBindingAction(player, backpack);
+                                ((IHasKeyBinding) item).doKeyBindingAction(player, backpack);
                             }
                         }
                     }

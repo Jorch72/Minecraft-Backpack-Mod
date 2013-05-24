@@ -10,6 +10,7 @@ public class Constants {
     public static final int BACKPACK_ID_DEFAULT = 18330;
     public static final int BOUND_LEATHER_ID_DEFAULT = 18331;
     public static final int TANNED_LEATHER_ID_DEFAULT = 18332;
+    public static final int WORKBENCHBACKPACK_ID_DEFAULT = 18333;
 
     public static final String CHANNEL_RENAME = "BackpackRename";
     public static final String CHANNEL_OPEN = "OpenBackpack";

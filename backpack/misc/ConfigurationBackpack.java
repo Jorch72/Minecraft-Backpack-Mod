@@ -8,6 +8,7 @@ public class ConfigurationBackpack {
     private Configuration config;
 
     public static int BACKPACK_ID;
+    public static int WORKBENCHBACKPACK_ID;
     public static int BOUND_LEATHER_ID;
     public static int TANNED_LEATHER_ID;
 
@@ -26,6 +27,7 @@ public class ConfigurationBackpack {
         // gets the item id from the configuration or creates it if it doesn't
         // exists
         BACKPACK_ID = config.getItem("backpackId", Constants.BACKPACK_ID_DEFAULT).getInt();
+        WORKBENCHBACKPACK_ID = config.getItem("workbenchBackpackId", Constants.WORKBENCHBACKPACK_ID_DEFAULT).getInt();
         BOUND_LEATHER_ID = config.getItem("boundLeatherId", Constants.BOUND_LEATHER_ID_DEFAULT).getInt();
         TANNED_LEATHER_ID = config.getItem("tannedLeatherId", Constants.TANNED_LEATHER_ID_DEFAULT).getInt();
 

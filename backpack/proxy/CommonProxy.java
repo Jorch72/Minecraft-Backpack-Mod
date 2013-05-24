@@ -5,8 +5,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import backpack.gui.GuiBackpack;
 import backpack.gui.GuiBackpackAlt;
+import backpack.gui.GuiWorkbenchBackpack;
 import backpack.inventory.ContainerBackpack;
+import backpack.inventory.ContainerWorkbenchBackpack;
 import backpack.item.ItemBackpack;
+import backpack.item.ItemWorkbenchBackpack;
 import backpack.misc.Constants;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -24,6 +27,12 @@ public class CommonProxy implements IGuiHandler {
             case Constants.GUI_ID_BACKPACK_WEARED:
                 backpack = player.getCurrentArmor(2);
                 return new ContainerBackpack(player.inventory, ItemBackpack.getBackpackInv(player, true), backpack);
+            case Constants.GUI_ID_WORKBENCH_BACKPACK:
+                backpack = player.getCurrentEquippedItem();
+                return new ContainerWorkbenchBackpack(player.inventory, ItemWorkbenchBackpack.getBackpackInv(player, false), backpack);
+            case Constants.GUI_ID_WORKBENCH_BACKPACK_WEARED:
+                backpack = player.getCurrentArmor(2);
+                return new ContainerWorkbenchBackpack(player.inventory, ItemWorkbenchBackpack.getBackpackInv(player, true), backpack);
         }
         return null;
     }
@@ -38,6 +47,10 @@ public class CommonProxy implements IGuiHandler {
                 return new GuiBackpack(player.inventory, ItemBackpack.getBackpackInv(player, true));
             case Constants.GUI_ID_RENAME_BACKPACK:
                 return new GuiBackpackAlt();
+            case Constants.GUI_ID_WORKBENCH_BACKPACK:
+                return new GuiWorkbenchBackpack(player.inventory, ItemWorkbenchBackpack.getBackpackInv(player, false));
+            case Constants.GUI_ID_WORKBENCH_BACKPACK_WEARED:
+                return new GuiWorkbenchBackpack(player.inventory, ItemWorkbenchBackpack.getBackpackInv(player, true));
         }
         return null;
     }

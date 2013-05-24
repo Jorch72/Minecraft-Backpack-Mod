@@ -6,13 +6,12 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import backpack.Backpack;
-import backpack.inventory.InventoryBackpack;
+import backpack.inventory.InventoryWorkbenchBackpack;
 import backpack.misc.Constants;
 import backpack.proxy.CommonProxy;
 import backpack.util.IBackpack;
@@ -21,16 +20,10 @@ import backpack.util.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding {
+public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasKeyBinding {
     protected Icon[] icons;
 
-    /**
-     * Creates an instance of the backpack item and sets some default values.
-     * 
-     * @param id
-     *            The item id.
-     */
-    public ItemBackpack(int id) {
+    public ItemWorkbenchBackpack(int id) {
         super(id, Backpack.backpackMaterial, 0, 1);
         setMaxStackSize(1);
         setHasSubtypes(true);
@@ -46,17 +39,15 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
     @Override
     public String getUnlocalizedName(ItemStack itemStack) {
         String name = super.getUnlocalizedName();
-
         int damage = itemStack.getItemDamage();
-        if(damage >= 0 && damage < 17) {
-            name += "." + Constants.BACKPACK_COLORS[damage];
+
+        if(damage == 18) {
+            name += "." + Constants.BACKPACK_COLORS[17];
         }
-        if(damage >= 32 && damage < 49) {
-            name += ".big_" + Constants.BACKPACK_COLORS[damage - 32];
+        if(damage == 50) {
+            name += ".big_" + Constants.BACKPACK_COLORS[17];
         }
-        if(damage == Constants.ENDERBACKPACK) {
-            name += "." + Constants.BACKPACK_COLORS[16];
-        }
+
         return name;
     }
 
@@ -65,26 +56,9 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
      */
     @Override
     public void registerIcons(IconRegister iconRegister) {
-        icons = new Icon[35];
-
-        for(int i = 0; i < 35; ++i) {
-            String name = "backpack:backpack";
-            // colored backpacks + ender backpack 0-16
-            if(i >= 0 && i < 17) {
-                name += "_" + Constants.BACKPACK_COLORS[i];
-            }
-            // normal backpack 17
-            if(i == 17) {}
-            // big colored backpack 18-34
-            if(i > 17 && i < 34) {
-                name += "_" + Constants.BACKPACK_COLORS[i - 18] + "_big";
-            }
-            // big backpack 34
-            if(i == 34) {
-                name += "_big";
-            }
-            icons[i] = iconRegister.registerIcon(name);
-        }
+        icons = new Icon[2];
+        icons[0] = iconRegister.registerIcon("backpack:backpack_workbench");
+        icons[1] = iconRegister.registerIcon("backpack:backpack_workbench_big");
     }
 
     /**
@@ -96,16 +70,13 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
      */
     @Override
     public Icon getIconFromDamage(int damage) {
-        if(damage >= 0 && damage < 16) {
-            return icons[damage];
+        if(damage == 18) {
+            return icons[0];
         }
-        if(damage >= 32 && damage < 49) {
-            return icons[damage - 14];
+        if(damage == 50) {
+            return icons[1];
         }
-        if(damage == Constants.ENDERBACKPACK) {
-            return icons[16];
-        }
-        return icons[17];
+        return icons[0];
     }
 
     /**
@@ -120,15 +91,8 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
      */
     @Override
     public void getSubItems(int itemId, CreativeTabs tab, List subItems) {
-        for(int i = 0; i < 17; i++) {
-            subItems.add(new ItemStack(itemId, 1, i));
-        }
-        for(int i = 32; i < 49; i++) {
-            subItems.add(new ItemStack(itemId, 1, i));
-        }
-        if(itemId == Backpack.backpack.itemID) {
-            subItems.add(new ItemStack(itemId, 1, Constants.ENDERBACKPACK));
-        }
+        subItems.add(new ItemStack(itemId, 1, 18));
+        subItems.add(new ItemStack(itemId, 1, 50));
     }
 
     /**
@@ -156,15 +120,16 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
 
         // when the player is not sneaking
         if(!player.isSneaking()) {
-            player.openGui(Backpack.instance, Constants.GUI_ID_BACKPACK, world, 0, 0, 0);
+            player.openGui(Backpack.instance, Constants.GUI_ID_WORKBENCH_BACKPACK, world, 0, 0, 0);
         }
+
         return is;
     }
 
     @Override
     public void doKeyBindingAction(EntityPlayer player, ItemStack itemStack) {
         NBTUtil.setBoolean(itemStack, Constants.WEARED_BACKPACK_OPEN, true);
-        player.openGui(Backpack.instance, Constants.GUI_ID_BACKPACK_WEARED, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+        player.openGui(Backpack.instance, Constants.GUI_ID_WORKBENCH_BACKPACK_WEARED, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
     }
 
     /**
@@ -176,27 +141,19 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
      */
     @Override
     public String getItemDisplayName(ItemStack itemstack) {
-        // it ItemStack has a NBTTagCompound load name from inventory title.
         if(NBTUtil.hasTag(itemstack, "display")) {
             return NBTUtil.getCompoundTag(itemstack, "display").getString("Name");
         }
-        // else if damage is between 0 and 15 return name from backpackNames
-        // array
+
         int dmg = itemstack.getItemDamage();
-        if(dmg >= 0 && dmg < 17) {
+        if(dmg == 18) {
             return Constants.BACKPACK_NAMES[dmg];
         }
-        if(dmg >= 32 && dmg < 49) {
+        if(dmg == 50) {
             return "Big " + Constants.BACKPACK_NAMES[dmg - 32];
         }
-        // else if damage is equal to ENDERBACKPACK then return backpackNames
-        // index 16
-        if(dmg == Constants.ENDERBACKPACK) {
-            return Constants.BACKPACK_NAMES[17];
-        }
 
-        // return index 0 of backpackNames array as fallback
-        return Constants.BACKPACK_NAMES[16];
+        return Constants.BACKPACK_NAMES[18];
     }
 
     /**
@@ -207,9 +164,9 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
      *            The player who holds the backpack.
      * @return An IInventory with the content of the backpack.
      */
-    public static IInventory getBackpackInv(EntityPlayer player, boolean weared) {
+    public static InventoryWorkbenchBackpack getBackpackInv(EntityPlayer player, boolean weared) {
         ItemStack backpack;
-        IInventory inventoryBackpack = null;
+        InventoryWorkbenchBackpack inventoryBackpack = null;
 
         if(weared) {
             backpack = player.getCurrentArmor(2);
@@ -217,12 +174,8 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
             backpack = player.getCurrentEquippedItem();
         }
 
-        if(backpack != null && backpack.getItem() instanceof ItemBackpack) {
-            if(backpack.getItemDamage() == Constants.ENDERBACKPACK) {
-                inventoryBackpack = player.getInventoryEnderChest();
-            } else {
-                inventoryBackpack = new InventoryBackpack(player, backpack);
-            }
+        if(backpack != null && backpack.getItem() instanceof ItemWorkbenchBackpack) {
+            inventoryBackpack = new InventoryWorkbenchBackpack(player, backpack);
         }
 
         return inventoryBackpack;

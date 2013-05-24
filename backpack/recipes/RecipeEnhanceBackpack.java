@@ -5,8 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import backpack.Backpack;
-import backpack.item.ItemBackpack;
 import backpack.item.ItemLeather;
+import backpack.util.IBackpack;
 
 public class RecipeEnhanceBackpack implements IRecipe {
 
@@ -20,10 +20,10 @@ public class RecipeEnhanceBackpack implements IRecipe {
                     return false;
                 }
                 if(i == 1 && j == 1) {
-                    if(!(slot.getItem() instanceof ItemBackpack)) {
+                    if(!(slot.getItem() instanceof IBackpack)) {
                         return false;
                     }
-                    if(slot.getItemDamage() >= 17) {
+                    if(slot.getItemDamage() >= 19) {
                         return false;
                     }
                 } else {
@@ -55,5 +55,4 @@ public class RecipeEnhanceBackpack implements IRecipe {
     public ItemStack getRecipeOutput() {
         return null;
     }
-
 }

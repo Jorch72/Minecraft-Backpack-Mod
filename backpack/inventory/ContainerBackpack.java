@@ -5,8 +5,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import backpack.item.ItemBackpack;
 import backpack.misc.Constants;
+import backpack.util.IBackpack;
 import backpack.util.NBTUtil;
 
 public class ContainerBackpack extends Container {
@@ -44,15 +44,14 @@ public class ContainerBackpack extends Container {
      */
     @Override
     public boolean canInteractWith(EntityPlayer player) {
+        ItemStack itemStack = null;
         if(NBTUtil.getBoolean(openedBackpack, Constants.WEARED_BACKPACK_OPEN)) {
-            if(player.getCurrentArmor(2).isItemEqual(openedBackpack)) {
-                return true;
-            }
+            itemStack = player.getCurrentArmor(2);
+        } else if(player.getCurrentEquippedItem() != null) {
+            itemStack = player.getCurrentEquippedItem();
         }
-        if(player.getCurrentEquippedItem() != null) {
-            if(player.getCurrentEquippedItem().isItemEqual(openedBackpack)) {
-                return true;
-            }
+        if(itemStack.getDisplayName() == openedBackpack.getDisplayName()) {
+            return true;
         }
         return false;
     }
@@ -67,7 +66,7 @@ public class ContainerBackpack extends Container {
 
         if(slot != null && slot.getHasStack()) {
             ItemStack itemStack = slot.getStack();
-            if(itemStack.getItem() instanceof ItemBackpack) {
+            if(itemStack.getItem() instanceof IBackpack) {
                 return returnStack;
             }
             returnStack = itemStack.copy();
@@ -103,5 +102,4 @@ public class ContainerBackpack extends Container {
             }
         }
     }
-
 }
