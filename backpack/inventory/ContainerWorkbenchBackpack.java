@@ -100,9 +100,9 @@ public class ContainerWorkbenchBackpack extends Container {
             returnStack = itemStack.copy();
 
             if(slotPos == 0) { // from craftingSlot
-                if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
-                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
-                        if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
+                    if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
+                        if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
                             return null;
                         }
                     }
@@ -110,7 +110,7 @@ public class ContainerWorkbenchBackpack extends Container {
 
                 slot.onSlotChange(itemStack, returnStack);
             } else if(slotPos >= 1 && slotPos < 10) { // from crafting matrix
-                if(mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
                     if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
                         if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
                             return null;
@@ -118,14 +118,14 @@ public class ContainerWorkbenchBackpack extends Container {
                     }
                 }
             } else if(slotPos >= 10 && slotPos < 37) { // from inventory
-                if(mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
                     if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
                         return null;
                     }
                 }
             } else if(slotPos >= 37 && slotPos < 46) { // from hotbar
-                if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
-                    if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
+                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
                         return null;
                     }
                 }
@@ -172,9 +172,9 @@ public class ContainerWorkbenchBackpack extends Container {
 
     protected boolean mergeItemStackWithBackpack(ItemStack itemStack) {
         if(numRows > 0 && !(itemStack.getItem() instanceof IBackpack)) {
-            return !mergeItemStack(itemStack, 46, 64, false);
+            return mergeItemStack(itemStack, 46, 64, false);
         }
-        return true;
+        return false;
     }
 
     @ContainerSectionCallback
@@ -190,5 +190,9 @@ public class ContainerWorkbenchBackpack extends Container {
             slotRefs.put(ContainerSection.CHEST, inventorySlots.subList(46, 64));
         }
         return slotRefs;
+    }
+
+    public boolean func_94530_a(ItemStack par1ItemStack, Slot par2Slot) {
+        return par2Slot.inventory != this.craftResult && super.func_94530_a(par1ItemStack, par2Slot);
     }
 }
