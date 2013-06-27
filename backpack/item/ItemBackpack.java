@@ -2,9 +2,11 @@ package backpack.item;
 
 import java.util.List;
 
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemArmor;
@@ -14,6 +16,7 @@ import net.minecraft.world.World;
 import backpack.Backpack;
 import backpack.inventory.InventoryBackpack;
 import backpack.misc.Constants;
+import backpack.model.ModelBackpack;
 import backpack.proxy.CommonProxy;
 import backpack.util.IBackpack;
 import backpack.util.IHasKeyBinding;
@@ -36,6 +39,7 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
         setHasSubtypes(true);
         setUnlocalizedName("backpack");
         setCreativeTab(CreativeTabs.tabMisc);
+        setFull3D();
     }
 
     /**
@@ -240,6 +244,14 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, int slot, int layer) {
-        return CommonProxy.ARMOR_PNG;
+        return CommonProxy.TEXTURES_PATH + "model/backpack.png";
+    }
+
+    @Override
+    public ModelBiped getArmorModel(EntityLiving entityLiving, ItemStack itemStack, int armorSlot) {
+        if(armorSlot == 1 && itemStack != null && itemStack.getItem() instanceof IBackpack) {
+            return new ModelBackpack();
+        }
+        return null;
     }
 }

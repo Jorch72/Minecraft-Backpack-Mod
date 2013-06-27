@@ -8,6 +8,7 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import org.lwjgl.input.Keyboard;
 
 import backpack.misc.Constants;
+import backpack.proxy.CommonProxy;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiBackpackAlt extends GuiScreen {
@@ -157,7 +158,7 @@ public class GuiBackpackAlt extends GuiScreen {
      * screen.
      */
     protected void drawGuiBackground() {
-        mc.renderEngine.bindTexture("/mods/backpack/textures/gui/guiBackpackAlt.png");
+        mc.renderEngine.bindTexture(CommonProxy.TEXTURES_PATH + "gui/guiBackpackAlt.png");
         // calculate position and draw texture
         int j = (width - 100) / 2;
         int k = (height - 50) / 2;

@@ -14,7 +14,7 @@ import backpack.misc.Constants;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class CommonProxy implements IGuiHandler {
-    public static String ARMOR_PNG = "/mods/backpack/textures/armor/backpack.png";
+    public static String TEXTURES_PATH = "/mods/backpack/textures/";
 
     // returns an instance of the Container
     @Override
