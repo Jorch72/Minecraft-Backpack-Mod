@@ -37,7 +37,7 @@ public class Backpack {
     public static Item tannedLeather;
     public static Item workbenchBackpack;
 
-    public static EnumArmorMaterial backpackMaterial = EnumHelper.addArmorMaterial("backpackMaterial", 0, new int[] { 0, 0, 0, 0 }, 0);
+    public static EnumArmorMaterial backpackMaterial = EnumHelper.addArmorMaterial("backpackMaterial", 0, new int[] { 0, 3, 0, 0 }, 0);
 
     @Instance("Backpack")
     public static Backpack instance;

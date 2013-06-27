@@ -11,8 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ISpecialArmor;
 import backpack.Backpack;
 import backpack.inventory.InventoryBackpack;
 import backpack.misc.Constants;
@@ -24,7 +26,7 @@ import backpack.util.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding {
+public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding, ISpecialArmor {
     protected Icon[] icons;
 
     /**
@@ -254,4 +256,17 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
         }
         return null;
     }
+
+    @Override
+    public ArmorProperties getProperties(EntityLiving player, ItemStack armor, DamageSource source, double damage, int slot) {
+        return new ArmorProperties(0, damageReduceAmount / 25D, 0);
+    }
+
+    @Override
+    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
+        return damageReduceAmount * 2;
+    }
+
+    @Override
+    public void damageArmor(EntityLiving entity, ItemStack stack, DamageSource source, int damage, int slot) {}
 }
