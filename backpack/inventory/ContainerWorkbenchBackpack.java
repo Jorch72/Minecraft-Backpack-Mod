@@ -27,10 +27,10 @@ public class ContainerWorkbenchBackpack extends Container {
     private InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     private IInventory craftResult = new InventoryCraftResult();
     private int numRows;
-    private ItemStack openedBackpack;
+    private ItemStack openedBackpack = null;
     private World worldObj;
 
-    public ContainerWorkbenchBackpack(InventoryPlayer playerInventory, InventoryWorkbenchBackpack backpackInventory, ItemStack backpack) {
+    public ContainerWorkbenchBackpack(InventoryPlayer playerInventory, IInventory backpackInventory, ItemStack backpack) {
         worldObj = playerInventory.player.worldObj;
         numRows = backpackInventory.getSizeInventory() / 9;
         backpackInventory.openChest();
@@ -68,7 +68,9 @@ public class ContainerWorkbenchBackpack extends Container {
         }
 
         onCraftMatrixChanged(craftMatrix);
-        openedBackpack = backpack;
+        if(backpackInventory instanceof InventoryWorkbenchBackpack) {
+            openedBackpack = backpack;
+        }
     }
 
     @Override
@@ -84,7 +86,7 @@ public class ContainerWorkbenchBackpack extends Container {
         } else if(player.getCurrentEquippedItem() != null) {
             itemStack = player.getCurrentEquippedItem();
         }
-        if(itemStack != null && itemStack.getDisplayName() == openedBackpack.getDisplayName()) {
+        if(itemStack != null && openedBackpack != null && itemStack.getDisplayName() == openedBackpack.getDisplayName()) {
             return true;
         }
         return false;

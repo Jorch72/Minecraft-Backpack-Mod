@@ -3,7 +3,7 @@
   "modid": "Backpack",
   "name": "Backpack",
   "description": "Provides the player with multiple, colored backpacks, which each has the space of a normal chest.",
-  "version": "1.10.11",
+  "version": "1.10.12",
   "credits": "(Backpacks *-1.2.5)MightyPork, (Icons)Simsala123 and SentientXIII, (Model)Ivanovsky",
   "logoFile": "",
   "mcversion": "1.5.2",

@@ -36,7 +36,10 @@ public class ContainerBackpack extends Container {
         for(int col = 0; col < 9; ++col) {
             addSlotToContainer(new Slot(playerInventory, col, 8 + col * 18, 161 + offset));
         }
-        openedBackpack = backpack;
+        
+        if(backpackInventory instanceof InventoryBackpack) {
+            openedBackpack = backpack;
+        }
     }
 
     /**

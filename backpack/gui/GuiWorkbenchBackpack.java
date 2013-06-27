@@ -9,20 +9,20 @@ import java.util.Map;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
 import backpack.inventory.ContainerWorkbenchBackpack;
-import backpack.inventory.InventoryWorkbenchBackpack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @ContainerGUI
 @SideOnly(Side.CLIENT)
 public class GuiWorkbenchBackpack extends GuiContainer {
-    public GuiWorkbenchBackpack(InventoryPlayer inventoryPlayer, InventoryWorkbenchBackpack inventoryBackpack) {
+    public GuiWorkbenchBackpack(InventoryPlayer inventoryPlayer, IInventory inventoryBackpack) {
         super(new ContainerWorkbenchBackpack(inventoryPlayer, inventoryBackpack, null));
         if(inventoryBackpack.getSizeInventory() != 0) {
             ySize = 207;
