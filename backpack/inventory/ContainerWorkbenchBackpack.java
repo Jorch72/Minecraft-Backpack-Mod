@@ -84,7 +84,7 @@ public class ContainerWorkbenchBackpack extends Container {
         } else if(player.getCurrentEquippedItem() != null) {
             itemStack = player.getCurrentEquippedItem();
         }
-        if(itemStack.getDisplayName() == openedBackpack.getDisplayName()) {
+        if(itemStack != null && itemStack.getDisplayName() == openedBackpack.getDisplayName()) {
             return true;
         }
         return false;
