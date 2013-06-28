@@ -79,4 +79,8 @@ public class CommonProxy implements IGuiHandler {
     public void registerKeyBinding() {
         // Nothing here as this is the server side proxy
     }
+    
+    public void addNeiSupport() {
+        // Nothing here as this is the server side proxy
+    }
 }

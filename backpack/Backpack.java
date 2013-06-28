@@ -73,6 +73,6 @@ public class Backpack {
 
     @PostInit
     public void postInit(FMLPostInitializationEvent event) {
-        // Stub Method
+        proxy.addNeiSupport();
     }
 }
