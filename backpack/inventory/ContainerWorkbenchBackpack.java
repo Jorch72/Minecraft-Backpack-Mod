@@ -81,7 +81,7 @@ public class ContainerWorkbenchBackpack extends Container {
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         ItemStack itemStack = null;
-        if(NBTUtil.getBoolean(openedBackpack, Constants.WEARED_BACKPACK_OPEN)) {
+        if(openedBackpack != null && NBTUtil.getBoolean(openedBackpack, Constants.WEARED_BACKPACK_OPEN)) {
             itemStack = player.getCurrentArmor(2);
         } else if(player.getCurrentEquippedItem() != null) {
             itemStack = player.getCurrentEquippedItem();

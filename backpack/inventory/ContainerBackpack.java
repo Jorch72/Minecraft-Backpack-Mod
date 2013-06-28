@@ -3,6 +3,7 @@ package backpack.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import backpack.misc.Constants;
@@ -37,7 +38,7 @@ public class ContainerBackpack extends Container {
             addSlotToContainer(new Slot(playerInventory, col, 8 + col * 18, 161 + offset));
         }
         
-        if(backpackInventory instanceof InventoryBackpack) {
+        if(backpackInventory instanceof InventoryBackpack || backpackInventory instanceof InventoryEnderChest) {
             openedBackpack = backpack;
         }
     }
@@ -48,12 +49,12 @@ public class ContainerBackpack extends Container {
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         ItemStack itemStack = null;
-        if(NBTUtil.getBoolean(openedBackpack, Constants.WEARED_BACKPACK_OPEN)) {
+        if(openedBackpack != null && NBTUtil.getBoolean(openedBackpack, Constants.WEARED_BACKPACK_OPEN)) {
             itemStack = player.getCurrentArmor(2);
         } else if(player.getCurrentEquippedItem() != null) {
             itemStack = player.getCurrentEquippedItem();
         }
-        if(itemStack != null && itemStack.getDisplayName() == openedBackpack.getDisplayName()) {
+        if(itemStack != null && openedBackpack != null && itemStack.getDisplayName() == openedBackpack.getDisplayName()) {
             return true;
         }
         return false;

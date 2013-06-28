@@ -23,7 +23,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
-@Mod(modid = "Backpack", name = "Backpack", version = "1.12.12")
+@Mod(modid = "Backpack", name = "Backpack", version = "1.12.13")
 @NetworkMod(
         clientSideRequired = true,
         serverSideRequired = true,
