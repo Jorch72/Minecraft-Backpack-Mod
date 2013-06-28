@@ -71,6 +71,7 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
      * Gets the icon from the registry.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister) {
         icons = new Icon[35];
 
@@ -102,6 +103,7 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
      * @return The icon index.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public Icon getIconFromDamage(int damage) {
         if(damage >= 0 && damage < 16) {
             return icons[damage];
@@ -126,6 +128,7 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
      *            List which stores the sub items.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void getSubItems(int itemId, CreativeTabs tab, List subItems) {
         for(int i = 0; i < 17; i++) {
             subItems.add(new ItemStack(itemId, 1, i));
@@ -251,6 +254,7 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public ModelBiped getArmorModel(EntityLiving entityLiving, ItemStack itemStack, int armorSlot) {
         if(armorSlot == 1 && itemStack != null && itemStack.getItem() instanceof IBackpack) {
             return new ModelBackpack();

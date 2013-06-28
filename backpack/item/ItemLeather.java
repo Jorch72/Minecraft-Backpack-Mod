@@ -1,5 +1,7 @@
 package backpack.item;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -38,6 +40,7 @@ public class ItemLeather extends Item {
      * Gets the icon from the registry.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister) {
         icons = new Icon[2];
         icons[0] = iconRegister.registerIcon("backpack:leatherBound");
@@ -52,6 +55,7 @@ public class ItemLeather extends Item {
      * @return The icon index.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public Icon getIconFromDamage(int damage) {
         if(itemID == Backpack.boundLeather.itemID) {
             return icons[0];

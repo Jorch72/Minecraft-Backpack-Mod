@@ -60,6 +60,7 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
      * Gets the icon from the registry.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister) {
         icons = new Icon[2];
         icons[0] = iconRegister.registerIcon("backpack:backpack_workbench");
@@ -74,6 +75,7 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
      * @return The icon index.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public Icon getIconFromDamage(int damage) {
         if(damage == 18) {
             return icons[0];
@@ -95,6 +97,7 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
      *            List which stores the sub items.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void getSubItems(int itemId, CreativeTabs tab, List subItems) {
         subItems.add(new ItemStack(itemId, 1, 18));
         subItems.add(new ItemStack(itemId, 1, 50));
@@ -202,6 +205,7 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public ModelBiped getArmorModel(EntityLiving entityLiving, ItemStack itemStack, int armorSlot) {
         if(armorSlot == 1 && itemStack != null && itemStack.getItem() instanceof IBackpack) {
             return new ModelBackpack();
