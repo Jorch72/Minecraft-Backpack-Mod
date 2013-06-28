@@ -14,7 +14,10 @@ import backpack.item.ItemBackpack;
 import backpack.item.ItemWorkbenchBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
+import backpack.util.ServerTickHandlerBackpack;
 import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy implements IGuiHandler {
     public static String TEXTURES_PATH = "/mods/backpack/textures/";
@@ -82,5 +85,9 @@ public class CommonProxy implements IGuiHandler {
     
     public void addNeiSupport() {
         // Nothing here as this is the server side proxy
+    }
+
+    public void registerServerTickHandler() {
+        TickRegistry.registerTickHandler(new ServerTickHandlerBackpack(), Side.SERVER);
     }
 }

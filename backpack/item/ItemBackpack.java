@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import backpack.Backpack;
 import backpack.inventory.InventoryBackpack;
+import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import backpack.model.ModelBackpack;
 import backpack.proxy.CommonProxy;
@@ -161,7 +162,7 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
         }
 
         // when the player is not sneaking
-        if(!player.isSneaking()) {
+        if(!player.isSneaking() && !ConfigurationBackpack.OPEN_ONLY_WEARED_BACKPACK) {
             player.openGui(Backpack.instance, Constants.GUI_ID_BACKPACK, world, 0, 0, 0);
         }
         return is;

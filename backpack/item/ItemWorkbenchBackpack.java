@@ -14,6 +14,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import backpack.Backpack;
 import backpack.inventory.InventoryWorkbenchBackpack;
+import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import backpack.model.ModelBackpack;
 import backpack.proxy.CommonProxy;
@@ -123,7 +124,7 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
         }
 
         // when the player is not sneaking
-        if(!player.isSneaking()) {
+        if(!player.isSneaking() && !ConfigurationBackpack.OPEN_ONLY_WEARED_BACKPACK) {
             player.openGui(Backpack.instance, Constants.GUI_ID_WORKBENCH_BACKPACK, world, 0, 0, 0);
         }
 

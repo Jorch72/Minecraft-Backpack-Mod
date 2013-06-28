@@ -16,7 +16,11 @@ public class RecipeHelper {
         ItemStack boundLeatherStack = new ItemStack(Backpack.boundLeather);
 
         // normal backpack without dye
-        GameRegistry.addRecipe(backpackStack, "LLL", "L L", "LLL", 'L', Item.leather);
+        if(ConfigurationBackpack.AIRSHIP_MOD_COMPATIBILITY) {
+            GameRegistry.addRecipe(backpackStack, "LLL", "LCL", "LLL", 'L', Item.leather, 'C', Block.chest);
+        } else {
+            GameRegistry.addRecipe(backpackStack, "LLL", "L L", "LLL", 'L', Item.leather);
+        }
 
         // normal big backpack without dye
         backpackStack = new ItemStack(Backpack.backpack, 1, 48);
