@@ -1,11 +1,11 @@
 package backpack.inventory;
 
-import invtweaks.api.ContainerGUI;
-import invtweaks.api.ContainerGUI.ContainerSectionCallback;
-import invtweaks.api.ContainerSection;
+import invtweaks.api.container.ContainerSection;
+import invtweaks.api.container.ContainerSectionCallback;
+import invtweaks.api.container.InventoryContainer;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +22,7 @@ import backpack.misc.Constants;
 import backpack.util.IBackpack;
 import backpack.util.NBTUtil;
 
-@ContainerGUI
+@InventoryContainer
 public class ContainerWorkbenchBackpack extends Container {
     private InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     private IInventory craftResult = new InventoryCraftResult();

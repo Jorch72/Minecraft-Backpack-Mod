@@ -12,10 +12,7 @@ import backpack.proxy.CommonProxy;
 import backpack.recipes.RecipeHelper;
 import backpack.util.PacketHandlerBackpack;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -45,22 +42,22 @@ public class Backpack {
     @SidedProxy(clientSide = "backpack.proxy.ClientProxy", serverSide = "backpack.proxy.CommonProxy")
     public static CommonProxy proxy;
 
-    @PreInit
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         // get the configuration file and let forge guess it's name
         ConfigurationBackpack config = new ConfigurationBackpack(event.getSuggestedConfigurationFile());
         config.init();
-    }
-
-    @Init
-    public void load(FMLInitializationEvent event) {
+        
         // create an instance of the backpack item with the id loaded from the
         // configuration file
         backpack = new ItemBackpack(ConfigurationBackpack.BACKPACK_ID);
         workbenchBackpack = new ItemWorkbenchBackpack(ConfigurationBackpack.WORKBENCHBACKPACK_ID);
         boundLeather = new ItemLeather(ConfigurationBackpack.BOUND_LEATHER_ID);
         tannedLeather = new ItemLeather(ConfigurationBackpack.TANNED_LEATHER_ID);
+    }
 
+    @Mod.EventHandler
+    public void load(FMLInitializationEvent event) {
         // register recipes
         RecipeHelper.registerRecipes();
 
@@ -76,7 +73,7 @@ public class Backpack {
         }
     }
 
-    @PostInit
+    @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.addNeiSupport();
     }

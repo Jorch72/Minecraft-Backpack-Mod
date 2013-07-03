@@ -1,5 +1,6 @@
 package backpack.inventory;
 
+import invtweaks.api.container.InventoryContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -10,6 +11,7 @@ import backpack.misc.Constants;
 import backpack.util.IBackpack;
 import backpack.util.NBTUtil;
 
+@InventoryContainer
 public class ContainerBackpack extends Container {
     private int numRows;
     private ItemStack openedBackpack;

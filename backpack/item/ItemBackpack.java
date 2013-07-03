@@ -6,7 +6,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemArmor;
@@ -255,7 +255,7 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ModelBiped getArmorModel(EntityLiving entityLiving, ItemStack itemStack, int armorSlot) {
+    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
         if(armorSlot == 1 && itemStack != null && itemStack.getItem() instanceof IBackpack) {
             return new ModelBackpack();
         }
@@ -263,7 +263,7 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
     }
 
     @Override
-    public ArmorProperties getProperties(EntityLiving player, ItemStack armor, DamageSource source, double damage, int slot) {
+    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
         return new ArmorProperties(0, damageReduceAmount / 25D, 0);
     }
 
@@ -273,5 +273,5 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
     }
 
     @Override
-    public void damageArmor(EntityLiving entity, ItemStack stack, DamageSource source, int damage, int slot) {}
+    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {}
 }

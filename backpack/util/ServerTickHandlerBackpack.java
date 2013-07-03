@@ -31,8 +31,8 @@ public class ServerTickHandlerBackpack implements ITickHandler {
         }
         counter -= ConfigurationBackpack.MAX_BACKPACK_AMOUNT;
         if(counter > 0) {
-            player.sendChatToPlayer("[Backpacks] You are not allowed to have more than " + ConfigurationBackpack.MAX_BACKPACK_AMOUNT + " backpacks in your inventory.");
-            player.sendChatToPlayer("[Backpacks] " + counter + " backpacks were removed from your inventory. Look on the ground.");
+            player.addChatMessage("[Backpacks] You are not allowed to have more than " + ConfigurationBackpack.MAX_BACKPACK_AMOUNT + " backpacks in your inventory.");
+            player.addChatMessage("[Backpacks] " + counter + " backpacks were removed from your inventory. Look on the ground.");
         }
     }
 

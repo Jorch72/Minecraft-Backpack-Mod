@@ -1,7 +1,7 @@
 package backpack.gui;
 
-import invtweaks.api.ContainerGUI;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -15,7 +15,6 @@ import backpack.util.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@ContainerGUI
 @SideOnly(Side.CLIENT)
 public class GuiBackpack extends GuiContainer {
     private IInventory upperInventory;
@@ -47,7 +46,7 @@ public class GuiBackpack extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture("/gui/container.png");
+        mc.func_110434_K().func_110577_a(new ResourceLocation("textures/gui/container/generic_54.png"));
         int var5 = (width - xSize) / 2;
         int var6 = (height - ySize) / 2;
         drawTexturedModalRect(var5, var6, 0, 0, xSize, inventoryRows * 18 + 17);

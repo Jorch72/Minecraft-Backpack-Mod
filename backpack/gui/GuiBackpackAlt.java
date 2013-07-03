@@ -3,12 +3,12 @@ package backpack.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
 import org.lwjgl.input.Keyboard;
 
 import backpack.misc.Constants;
-import backpack.proxy.CommonProxy;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiBackpackAlt extends GuiScreen {
@@ -158,7 +158,7 @@ public class GuiBackpackAlt extends GuiScreen {
      * screen.
      */
     protected void drawGuiBackground() {
-        mc.renderEngine.bindTexture(CommonProxy.TEXTURES_PATH + "gui/guiBackpackAlt.png");
+    	mc.func_110434_K().func_110577_a(new ResourceLocation("backpack", "textures/gui/guiBackpackAlt.png"));
         // calculate position and draw texture
         int j = (width - 100) / 2;
         int k = (height - 50) / 2;
@@ -182,5 +182,4 @@ public class GuiBackpackAlt extends GuiScreen {
         // send the packet to the server
         PacketDispatcher.sendPacketToServer(packet);
     }
-
 }
