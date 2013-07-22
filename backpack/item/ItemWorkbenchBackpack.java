@@ -17,7 +17,6 @@ import backpack.inventory.InventoryWorkbenchBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import backpack.model.ModelBackpack;
-import backpack.proxy.CommonProxy;
 import backpack.util.IBackpack;
 import backpack.util.IHasKeyBinding;
 import backpack.util.NBTUtil;
@@ -26,6 +25,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasKeyBinding {
     protected Icon[] icons;
+    protected ModelBiped backpackModel = null;
 
     public ItemWorkbenchBackpack(int id) {
         super(id, Backpack.backpackMaterial, 0, 1);
@@ -201,14 +201,17 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, int slot, int layer) {
-        return CommonProxy.TEXTURES_PATH + "model/backpack.png";
+        return "backpack:textures/model/backpack.png";
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
         if(armorSlot == 1 && itemStack != null && itemStack.getItem() instanceof IBackpack) {
-            return new ModelBackpack();
+            if(backpackModel == null) {
+                backpackModel = new ModelBackpack();
+            }
+            return backpackModel;
         }
         return null;
     }

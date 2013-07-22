@@ -21,112 +21,79 @@ public class ModelBackpack extends ModelBiped {
     public ModelRenderer stringBottomRight;
 
     public ModelBackpack() {
-        textureWidth = 64;
-        textureHeight = 32;
+        this(0.0F);
+    }
+    
+    public ModelBackpack(float par1) {
+        this(par1, 0.0F, 64, 32);
+    }
+    
+    public ModelBackpack(float enlargement, float yShift, int textureWidth, int textureHeight) {
+        this.textureWidth = textureWidth;
+        this.textureHeight = textureHeight;
 
         bagTop = new ModelRenderer(this, 44, 0);
-        bagTop.addBox(0F, 0F, 0F, 6, 1, 4);
-        bagTop.setRotationPoint(-3F, -0.5F, 2F);
-        bagTop.setTextureSize(64, 32);
-        bagTop.mirror = true;
+        bagTop.addBox(-3F, -0.5F + yShift, 2F, 6, 1, 4, enlargement);
         setRotation(bagTop, 0F, 0F, 0F);
         bagMain = new ModelRenderer(this, 42, 6);
-        bagMain.addBox(0F, 0F, 0F, 7, 10, 4);
-        bagMain.setRotationPoint(-3.5F, 0F, 2F);
-        bagMain.setTextureSize(64, 32);
-        bagMain.mirror = true;
+        bagMain.addBox(-3.5F, 0F + yShift, 2F, 7, 10, 4, enlargement);
         setRotation(bagMain, 0F, 0F, 0F);
         pocketLeft = new ModelRenderer(this, 33, 5);
-        pocketLeft.addBox(0F, 0F, 0F, 1, 4, 3);
-        pocketLeft.setRotationPoint(3.5F, 5F, 2.5F);
-        pocketLeft.setTextureSize(64, 32);
-        pocketLeft.mirror = true;
+        pocketLeft.addBox(3.5F, 5F + yShift, 2.5F, 1, 4, 3, enlargement);
         setRotation(pocketLeft, 0F, 0F, 0F);
         pocketRight = new ModelRenderer(this, 33, 13);
-        pocketRight.addBox(0F, 0F, 0F, 1, 4, 3);
-        pocketRight.setRotationPoint(-4.5F, 4.7F, 2.5F);
-        pocketRight.setTextureSize(64, 32);
-        pocketRight.mirror = true;
+        pocketRight.addBox(-4.5F, 4.7F + yShift, 2.5F, 1, 4, 3, enlargement);
         setRotation(pocketRight, 0F, 0F, 0F);
         pocketFront = new ModelRenderer(this, 15, 27);
-        pocketFront.addBox(0F, 0F, 1F, 4, 4, 1);
-        pocketFront.setRotationPoint(-2F, 4.7F, 5.2F);
-        pocketFront.setTextureSize(64, 32);
-        pocketFront.mirror = true;
+        pocketFront.addBox(-2F, 4.7F + yShift, 6.2F, 4, 4, 1, enlargement);
         setRotation(pocketFront, 0F, 0F, 0F);
         ledgeFront1 = new ModelRenderer(this, 0, 23);
-        ledgeFront1.addBox(0F, 0F, 0F, 6, 8, 1);
-        ledgeFront1.setRotationPoint(-3F, 1F, 5.3F);
-        ledgeFront1.setTextureSize(64, 32);
-        ledgeFront1.mirror = true;
+        ledgeFront1.addBox(-3F, 1F + yShift, 5.3F, 6, 8, 1, enlargement);
         setRotation(ledgeFront1, 0F, 0F, 0F);
         ledgeFront2 = new ModelRenderer(this, 1, 20);
-        ledgeFront2.addBox(0F, 0F, 0F, 4, 1, 1);
-        ledgeFront2.setRotationPoint(-2F, 0.6F, 5.3F);
-        ledgeFront2.setTextureSize(64, 32);
-        ledgeFront2.mirror = true;
+        ledgeFront2.addBox(-2F, 0.6F + yShift, 5.3F, 4, 1, 1, enlargement);
         setRotation(ledgeFront2, 0F, 0F, 0F);
         ledgeFront3 = new ModelRenderer(this, 1, 17);
-        ledgeFront3.addBox(0F, 0F, 0F, 4, 1, 1);
-        ledgeFront3.setRotationPoint(-2F, 8.5F, 5.3F);
-        ledgeFront3.setTextureSize(64, 32);
-        ledgeFront3.mirror = true;
+        ledgeFront3.addBox(-2F, 8.5F + yShift, 5.3F, 4, 1, 1, enlargement);
         setRotation(ledgeFront3, 0F, 0F, 0F);
         stringTopLeft = new ModelRenderer(this, 54, 21);
-        stringTopLeft.addBox(0F, 0F, 0F, 1, 0, 5);
-        stringTopLeft.setRotationPoint(2.5F, 0F, -2F);
-        stringTopLeft.setTextureSize(64, 32);
-        stringTopLeft.mirror = true;
+        stringTopLeft.addBox(2.5F, -0.1F + yShift, -2F, 1, 0, 4, enlargement);
         setRotation(stringTopLeft, 0F, 0F, 0F);
         stringTopRight = new ModelRenderer(this, 41, 21);
-        stringTopRight.addBox(0F, 0F, 0F, 1, 0, 5);
-        stringTopRight.setRotationPoint(-3.5F, 0F, -2F);
-        stringTopRight.setTextureSize(64, 32);
-        stringTopRight.mirror = true;
+        stringTopRight.addBox(-3.5F, -0.1F + yShift, -2F, 1, 0, 4, enlargement);
         setRotation(stringTopRight, 0F, 0F, 0F);
         stringBackLeft = new ModelRenderer(this, 62, 21);
-        stringBackLeft.addBox(0F, 0F, 0F, 1, 10, 0);
-        stringBackLeft.setRotationPoint(2.5F, 0F, -2F);
-        stringBackLeft.setTextureSize(64, 32);
-        stringBackLeft.mirror = true;
+        stringBackLeft.addBox(2.5F, -0.1F + yShift, -2.1F, 1, 10, 0, enlargement);
         setRotation(stringBackLeft, 0F, 0F, 0F);
         stringBackRight = new ModelRenderer(this, 49, 21);
-        stringBackRight.addBox(0F, 0F, 0F, 1, 10, 0);
-        stringBackRight.setRotationPoint(-3.5F, 0F, -2F);
-        stringBackRight.setTextureSize(64, 32);
-        stringBackRight.mirror = true;
+        stringBackRight.addBox(-3.5F, -0.10F + yShift, -2.1F, 1, 10, 0, enlargement);
         setRotation(stringBackRight, 0F, 0F, 0F);
         stringBottomLeft = new ModelRenderer(this, 54, 27);
-        stringBottomLeft.addBox(0F, 0F, 0F, 1, 0, 5);
-        stringBottomLeft.setRotationPoint(2.5F, 10F, -2F);
-        stringBottomLeft.setTextureSize(64, 32);
-        stringBottomLeft.mirror = true;
+        stringBottomLeft.addBox(2.5F, 10F + yShift, -2F, 1, 0, 5, enlargement);
         setRotation(stringBottomLeft, 0F, 0F, 0F);
         stringBottomRight = new ModelRenderer(this, 41, 27);
-        stringBottomRight.addBox(0F, 0F, 0F, 1, 0, 5);
-        stringBottomRight.setRotationPoint(-3.5F, 10F, -2F);
-        stringBottomRight.setTextureSize(64, 32);
-        stringBottomRight.mirror = true;
+        stringBottomRight.addBox(-3.5F, 10F + yShift, -2F, 1, 0, 5, enlargement);
         setRotation(stringBottomRight, 0F, 0F, 0F);
+
+        bagMain.addChild(bagTop);
+        bagMain.addChild(pocketLeft);
+        bagMain.addChild(pocketRight);
+        bagMain.addChild(pocketFront);
+        bagMain.addChild(ledgeFront1);
+        bagMain.addChild(ledgeFront2);
+        bagMain.addChild(ledgeFront3);
+        bagMain.addChild(stringTopLeft);
+        bagMain.addChild(stringTopRight);
+        bagMain.addChild(stringBackLeft);
+        bagMain.addChild(stringBackRight);
+        bagMain.addChild(stringBottomLeft);
+        bagMain.addChild(stringBottomRight);
     }
 
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-        bagTop.render(f5);
         bagMain.render(f5);
-        pocketLeft.render(f5);
-        pocketRight.render(f5);
-        pocketFront.render(f5);
-        ledgeFront1.render(f5);
-        ledgeFront2.render(f5);
-        ledgeFront3.render(f5);
-        stringTopLeft.render(f5);
-        stringTopRight.render(f5);
-        stringBackLeft.render(f5);
-        stringBackRight.render(f5);
-        stringBottomLeft.render(f5);
-        stringBottomRight.render(f5);
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {
@@ -138,5 +105,11 @@ public class ModelBackpack extends ModelBiped {
     @Override
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+        
+        if(entity != null && entity.isSneaking()) {
+            bagMain.rotateAngleX = 0.5F;
+        } else {
+            bagMain.rotateAngleX = 0.0F;
+        }
     }
 }

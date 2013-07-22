@@ -20,7 +20,6 @@ import backpack.inventory.InventoryBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import backpack.model.ModelBackpack;
-import backpack.proxy.CommonProxy;
 import backpack.util.IBackpack;
 import backpack.util.IHasKeyBinding;
 import backpack.util.NBTUtil;
@@ -29,6 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding, ISpecialArmor {
     protected Icon[] icons;
+    protected ModelBiped backpackModel = null;
 
     /**
      * Creates an instance of the backpack item and sets some default values.
@@ -250,14 +250,17 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, int slot, int layer) {
-        return CommonProxy.TEXTURES_PATH + "model/backpack.png";
+        return "backpack:textures/model/backpack.png";
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
         if(armorSlot == 1 && itemStack != null && itemStack.getItem() instanceof IBackpack) {
-            return new ModelBackpack();
+            if(backpackModel == null) {
+                backpackModel = new ModelBackpack();
+            }
+            return backpackModel;
         }
         return null;
     }
