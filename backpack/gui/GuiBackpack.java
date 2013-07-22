@@ -1,10 +1,10 @@
 package backpack.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
@@ -20,6 +20,7 @@ public class GuiBackpack extends GuiContainer {
     private IInventory upperInventory;
     private IInventory lowerInventory;
     private int inventoryRows;
+    private ResourceLocation background;
 
     public GuiBackpack(IInventory inventoryPlayer, IInventory inventoryBackpack) {
         super(new ContainerBackpack(inventoryPlayer, inventoryBackpack, null));
@@ -27,6 +28,7 @@ public class GuiBackpack extends GuiContainer {
         lowerInventory = inventoryPlayer;
         inventoryRows = inventoryBackpack.getSizeInventory() / 9;
         ySize = 114 + inventoryRows * 18;
+        background = new ResourceLocation("textures/gui/container/generic_54.png");
     }
 
     /**
@@ -46,7 +48,7 @@ public class GuiBackpack extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.func_110434_K().func_110577_a(new ResourceLocation("textures/gui/container/generic_54.png"));
+        mc.func_110434_K().func_110577_a(background);
         int var5 = (width - xSize) / 2;
         int var6 = (height - ySize) / 2;
         drawTexturedModalRect(var5, var6, 0, 0, xSize, inventoryRows * 18 + 17);

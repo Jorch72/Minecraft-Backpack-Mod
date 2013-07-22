@@ -3,8 +3,8 @@ package backpack.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
 
@@ -16,16 +16,10 @@ public class GuiBackpackAlt extends GuiScreen {
 
     private GuiTextField txt_backpackName;
     private GuiButton btn_ok, btn_cancel;
+    private ResourceLocation background;
 
-    /**
-     * Basic constructor. Takes instance of EntityPlayer to send a package to
-     * the server.
-     * 
-     * @param player
-     *            The player who sends the package with the new name to the
-     *            server.
-     */
     public GuiBackpackAlt() {
+    	background = new ResourceLocation("backpack", "textures/gui/guiBackpackAlt.png");
     }
 
     /**
@@ -158,7 +152,7 @@ public class GuiBackpackAlt extends GuiScreen {
      * screen.
      */
     protected void drawGuiBackground() {
-    	mc.func_110434_K().func_110577_a(new ResourceLocation("backpack", "textures/gui/guiBackpackAlt.png"));
+    	mc.func_110434_K().func_110577_a(background);
         // calculate position and draw texture
         int j = (width - 100) / 2;
         int k = (height - 50) / 2;

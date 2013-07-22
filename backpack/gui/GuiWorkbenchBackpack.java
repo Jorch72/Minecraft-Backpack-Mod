@@ -1,9 +1,9 @@
 package backpack.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
@@ -14,10 +14,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiWorkbenchBackpack extends GuiContainer {
+	private ResourceLocation background;
+	
     public GuiWorkbenchBackpack(InventoryPlayer inventoryPlayer, IInventory inventoryBackpack) {
         super(new ContainerWorkbenchBackpack(inventoryPlayer, inventoryBackpack, null));
         if(inventoryBackpack.getSizeInventory() != 0) {
             ySize = 207;
+        }
+        if(ySize == 207) {
+        	background = new ResourceLocation("backpack", "textures/gui/guiWorkbenchBackpack.png");
+        } else {
+        	background = new ResourceLocation("textures/gui/container/crafting_table.png");
         }
     }
 
@@ -39,9 +46,9 @@ public class GuiWorkbenchBackpack extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         if(ySize == 207) {
-        	mc.func_110434_K().func_110577_a(new ResourceLocation("backpack", "textures/gui/guiWorkbenchBackpack.png"));
+        	mc.func_110434_K().func_110577_a(background);
         } else {
-        	mc.func_110434_K().func_110577_a(new ResourceLocation("textures/gui/container/crafting_table.png"));
+        	mc.func_110434_K().func_110577_a(background);
         }
         int var5 = (width - xSize) / 2;
         int var6 = (height - ySize) / 2;
