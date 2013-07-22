@@ -1,11 +1,11 @@
 package backpack.inventory;
 
+import invtweaks.api.container.ChestContainer;
 import invtweaks.api.container.ContainerSection;
 import invtweaks.api.container.ContainerSectionCallback;
-import invtweaks.api.container.InventoryContainer;
 
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +22,7 @@ import backpack.misc.Constants;
 import backpack.util.IBackpack;
 import backpack.util.NBTUtil;
 
-@InventoryContainer
+@ChestContainer
 public class ContainerWorkbenchBackpack extends Container {
     private InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     private IInventory craftResult = new InventoryCraftResult();
@@ -159,8 +159,8 @@ public class ContainerWorkbenchBackpack extends Container {
     }
 
     @Override
-    public void onCraftGuiClosed(EntityPlayer player) {
-        super.onCraftGuiClosed(player);
+    public void onContainerClosed(EntityPlayer player) {
+        super.onContainerClosed(player);
 
         if(!player.worldObj.isRemote) {
             ItemStack itemStack = player.getCurrentArmor(2);
