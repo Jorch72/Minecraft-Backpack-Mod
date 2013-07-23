@@ -7,6 +7,7 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import backpack.misc.Constants;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -18,8 +19,15 @@ public class GuiBackpackAlt extends GuiScreen {
     private GuiButton btn_ok, btn_cancel;
     private ResourceLocation background;
 
+    protected int xSize;
+    protected int ySize;
+    protected int guiLeft;
+    protected int guiTop;
+
     public GuiBackpackAlt() {
-    	background = new ResourceLocation("backpack", "textures/gui/guiBackpackAlt.png");
+        background = new ResourceLocation("backpack", "textures/gui/guiBackpackAlt.png");
+        xSize = 240;
+        ySize = 90;
     }
 
     /**
@@ -36,28 +44,26 @@ public class GuiBackpackAlt extends GuiScreen {
     @Override
     public void initGui() {
         Keyboard.enableRepeatEvents(false);
+        
+        guiLeft = (width - xSize) / 2;
+        guiTop = (height - ySize) / 2;
+        
         // clear control list
         buttonList.clear();
 
         // create button for ok and disable it at the beginning
-        int posX = width / 2 + 100 - 80;
-        int posY = height / 2 + 50 - 24;
-        btn_ok = new GuiButton(0, posX, posY, 60, 20, "OK");
+        btn_ok = new GuiButton(0, guiLeft + xSize - 100, guiTop + 70, 60, 20, "OK");
         btn_ok.enabled = false;
 
         // create button for cancel
-        posX = width / 2 - 100 + 20;
-        posY = height / 2 + 50 - 24;
-        btn_cancel = new GuiButton(1, posX, posY, 60, 20, "Cancel");
+        btn_cancel = new GuiButton(1, guiLeft + 40, guiTop + 70, 60, 20, "Cancel");
 
         // add buttons to control list
         buttonList.add(btn_ok);
         buttonList.add(btn_cancel);
 
         // create text field
-        posX = width / 2 - 100;
-        posY = height / 2 - 50 + 47;
-        txt_backpackName = new GuiTextField(fontRenderer, posX, posY, 200, 20);
+        txt_backpackName = new GuiTextField(fontRenderer, guiLeft + 20, guiTop + 40, 200, 20);
         txt_backpackName.setFocused(true);
         txt_backpackName.setMaxStringLength(32);
     }
@@ -132,13 +138,10 @@ public class GuiBackpackAlt extends GuiScreen {
 
         // draw "Rename your Backpack" at the top in the middle
         int posX = width / 2 - fontRenderer.getStringWidth(TITLE) / 2;
-        int posY = height / 2 - 50 + 20;
-        fontRenderer.drawString(TITLE, posX, posY, 0x000000);
+        fontRenderer.drawString(TITLE, posX, guiTop + 10, 0x000000);
 
         // draw "New name:" at the left site above the GuiTextField
-        posX = width / 2 - 100;
-        posY = height / 2 - 50 + 35;
-        fontRenderer.drawString("New name:", posX, posY, 0x404040);
+        fontRenderer.drawString("New name:", guiLeft + 20, guiTop + 30, 0x404040);
 
         // draw the GuiTextField
         txt_backpackName.drawTextBox();
@@ -152,11 +155,9 @@ public class GuiBackpackAlt extends GuiScreen {
      * screen.
      */
     protected void drawGuiBackground() {
-    	mc.func_110434_K().func_110577_a(background);
-        // calculate position and draw texture
-        int j = (width - 100) / 2;
-        int k = (height - 50) / 2;
-        drawTexturedModalRect(j - 100 + 30, k - 50 + 30 + 5, 0, 0, 240, 100);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        mc.func_110434_K().func_110577_a(background);
+        drawTexturedModalRect(guiLeft, guiTop, 0, 0, 240, 100);
     }
 
     /**
