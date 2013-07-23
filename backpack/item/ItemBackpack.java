@@ -267,12 +267,12 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
 
     @Override
     public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
-        return new ArmorProperties(0, damageReduceAmount / 25D, 0);
+        return new ArmorProperties(0, damageReduceAmount / 25D, 80);
     }
 
     @Override
     public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
-        return damageReduceAmount * 2;
+        return damageReduceAmount;
     }
 
     @Override
