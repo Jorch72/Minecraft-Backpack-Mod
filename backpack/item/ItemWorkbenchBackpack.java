@@ -6,7 +6,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -19,6 +19,7 @@ import backpack.inventory.InventoryWorkbenchBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import backpack.model.ModelBackpack;
+import backpack.proxy.CommonProxy;
 import backpack.util.IBackpack;
 import backpack.util.IHasKeyBinding;
 import backpack.util.NBTUtil;
@@ -203,12 +204,12 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, int slot, int layer) {
-        return "backpack:textures/model/backpack.png";
+        return CommonProxy.TEXTURES_PATH + "model/backpack.png";
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
+    public ModelBiped getArmorModel(EntityLiving entityLiving, ItemStack itemStack, int armorSlot) {
         if(armorSlot == 1 && itemStack != null && itemStack.getItem() instanceof IBackpack) {
             if(backpackModel == null) {
                 backpackModel = new ModelBackpack();
@@ -219,7 +220,7 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
     }
 
     @Override
-    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
+    public ArmorProperties getProperties(EntityLiving player, ItemStack armor, DamageSource source, double damage, int slot) {
         return new ArmorProperties(0, damageReduceAmount / 25D, 80);
     }
 
@@ -229,6 +230,6 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
     }
 
     @Override
-    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
+    public void damageArmor(EntityLiving entity, ItemStack stack, DamageSource source, int damage, int slot) {
     }
 }

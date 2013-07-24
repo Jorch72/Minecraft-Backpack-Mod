@@ -20,6 +20,8 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy implements IGuiHandler {
+    public static String TEXTURES_PATH = "/mods/backpack/textures/";
+
     // returns an instance of the Container
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {

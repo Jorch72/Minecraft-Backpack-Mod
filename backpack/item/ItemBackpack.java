@@ -6,7 +6,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemArmor;
@@ -20,6 +20,7 @@ import backpack.inventory.InventoryBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import backpack.model.ModelBackpack;
+import backpack.proxy.CommonProxy;
 import backpack.util.IBackpack;
 import backpack.util.IHasKeyBinding;
 import backpack.util.NBTUtil;
@@ -250,12 +251,12 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, int slot, int layer) {
-        return "backpack:textures/model/backpack.png";
+        return CommonProxy.TEXTURES_PATH + "model/backpack.png";
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
+    public ModelBiped getArmorModel(EntityLiving entityLiving, ItemStack itemStack, int armorSlot) {
         if(armorSlot == 1 && itemStack != null && itemStack.getItem() instanceof IBackpack) {
             if(backpackModel == null) {
                 backpackModel = new ModelBackpack();
@@ -266,7 +267,7 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
     }
 
     @Override
-    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
+    public ArmorProperties getProperties(EntityLiving player, ItemStack armor, DamageSource source, double damage, int slot) {
         return new ArmorProperties(0, damageReduceAmount / 25D, 80);
     }
 
@@ -276,6 +277,6 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
     }
 
     @Override
-    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
+    public void damageArmor(EntityLiving entity, ItemStack stack, DamageSource source, int damage, int slot) {
     }
 }

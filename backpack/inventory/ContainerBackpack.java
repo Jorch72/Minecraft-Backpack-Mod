@@ -1,6 +1,5 @@
 package backpack.inventory;
 
-import invtweaks.api.container.ChestContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -11,7 +10,7 @@ import backpack.misc.Constants;
 import backpack.util.IBackpack;
 import backpack.util.NBTUtil;
 
-@ChestContainer
+
 public class ContainerBackpack extends Container {
     private int numRows;
     private ItemStack openedBackpack;
@@ -94,10 +93,10 @@ public class ContainerBackpack extends Container {
 
         return returnStack;
     }
-
+    
     @Override
-    public void onContainerClosed(EntityPlayer player) {
-        super.onContainerClosed(player);
+    public void onCraftGuiClosed(EntityPlayer player) {
+        super.onCraftGuiClosed(player);
 
         if(!player.worldObj.isRemote) {
             ItemStack itemStack = player.getCurrentArmor(2);

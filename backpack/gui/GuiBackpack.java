@@ -1,10 +1,10 @@
 package backpack.gui;
 
+import invtweaks.api.ContainerGUI;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
@@ -15,12 +15,12 @@ import backpack.util.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+@ContainerGUI
 @SideOnly(Side.CLIENT)
 public class GuiBackpack extends GuiContainer {
     private IInventory upperInventory;
     private IInventory lowerInventory;
     private int inventoryRows;
-    private ResourceLocation background;
 
     public GuiBackpack(IInventory inventoryPlayer, IInventory inventoryBackpack) {
         super(new ContainerBackpack(inventoryPlayer, inventoryBackpack, null));
@@ -28,7 +28,6 @@ public class GuiBackpack extends GuiContainer {
         lowerInventory = inventoryPlayer;
         inventoryRows = inventoryBackpack.getSizeInventory() / 9;
         ySize = 114 + inventoryRows * 18;
-        background = new ResourceLocation("textures/gui/container/generic_54.png");
     }
 
     /**
@@ -37,8 +36,8 @@ public class GuiBackpack extends GuiContainer {
      */
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        fontRenderer.drawString(StatCollector.translateToLocal(upperInventory.getInvName()), 8, 6, 0x404040);
-        fontRenderer.drawString(StatCollector.translateToLocal(lowerInventory.getInvName()), 8, ySize - 94, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal(upperInventory.getInvName()), 8, 6, 4210752);
+        fontRenderer.drawString(StatCollector.translateToLocal(lowerInventory.getInvName()), 8, ySize - 96 + 2, 4210752);
     }
 
     /**
@@ -48,9 +47,11 @@ public class GuiBackpack extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.func_110434_K().func_110577_a(background);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, inventoryRows * 18 + 17);
-        drawTexturedModalRect(guiLeft, guiTop + inventoryRows * 18 + 17, 0, 126, xSize, 96);
+        mc.renderEngine.bindTexture("/gui/container.png");
+        int var5 = (width - xSize) / 2;
+        int var6 = (height - ySize) / 2;
+        drawTexturedModalRect(var5, var6, 0, 0, xSize, inventoryRows * 18 + 17);
+        drawTexturedModalRect(var5, var6 + inventoryRows * 18 + 17, 0, 126, xSize, 96);
     }
 
     @Override
