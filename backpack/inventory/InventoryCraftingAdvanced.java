@@ -11,7 +11,7 @@ public class InventoryCraftingAdvanced extends InventoryCrafting {
     public InventoryCraftingAdvanced(Container eventHandler, IInventory backpackInventory) {
         super(eventHandler, 3, 3);
         if(backpackInventory instanceof InventoryWorkbenchBackpack) {
-            this.backpackInventory = (InventoryWorkbenchBackpack)backpackInventory;
+            this.backpackInventory = (InventoryWorkbenchBackpack) backpackInventory;
             for(int i = 0; i < getSizeInventory(); i++) {
                 super.setInventorySlotContents(i, this.backpackInventory.getStackInCraftingSlot(i));
             }

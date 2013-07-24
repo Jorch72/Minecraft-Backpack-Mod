@@ -44,10 +44,10 @@ public class GuiBackpackAlt extends GuiScreen {
     @Override
     public void initGui() {
         Keyboard.enableRepeatEvents(false);
-        
+
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
-        
+
         // clear control list
         buttonList.clear();
 

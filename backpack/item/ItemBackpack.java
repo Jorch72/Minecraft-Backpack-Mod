@@ -276,5 +276,6 @@ public class ItemBackpack extends ItemArmor implements IBackpack, IHasKeyBinding
     }
 
     @Override
-    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {}
+    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
+    }
 }

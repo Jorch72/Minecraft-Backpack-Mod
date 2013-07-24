@@ -14,8 +14,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiWorkbenchBackpack extends GuiContainer {
-	private ResourceLocation background;
-	
+    private ResourceLocation background;
+
     public GuiWorkbenchBackpack(InventoryPlayer inventoryPlayer, IInventory inventoryBackpack) {
         super(new ContainerWorkbenchBackpack(inventoryPlayer, inventoryBackpack, null));
         xSize = 175;
@@ -46,9 +46,9 @@ public class GuiWorkbenchBackpack extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         if(ySize == 207) {
-        	mc.func_110434_K().func_110577_a(background);
+            mc.func_110434_K().func_110577_a(background);
         } else {
-        	mc.func_110434_K().func_110577_a(background);
+            mc.func_110434_K().func_110577_a(background);
         }
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
     }

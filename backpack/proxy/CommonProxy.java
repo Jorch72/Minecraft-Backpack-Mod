@@ -56,7 +56,7 @@ public class CommonProxy implements IGuiHandler {
         IInventory inventoryBackpack;
         switch(ID) {
             case Constants.GUI_ID_BACKPACK:
-                inventoryBackpack = ItemBackpack.getBackpackInv(player, false); 
+                inventoryBackpack = ItemBackpack.getBackpackInv(player, false);
                 if(inventoryBackpack == null) {
                     inventoryBackpack = new InventoryBasic("placebo", false, 9 * ConfigurationBackpack.BACKPACK_SIZE_L);
                 }
@@ -80,7 +80,7 @@ public class CommonProxy implements IGuiHandler {
     public void registerKeyBinding() {
         // Nothing here as this is the server side proxy
     }
-    
+
     public void addNeiSupport() {
         // Nothing here as this is the server side proxy
     }

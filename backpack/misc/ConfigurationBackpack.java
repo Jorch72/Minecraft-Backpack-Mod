@@ -55,11 +55,11 @@ public class ConfigurationBackpack {
         // save the file so it will be generated if it doesn't exists
         config.save();
     }
-    
+
     private String getEnderRecipeComment() {
         return "##############\n" + "Recipe to craft ender backpack\n" + "0 ender chest\n" + "1 eye of the ender\n" + "##############";
     }
-    
+
     private String getBackpackSizeComment() {
         return "##############\n" + "Number of rows (9 slots) a backpack has\n" + "valid: integers 1-6\n" + "##############";
     }
@@ -67,11 +67,11 @@ public class ConfigurationBackpack {
     private String getMaxBackpackAmountComment() {
         return "##############\n" + "Number of backpacks a player can have in his inventory\n" + "valid: integers 0-36\n" + "0 = unlimited\n" + "##############";
     }
-    
+
     private String getOpenOnlyWearedBackpacksComment() {
         return "##############\n" + "If true you can only open a backpack that you wear in your chest slot\n" + "##############";
     }
-    
+
     private String getAirshipModCompatibilityComment() {
         return "##############\n" + "If true normal backpack requires a chest in the middle\n" + "##############";
     }
