@@ -23,11 +23,11 @@ public class ModelBackpack extends ModelBiped {
     public ModelBackpack() {
         this(0.0F);
     }
-    
+
     public ModelBackpack(float par1) {
         this(par1, 0.0F, 64, 32);
     }
-    
+
     public ModelBackpack(float enlargement, float yShift, int textureWidth, int textureHeight) {
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
@@ -105,7 +105,7 @@ public class ModelBackpack extends ModelBiped {
     @Override
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-        
+
         if(entity != null && entity.isSneaking()) {
             bagMain.rotateAngleX = 0.5F;
         } else {

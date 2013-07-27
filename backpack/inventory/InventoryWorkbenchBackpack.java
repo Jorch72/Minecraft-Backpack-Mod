@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import backpack.util.NBTUtil;
 
-public class InventoryWorkbenchBackpack extends InventoryBackpack {
+public class InventoryWorkbenchBackpack extends InventoryBackpack implements IInventoryBackpack {
     protected ItemStack[] craftMatrix;
 
     public InventoryWorkbenchBackpack(EntityPlayer player, ItemStack is) {

@@ -27,7 +27,7 @@ public class GuiBackpack extends GuiContainer {
         upperInventory = inventoryBackpack;
         lowerInventory = inventoryPlayer;
         inventoryRows = inventoryBackpack.getSizeInventory() / 9;
-        ySize = 114 + inventoryRows * 18;
+        ySize = 115 + inventoryRows * 18;
         background = new ResourceLocation("textures/gui/container/generic_54.png");
     }
 
@@ -38,7 +38,7 @@ public class GuiBackpack extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         fontRenderer.drawString(StatCollector.translateToLocal(upperInventory.getInvName()), 8, 6, 0x404040);
-        fontRenderer.drawString(StatCollector.translateToLocal(lowerInventory.getInvName()), 8, ySize - 94, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal(lowerInventory.getInvName()), 8, ySize - 95, 0x404040);
     }
 
     /**
@@ -50,7 +50,7 @@ public class GuiBackpack extends GuiContainer {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.func_110434_K().func_110577_a(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, inventoryRows * 18 + 17);
-        drawTexturedModalRect(guiLeft, guiTop + inventoryRows * 18 + 17, 0, 126, xSize, 96);
+        drawTexturedModalRect(guiLeft, guiTop + inventoryRows * 18 + 17, 0, 125, xSize, 97);
     }
 
     @Override

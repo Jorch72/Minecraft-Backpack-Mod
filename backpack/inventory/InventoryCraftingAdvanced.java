@@ -5,13 +5,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 
-public class InventoryCraftingAdvanced extends InventoryCrafting {
+public class InventoryCraftingAdvanced extends InventoryCrafting implements IInventoryBackpack {
     protected InventoryWorkbenchBackpack backpackInventory = null;
 
     public InventoryCraftingAdvanced(Container eventHandler, IInventory backpackInventory) {
         super(eventHandler, 3, 3);
         if(backpackInventory instanceof InventoryWorkbenchBackpack) {
-            this.backpackInventory = (InventoryWorkbenchBackpack)backpackInventory;
+            this.backpackInventory = (InventoryWorkbenchBackpack) backpackInventory;
             for(int i = 0; i < getSizeInventory(); i++) {
                 super.setInventorySlotContents(i, this.backpackInventory.getStackInCraftingSlot(i));
             }

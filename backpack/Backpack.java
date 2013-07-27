@@ -47,7 +47,7 @@ public class Backpack {
         // get the configuration file and let forge guess it's name
         ConfigurationBackpack config = new ConfigurationBackpack(event.getSuggestedConfigurationFile());
         config.init();
-        
+
         // create an instance of the backpack item with the id loaded from the
         // configuration file
         backpack = new ItemBackpack(ConfigurationBackpack.BACKPACK_ID);
@@ -66,7 +66,7 @@ public class Backpack {
 
         // register key bindings
         proxy.registerKeyBinding();
-        
+
         // register tick handler
         if(ConfigurationBackpack.MAX_BACKPACK_AMOUNT > 0) {
             proxy.registerServerTickHandler();

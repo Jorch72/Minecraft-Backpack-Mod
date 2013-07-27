@@ -11,7 +11,7 @@ import backpack.misc.Constants;
 import backpack.util.IBackpack;
 import backpack.util.NBTUtil;
 
-public class InventoryBackpack extends InventoryBasic {
+public class InventoryBackpack extends InventoryBasic implements IInventoryBackpack {
     // the title of the backpack
     protected String inventoryTitle;
 

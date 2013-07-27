@@ -2,64 +2,49 @@ package backpack.inventory;
 
 import invtweaks.api.container.ChestContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import backpack.misc.Constants;
 import backpack.util.IBackpack;
-import backpack.util.NBTUtil;
 
 @ChestContainer
-public class ContainerBackpack extends Container {
-    private int numRows;
-    private ItemStack openedBackpack;
-
+public class ContainerBackpack extends ContainerAdvanced {
     public ContainerBackpack(IInventory playerInventory, IInventory backpackInventory, ItemStack backpack) {
-        numRows = backpackInventory.getSizeInventory() / 9;
+        super(playerInventory, backpackInventory, backpack);
         backpackInventory.openChest();
-        int offset = (numRows - 4) * 18;
+
+        int y = TOPSPACING;
+        int x = LEFTSPACING;
 
         // backpack
-        for(int row = 0; row < numRows; ++row) {
+        for(int row = 0; row < upperInventoryRows; ++row) {
             for(int col = 0; col < 9; ++col) {
-                addSlotToContainer(new SlotBackpack(backpackInventory, col + row * 9, 8 + col * 18, 18 + row * 18));
+                addSlotToContainer(new SlotBackpack(backpackInventory, col + row * 9, x, y));
+                x += SLOT;
             }
+            y += SLOT;
+            x = LEFTSPACING;
         }
+
+        y += INVENTORYSPACING;
 
         // inventory
         for(int row = 0; row < 3; ++row) {
             for(int col = 0; col < 9; ++col) {
-                addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 103 + row * 18 + offset));
+                addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, x, y));
+                x += SLOT;
             }
+            y += SLOT;
+            x = LEFTSPACING;
         }
+
+        y += HOTBARSPACING;
 
         // hot bar
         for(int col = 0; col < 9; ++col) {
-            addSlotToContainer(new Slot(playerInventory, col, 8 + col * 18, 161 + offset));
+            addSlotToContainer(new Slot(playerInventory, col, x, y));
+            x += SLOT;
         }
-        
-        if(backpackInventory instanceof InventoryBackpack || backpackInventory instanceof InventoryEnderChest) {
-            openedBackpack = backpack;
-        }
-    }
-
-    /**
-     * True is the current equipped item is the opened item otherwise false.
-     */
-    @Override
-    public boolean canInteractWith(EntityPlayer player) {
-        ItemStack itemStack = null;
-        if(openedBackpack != null && NBTUtil.getBoolean(openedBackpack, Constants.WEARED_BACKPACK_OPEN)) {
-            itemStack = player.getCurrentArmor(2);
-        } else if(player.getCurrentEquippedItem() != null) {
-            itemStack = player.getCurrentEquippedItem();
-        }
-        if(itemStack != null && openedBackpack != null && itemStack.getDisplayName() == openedBackpack.getDisplayName()) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -77,11 +62,11 @@ public class ContainerBackpack extends Container {
             }
             returnStack = itemStack.copy();
 
-            if(slotPos < numRows * 9) {
-                if(!mergeItemStack(itemStack, numRows * 9, inventorySlots.size(), true)) {
+            if(slotPos < upperInventoryRows * 9) {
+                if(!mergeItemStack(itemStack, upperInventoryRows * 9, inventorySlots.size(), true)) {
                     return null;
                 }
-            } else if(!mergeItemStack(itemStack, 0, numRows * 9, false)) {
+            } else if(!mergeItemStack(itemStack, 0, upperInventoryRows * 9, false)) {
                 return null;
             }
 
@@ -93,19 +78,5 @@ public class ContainerBackpack extends Container {
         }
 
         return returnStack;
-    }
-
-    @Override
-    public void onContainerClosed(EntityPlayer player) {
-        super.onContainerClosed(player);
-
-        if(!player.worldObj.isRemote) {
-            ItemStack itemStack = player.getCurrentArmor(2);
-            if(itemStack != null) {
-                if(NBTUtil.hasTag(itemStack, Constants.WEARED_BACKPACK_OPEN)) {
-                    NBTUtil.removeTag(itemStack, Constants.WEARED_BACKPACK_OPEN);
-                }
-            }
-        }
     }
 }

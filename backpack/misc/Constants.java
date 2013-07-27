@@ -6,6 +6,7 @@ public class Constants {
     public static final int GUI_ID_RENAME_BACKPACK = 3;
     public static final int GUI_ID_WORKBENCH_BACKPACK = 4;
     public static final int GUI_ID_WORKBENCH_BACKPACK_WEARED = 5;
+    public static final int GUI_ID_COMBINED = 6;
 
     public static final int BACKPACK_ID_DEFAULT = 18330;
     public static final int BOUND_LEATHER_ID_DEFAULT = 18331;

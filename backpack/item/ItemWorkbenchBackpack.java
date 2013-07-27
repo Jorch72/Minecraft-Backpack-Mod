@@ -8,14 +8,16 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import backpack.Backpack;
-import backpack.inventory.InventoryWorkbenchBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import backpack.model.ModelBackpack;
@@ -106,6 +108,42 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
     }
 
     /**
+     * Callback for item usage. If the item does something special on right
+     * clicking, he will have one of those. Return True if something happen and
+     * false if it don't. This is for ITEMS, not BLOCKS
+     * 
+     * @param stack
+     *            The itemstack which is used
+     * @param player
+     *            The player who used the item
+     * @param worldObj
+     *            The world in which the click has occured
+     * @param x
+     *            The x coord of the clicked block
+     * @param y
+     *            The y coord of the clicked block
+     * @param z
+     *            The z coord of the clicked block
+     * @param side
+     *            The side of the block that was clicked
+     * @param hitX
+     *            The x position on the block which got clicked
+     * @param hitY
+     *            The y position on the block which got clicked
+     * @param hitz
+     *            The z position on the block which got clicked
+     */
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World worldObj, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+        TileEntity te = worldObj.getBlockTileEntity(x, y, z);
+        if(te != null && (te instanceof IInventory || te instanceof TileEntityEnderChest)) {
+            player.openGui(Backpack.instance, Constants.GUI_ID_COMBINED, worldObj, x, y, z);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Handles what should be done on right clicking the item.
      * 
      * @param is
@@ -167,38 +205,13 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
     }
 
     /**
-     * Returns the IInventory of the current equipped backpack or the ender
-     * backpack.
-     * 
-     * @param player
-     *            The player who holds the backpack.
-     * @return An IInventory with the content of the backpack.
-     */
-    public static InventoryWorkbenchBackpack getBackpackInv(EntityPlayer player, boolean weared) {
-        ItemStack backpack;
-        InventoryWorkbenchBackpack inventoryBackpack = null;
-
-        if(weared) {
-            backpack = player.getCurrentArmor(2);
-        } else {
-            backpack = player.getCurrentEquippedItem();
-        }
-
-        if(backpack != null && backpack.getItem() instanceof ItemWorkbenchBackpack) {
-            inventoryBackpack = new InventoryWorkbenchBackpack(player, backpack);
-        }
-
-        return inventoryBackpack;
-    }
-
-    /**
      * Override ItemArmor implementation with default from Item so that the
      * correct color is rendered.
      */
     @Override
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-        return 16777215;
+        return 0xFFFFFF;
     }
 
     @Override
@@ -229,5 +242,6 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
     }
 
     @Override
-    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {}
+    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
+    }
 }
