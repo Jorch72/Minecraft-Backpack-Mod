@@ -8,6 +8,8 @@ import backpack.item.ItemLeather;
 import backpack.item.ItemWorkbenchBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
+import backpack.misc.Version;
+import backpack.network.ConnectionHandlerBackpack;
 import backpack.proxy.CommonProxy;
 import backpack.recipes.RecipeHelper;
 import backpack.util.PacketHandlerBackpack;
@@ -58,11 +60,14 @@ public class Backpack {
 
     @Mod.EventHandler
     public void load(FMLInitializationEvent event) {
+        Version.checkForUpdate();
+
         // register recipes
         RecipeHelper.registerRecipes();
 
         // register GuiHandler
         NetworkRegistry.instance().registerGuiHandler(this, proxy);
+        NetworkRegistry.instance().registerConnectionHandler(new ConnectionHandlerBackpack());
 
         // register key bindings
         proxy.registerKeyBinding();
