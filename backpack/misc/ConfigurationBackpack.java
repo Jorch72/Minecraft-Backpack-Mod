@@ -18,6 +18,10 @@ public class ConfigurationBackpack {
     public static int MAX_BACKPACK_AMOUNT;
     public static boolean OPEN_ONLY_WEARED_BACKPACK;
     public static boolean AIRSHIP_MOD_COMPATIBILITY;
+    public static boolean DISABLE_BACKPACKS;
+    public static boolean DISABLE_BIG_BACKPACKS;
+    public static boolean DISABLE_ENDER_BACKPACKS;
+    public static boolean DISABLE_WORKBENCH_BACKPACKS;
 
     public ConfigurationBackpack(File configFile) {
         config = new Configuration(configFile);
@@ -51,6 +55,10 @@ public class ConfigurationBackpack {
         }
         OPEN_ONLY_WEARED_BACKPACK = config.get(Configuration.CATEGORY_GENERAL, "openOnlyWearedBackpacks", false, getOpenOnlyWearedBackpacksComment()).getBoolean(false);
         AIRSHIP_MOD_COMPATIBILITY = config.get(Configuration.CATEGORY_GENERAL, "airshipModCompatibility", false, getAirshipModCompatibilityComment()).getBoolean(false);
+        DISABLE_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableBackpacks", false, getDisableBackpacksComment()).getBoolean(false);
+        DISABLE_BIG_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableBigBackpacks", false, getDisableBigBackpacksComment()).getBoolean(false);
+        DISABLE_ENDER_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableEnderBackpack", false, getDisableEnderBackpacksComment()).getBoolean(false);
+        DISABLE_WORKBENCH_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableWorkbenchBackpack", false, getDisableWorkbenchBackpacksComment()).getBoolean(false);
 
         // save the file so it will be generated if it doesn't exists
         config.save();
@@ -74,5 +82,21 @@ public class ConfigurationBackpack {
 
     private String getAirshipModCompatibilityComment() {
         return "##############\n" + "If true normal backpack requires a chest in the middle\n" + "##############";
+    }
+
+    private String getDisableBackpacksComment() {
+        return "##############\n" + "If true small backpacks are not craftable\n" + "##############";
+    }
+
+    private String getDisableBigBackpacksComment() {
+        return "##############\n" + "If true big backpacks are not craftable\n" + "##############";
+    }
+
+    private String getDisableEnderBackpacksComment() {
+        return "##############\n" + "If true ender backpacks are not craftable\n" + "##############";
+    }
+
+    private String getDisableWorkbenchBackpacksComment() {
+        return "##############\n" + "If true workbench backpacks are not craftable\n" + "##############";
     }
 }
