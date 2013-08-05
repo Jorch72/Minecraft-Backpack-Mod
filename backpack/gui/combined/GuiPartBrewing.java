@@ -1,16 +1,13 @@
 package backpack.gui.combined;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ContainerBrewingStand;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.SlotBrewingStandIngredient;
-import net.minecraft.inventory.SlotBrewingStandPotion;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.ResourceLocation;
 import backpack.inventory.ContainerBackpackCombined;
+import backpack.inventory.SlotBrewingStandIngredient;
+import backpack.inventory.SlotBrewingStandPotion;
 
 public class GuiPartBrewing extends GuiPart {
 
@@ -22,11 +19,10 @@ public class GuiPartBrewing extends GuiPart {
 
     @Override
     public void addSlots(ContainerBackpackCombined container) {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        container.addSlot(new SlotBrewingStandPotion(player, inventory, 0, 56, 46));
-        container.addSlot(new SlotBrewingStandPotion(player, inventory, 1, 79, 53));
-        container.addSlot(new SlotBrewingStandPotion(player, inventory, 2, 102, 46));
-        container.addSlot(new SlotBrewingStandIngredient(new ContainerBrewingStand(player.inventory, (TileEntityBrewingStand) inventory), inventory, 3, 79, 17));
+        container.addSlot(new SlotBrewingStandPotion(inventory, 0, 56, 46));
+        container.addSlot(new SlotBrewingStandPotion(inventory, 1, 79, 53));
+        container.addSlot(new SlotBrewingStandPotion(inventory, 2, 102, 46));
+        container.addSlot(new SlotBrewingStandIngredient(inventory, 3, 79, 17));
     }
 
     @Override
