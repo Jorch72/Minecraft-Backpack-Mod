@@ -1,37 +1,28 @@
 package backpack.gui;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-
-import org.lwjgl.opengl.GL11;
-
 import backpack.inventory.ContainerBackpackCombined;
 
-public class GuiBackpackCombined extends GuiContainer {
-    protected IInventory upperInventory;
-    protected IInventory lowerInventory;
-    protected int lowerGuiRows;
-    protected ResourceLocation background;
+@SideOnly(Side.CLIENT)
+public class GuiBackpackCombined extends GuiAdvanced {
     protected ContainerBackpackCombined container;
 
     public GuiBackpackCombined(IInventory inventoryPlayer, IInventory otherInventory, IInventory inventoryBackpack) {
         super(new ContainerBackpackCombined(inventoryPlayer, otherInventory, inventoryBackpack, null));
-        upperInventory = otherInventory;
-        lowerInventory = inventoryBackpack;
 
         container = (ContainerBackpackCombined) inventorySlots;
 
-        lowerGuiRows = container.lowerInventoryRows > 3 ? 3 : container.lowerInventoryRows;
-        ySize = container.top.ySize + container.INVENTORYSPACING + (lowerGuiRows + 1) * container.SLOT + container.HOTBARSPACING + container.BOTTOMSPACING;
-        background = new ResourceLocation("textures/gui/container/generic_54.png");
+        ySize = TOPSPACING + container.top.ySize + container.bottom.ySize + container.hotbar.ySize + BOTTOMSPACING;
     }
 
     @Override
     public void initGui() {
         super.initGui();
-        container.top.initGui(guiTop, guiLeft);
+        container.top.initGui(guiLeft, guiTop);
+        container.bottom.initGui(guiLeft, guiTop);
+        container.hotbar.initGui(guiLeft, guiTop);
     }
 
     /**
@@ -40,11 +31,13 @@ public class GuiBackpackCombined extends GuiContainer {
      */
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
-        int lowerHeight = container.BOTTOMSPACING + container.SLOT + container.HOTBARSPACING + lowerGuiRows * container.SLOT + container.INVENTORYSPACING;
-        // fontRenderer.drawString(StatCollector.translateToLocal(upperInventory.getInvName()),
-        // 8, 6, 0x404040);
+        container.top.setTextOffset(6);
+        container.bottom.setTextOffset(13 + container.top.ySize);
+
         container.top.drawForegroundLayer(fontRenderer, x, y);
-        fontRenderer.drawString(StatCollector.translateToLocal(lowerInventory.getInvName()), 8, ySize - lowerHeight + 3, 0x404040);
+        if(container.bottom.ySize > 0) {
+            container.bottom.drawForegroundLayer(fontRenderer, x, y);
+        }
     }
 
     /**
@@ -53,18 +46,16 @@ public class GuiBackpackCombined extends GuiContainer {
      */
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-        int bottomHeight = container.INVENTORYSPACING + lowerGuiRows * container.SLOT;
+        drawTopBorder();
+        drawBottomBorder();
 
         // top container (chest/furnance/hopper/dropper/dispenser)
         container.top.drawBackgroundLayer(f, x, y);
 
-        mc.func_110434_K().func_110577_a(background);
-
         // bottom container (backpack)
-        drawTexturedModalRect(guiLeft, guiTop + container.top.ySize, 0, 125, xSize, bottomHeight);
-        // bottom of gui
-        drawTexturedModalRect(guiLeft, guiTop + container.top.ySize + bottomHeight, 0, 193, xSize, 29);
+        container.bottom.drawBackgroundLayer(f, x, y);
+
+        // hotbar
+        container.hotbar.drawBackgroundLayer(f, x, y);
     }
 }

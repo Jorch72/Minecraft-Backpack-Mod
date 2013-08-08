@@ -1,31 +1,30 @@
 package backpack.gui;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-
-import org.lwjgl.opengl.GL11;
-
 import backpack.inventory.ContainerWorkbenchBackpack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiWorkbenchBackpack extends GuiContainer {
-    private ResourceLocation background;
+public class GuiWorkbenchBackpack extends GuiAdvanced {
+    private ContainerWorkbenchBackpack container;
 
     public GuiWorkbenchBackpack(InventoryPlayer inventoryPlayer, IInventory inventoryBackpack) {
         super(new ContainerWorkbenchBackpack(inventoryPlayer, inventoryBackpack, null));
-        xSize = 175;
-        if(inventoryBackpack.getSizeInventory() != 0) {
-            ySize = 207;
-            background = new ResourceLocation("backpack", "textures/gui/guiWorkbenchBackpack.png");
-        } else {
-            ySize = 166;
-            background = new ResourceLocation("textures/gui/container/crafting_table.png");
-        }
+
+        container = (ContainerWorkbenchBackpack) inventorySlots;
+
+        ySize = TOPSPACING + container.workbench.ySize + container.backpack.ySize + container.player.ySize + container.hotbar.ySize + BOTTOMSPACING;
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        container.workbench.initGui(guiLeft, guiTop);
+        container.backpack.initGui(guiLeft, guiTop);
+        container.player.initGui(guiLeft, guiTop);
+        container.hotbar.initGui(guiLeft, guiTop);
     }
 
     /**
@@ -33,9 +32,12 @@ public class GuiWorkbenchBackpack extends GuiContainer {
      * the items)
      */
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        fontRenderer.drawString(StatCollector.translateToLocal("container.crafting"), 28, 6, 0x404040);
-        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 94, 0x404040);
+    protected void drawGuiContainerForegroundLayer(int x, int y) {
+        container.workbench.setTextOffset(6);
+        container.player.setTextOffset(19 + container.workbench.ySize + container.backpack.ySize);
+
+        container.workbench.drawForegroundLayer(fontRenderer, x, y);
+        container.player.drawForegroundLayer(fontRenderer, x, y);
     }
 
     /**
@@ -43,13 +45,13 @@ public class GuiWorkbenchBackpack extends GuiContainer {
      * items)
      */
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        if(ySize == 207) {
-            mc.func_110434_K().func_110577_a(background);
-        } else {
-            mc.func_110434_K().func_110577_a(background);
-        }
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        drawTopBorder();
+        drawBottomBorder();
+
+        container.workbench.drawBackgroundLayer(f, x, y);
+        container.backpack.drawBackgroundLayer(f, x, y);
+        container.player.drawBackgroundLayer(f, x, y);
+        container.hotbar.drawBackgroundLayer(f, x, y);
     }
 }

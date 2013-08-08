@@ -4,20 +4,21 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import backpack.misc.Constants;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiBackpackAlt extends GuiScreen {
     private String TITLE = "Rename your backpack";
 
     private GuiTextField txt_backpackName;
     private GuiButton btn_ok, btn_cancel;
-    private ResourceLocation background;
 
     protected int xSize;
     protected int ySize;
@@ -25,7 +26,6 @@ public class GuiBackpackAlt extends GuiScreen {
     protected int guiTop;
 
     public GuiBackpackAlt() {
-        background = new ResourceLocation("backpack", "textures/gui/guiBackpackAlt.png");
         xSize = 240;
         ySize = 90;
     }
@@ -156,7 +156,7 @@ public class GuiBackpackAlt extends GuiScreen {
      */
     protected void drawGuiBackground() {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.func_110434_K().func_110577_a(background);
+        mc.func_110434_K().func_110577_a(Constants.guiAlt);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, 240, 100);
     }
 

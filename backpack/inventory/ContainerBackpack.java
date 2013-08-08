@@ -5,46 +5,45 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import backpack.gui.combined.GuiPart;
+import backpack.gui.combined.GuiPartBackpack;
+import backpack.gui.combined.GuiPartPlayerInventory;
+import backpack.gui.combined.GuiPartScrolling;
 import backpack.util.IBackpack;
 
 @ChestContainer
 public class ContainerBackpack extends ContainerAdvanced {
+    public GuiPart top;
+    public GuiPart bottom;
+    public GuiPart hotbar;
+
     public ContainerBackpack(IInventory playerInventory, IInventory backpackInventory, ItemStack backpack) {
         super(playerInventory, backpackInventory, backpack);
-        backpackInventory.openChest();
 
-        int y = TOPSPACING;
-        int x = LEFTSPACING;
+        // init gui parts
+        top = new GuiPartBackpack(this, backpackInventory, upperInventoryRows, true);
+        bottom = new GuiPartPlayerInventory(this, playerInventory, false);
+        hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
 
-        // backpack
-        for(int row = 0; row < upperInventoryRows; ++row) {
-            for(int col = 0; col < 9; ++col) {
-                addSlotToContainer(new SlotBackpack(backpackInventory, col + row * 9, x, y));
-                x += SLOT;
-            }
-            y += SLOT;
-            x = LEFTSPACING;
-        }
+        // init scrollbar
+        ((GuiPartScrolling) top).setScrollbarOffset(-6);
 
-        y += INVENTORYSPACING;
+        // set spacings
+        top.setSpacings(0, 6);
+        bottom.setSpacings(8, 6);
 
-        // inventory
-        for(int row = 0; row < 3; ++row) {
-            for(int col = 0; col < 9; ++col) {
-                addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, x, y));
-                x += SLOT;
-            }
-            y += SLOT;
-            x = LEFTSPACING;
-        }
+        // set offsets
+        int offset = 16;
+        top.setOffsetY(offset);
+        offset += top.ySize;
+        bottom.setOffsetY(offset);
+        offset += bottom.ySize;
+        hotbar.setOffsetY(offset);
 
-        y += HOTBARSPACING;
-
-        // hot bar
-        for(int col = 0; col < 9; ++col) {
-            addSlotToContainer(new Slot(playerInventory, col, x, y));
-            x += SLOT;
-        }
+        // add slots
+        top.addSlots();
+        bottom.addSlots();
+        hotbar.addSlots();
     }
 
     /**

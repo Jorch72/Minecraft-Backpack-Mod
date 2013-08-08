@@ -1,5 +1,7 @@
 package backpack.misc;
 
+import net.minecraft.util.ResourceLocation;
+
 public class Constants {
     public static final int GUI_ID_BACKPACK = 1;
     public static final int GUI_ID_BACKPACK_WEARED = 2;
@@ -16,6 +18,8 @@ public class Constants {
     public static final String CHANNEL_RENAME = "BackpackRename";
     public static final String CHANNEL_OPEN = "OpenBackpack";
 
+    public static final String DOMAIN = "backpack";
+
     public static final String WEARED_BACKPACK_OPEN = "wearedBackpackOpen";
 
     public static final String[] BACKPACK_NAMES = { "Black Backpack", "Red Backpack", "Green Backpack", "Brown Backpack", "Blue Backpack", "Purple Backpack", "Cyan Backpack", "Light Gray Backpack",
@@ -26,4 +30,7 @@ public class Constants {
     public static final int ENDERBACKPACK = 31999;
 
     public static final String KEY_OPEN = "Open Backpack";
+
+    public static final ResourceLocation guiCombined = new ResourceLocation(DOMAIN, "textures/gui/guiCombined.png");
+    public static final ResourceLocation guiAlt = new ResourceLocation(DOMAIN, "textures/gui/guiBackpackAlt.png");
 }

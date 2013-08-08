@@ -17,6 +17,7 @@ public class SlotBrewingStandPotion extends Slot {
      * Check if the stack is a valid item for this slot. Always true beside for
      * the armor slots.
      */
+    @Override
     public boolean isItemValid(ItemStack stack) {
         return canHoldPotion(stack);
     }
@@ -25,10 +26,12 @@ public class SlotBrewingStandPotion extends Slot {
      * Returns the maximum stack size for a given slot (usually the same as
      * getInventoryStackLimit(), but 1 in the case of armor slots)
      */
+    @Override
     public int getSlotStackLimit() {
         return 1;
     }
 
+    @Override
     public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
         if(stack.getItem() instanceof ItemPotion && stack.getItemDamage() > 0) {
             player.addStat(AchievementList.potion, 1);

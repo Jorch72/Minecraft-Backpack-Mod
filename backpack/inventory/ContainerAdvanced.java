@@ -1,26 +1,31 @@
 package backpack.inventory;
 
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import backpack.misc.Constants;
 import backpack.util.NBTUtil;
 
-public class ContainerAdvanced extends Container {
-    public int TOPSPACING = 18;
-    public int LEFTSPACING = 8;
-    public int BOTTOMSPACING = 7;
-    public int SLOT = 18;
-    public int INVENTORYSPACING = 14;
-    public int HOTBARSPACING = 4;
-
+public abstract class ContainerAdvanced extends Container {
     protected final ItemStack openedBackpack;
+    protected final IInventory lowerInventory;
+    protected final IInventory upperInventory;
     public final int upperInventoryRows;
     public final int lowerInventoryRows;
 
     public ContainerAdvanced(IInventory lowerInventory, IInventory upperInventory, ItemStack backpack) {
+        this.lowerInventory = lowerInventory;
+        this.upperInventory = upperInventory;
+
+        lowerInventory.openChest();
+        upperInventory.openChest();
+
         lowerInventoryRows = (int) Math.ceil(lowerInventory.getSizeInventory() / 9.);
         upperInventoryRows = (int) Math.ceil(upperInventory.getSizeInventory() / 9.);
 
@@ -51,6 +56,9 @@ public class ContainerAdvanced extends Container {
     public void onContainerClosed(EntityPlayer entityplayer) {
         super.onContainerClosed(entityplayer);
 
+        lowerInventory.closeChest();
+        upperInventory.closeChest();
+
         if(!entityplayer.worldObj.isRemote) {
             ItemStack itemStack = entityplayer.getCurrentArmor(2);
             if(itemStack != null) {
@@ -59,5 +67,13 @@ public class ContainerAdvanced extends Container {
                 }
             }
         }
+    }
+
+    public void addSlot(Slot slot) {
+        addSlotToContainer(slot);
+    }
+
+    public List<ICrafting> getCrafters() {
+        return crafters;
     }
 }

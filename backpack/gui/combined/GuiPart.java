@@ -3,49 +3,85 @@ package backpack.gui.combined;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.inventory.Container;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import backpack.inventory.ContainerBackpackCombined;
+import backpack.inventory.ContainerAdvanced;
+import backpack.misc.Constants;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public abstract class GuiPart extends Gui {
-    public int TOPSPACING = 18;
-    public int LEFTSPACING = 8;
-    public int BOTTOMSPACING = 7;
-    public int SLOT = 18;
-    public int INVENTORYSPACING = 14;
-    public int HOTBARSPACING = 4;
+    protected int LEFTSPACING = 8;
+    protected int SLOT = 18;
 
+    protected ContainerAdvanced container;
     protected IInventory inventory;
-    protected ResourceLocation background;
+    protected boolean big;
     protected int guiLeft;
     protected int guiTop;
-    public int rows;
+    protected int offsetY;
+    protected int textOffset;
+    protected TEXTPOSITION textPosition = TEXTPOSITION.LEFT;
+    protected int inventoryRows;
+    protected int topSpacing;
+    protected int bottomSpacing;
+    protected int firstSlot;
+    protected int lastSlot;
     public int ySize;
     public int xSize = 176;
 
-    public GuiPart(IInventory inventory, int inventoryRows) {
-        this.inventory = inventory;
-        rows = inventoryRows > 3 ? 3 : inventoryRows;
+    public GuiPart(ContainerAdvanced container, IInventory inventory, int inventoryRows) {
+        this(container, inventory, inventoryRows, false);
     }
 
-    public void initGui(int guiTop, int guiLeft) {
-        this.guiTop = guiTop;
+    public GuiPart(ContainerAdvanced container, IInventory inventory, int inventoryRows, boolean big) {
+        this.container = container;
+        this.inventory = inventory;
+        this.big = big;
+        if(big) {
+            this.inventoryRows = inventoryRows > 6 ? 6 : inventoryRows;
+        } else {
+            this.inventoryRows = inventoryRows > 3 ? 3 : inventoryRows;
+        }
+        ySize = this.inventoryRows * SLOT;
+    }
+
+    public void initGui(int guiLeft, int guiTop) {
         this.guiLeft = guiLeft;
+        this.guiTop = guiTop;
+    }
+
+    public void setOffsetY(int offsetY) {
+        this.offsetY = offsetY;
+    }
+
+    public void setTextOffset(int offset) {
+        textOffset = offset;
+    }
+
+    public void setTextPosition(TEXTPOSITION position) {
+        textPosition = position;
+    }
+
+    public void setSpacings(int topSpacing, int bottomSpacing) {
+        this.topSpacing = topSpacing;
+        this.bottomSpacing = bottomSpacing;
+        if(ySize != 0) {
+            ySize += topSpacing + bottomSpacing;
+        }
     }
 
     public void drawBackgroundLayer(float f, int x, int y) {
         GL11.glPushMatrix();
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getMinecraft().func_110434_K().func_110577_a(background);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        Minecraft.getMinecraft().func_110434_K().func_110577_a(Constants.guiCombined);
+        drawTexturedModalRect(guiLeft, guiTop + offsetY, 0, 4, xSize, ySize);
 
         GL11.glPopMatrix();
     }
@@ -54,13 +90,34 @@ public abstract class GuiPart extends Gui {
     public void updateProgressBar(int par1, int par2) {
     }
 
-    public void addCraftingToCrafters(Container container, ICrafting par1iCrafting) {
+    public void addCraftingToCrafters(ICrafting par1iCrafting) {
     }
 
-    public void detectAndSendChanges(ContainerBackpackCombined container) {
+    public void detectAndSendChanges() {
     }
 
-    public abstract void addSlots(ContainerBackpackCombined container);
+    public abstract void addSlots();
 
-    public abstract void drawForegroundLayer(FontRenderer fontRenderer, int x, int y);
+    public void drawForegroundLayer(FontRenderer fontRenderer, int x, int y) {
+        String text = inventory.isInvNameLocalized() ? inventory.getInvName() : I18n.func_135053_a(inventory.getInvName());
+        int xOffset;
+        switch(textPosition) {
+            case LEFT:
+                xOffset = 8;
+                break;
+            case MIDDLE:
+                xOffset = xSize / 2 - fontRenderer.getStringWidth(text) / 2;
+                break;
+            case RIGHT:
+                xOffset = xSize - fontRenderer.getStringWidth(text) - 6;
+                break;
+            default:
+                xOffset = 0;
+        }
+        fontRenderer.drawString(text, xOffset, textOffset, 0x404040);
+    }
+
+    public enum TEXTPOSITION {
+        LEFT, MIDDLE, RIGHT
+    }
 }

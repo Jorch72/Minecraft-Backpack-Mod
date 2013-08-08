@@ -17,72 +17,53 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.world.World;
+import backpack.gui.combined.GuiPart;
+import backpack.gui.combined.GuiPartBackpack;
+import backpack.gui.combined.GuiPartPlayerInventory;
+import backpack.gui.combined.GuiPartWorkbench;
 import backpack.util.IBackpack;
 
 @ChestContainer
 public class ContainerWorkbenchBackpack extends ContainerAdvanced {
-    private InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
-    private IInventory craftResult = new InventoryCraftResult();
+    public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
+    public IInventory craftResult = new InventoryCraftResult();
     private World worldObj;
+    public GuiPart workbench;
+    public GuiPart player;
+    public GuiPart hotbar;
+    public GuiPart backpack;
 
-    public ContainerWorkbenchBackpack(InventoryPlayer playerInventory, IInventory backpackInventory, ItemStack backpack) {
-        super(playerInventory, backpackInventory, backpack);
-
-        TOPSPACING = 75;
-        if(upperInventoryRows > 0) {
-            INVENTORYSPACING = 14;
-        } else {
-            INVENTORYSPACING = 9;
-        }
+    public ContainerWorkbenchBackpack(InventoryPlayer playerInventory, IInventory backpackInventory, ItemStack backpackIS) {
+        super(playerInventory, backpackInventory, backpackIS);
 
         worldObj = playerInventory.player.worldObj;
-        backpackInventory.openChest();
-
         craftMatrix = new InventoryCraftingAdvanced(this, backpackInventory);
 
-        // result slot
-        addSlotToContainer(new SlotCraftingAdvanced(playerInventory.player, craftMatrix, craftResult, backpackInventory, 0, 125, 35));
+        // init parts
+        workbench = new GuiPartWorkbench(this, backpackInventory, playerInventory);
+        backpack = new GuiPartBackpack(this, backpackInventory, upperInventoryRows, false);
+        player = new GuiPartPlayerInventory(this, playerInventory, false);
+        hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
 
-        // crafting grid
-        for(int row = 0; row < 3; row++) {
-            for(int col = 0; col < 3; col++) {
-                addSlotToContainer(new Slot(craftMatrix, col + row * 3, 30 + col * SLOT, 17 + row * SLOT));
-            }
-        }
+        // set spacings
+        backpack.setSpacings(6, 0);
+        player.setSpacings(13, 6);
 
-        int x = LEFTSPACING;
-        int y = TOPSPACING + upperInventoryRows * SLOT + INVENTORYSPACING;
+        // set offsets
+        int offset = 16;
+        workbench.setOffsetY(offset);
+        offset += workbench.ySize;
+        backpack.setOffsetY(offset);
+        offset += backpack.ySize;
+        player.setOffsetY(offset);
+        offset += player.ySize;
+        hotbar.setOffsetY(offset);
 
-        // inventory
-        for(int row = 0; row < 3; row++) {
-            for(int col = 0; col < 9; col++) {
-                addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, x, y));
-                x += SLOT;
-            }
-            y += SLOT;
-            x = LEFTSPACING;
-        }
-
-        y += HOTBARSPACING;
-
-        // hotbar
-        for(int col = 0; col < 9; col++) {
-            addSlotToContainer(new Slot(playerInventory, col, x, y));
-            x += SLOT;
-        }
-
-        x = LEFTSPACING;
-        y = TOPSPACING;
-
-        // backpack
-        for(int row = 0; row < upperInventoryRows; ++row) {
-            for(int col = 0; col < 9; ++col) {
-                addSlotToContainer(new SlotBackpack(backpackInventory, col + row * 9, x, y));
-                x += SLOT;
-            }
-            y += SLOT;
-            x = LEFTSPACING;
-        }
+        // add slots
+        workbench.addSlots();
+        player.addSlots();
+        hotbar.addSlots();
+        backpack.addSlots();
 
         onCraftMatrixChanged(craftMatrix);
     }
@@ -102,11 +83,9 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
             returnStack = itemStack.copy();
 
             if(slotPos == 0) { // from craftingSlot
-                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack
-                                                             // inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
                     if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
-                        if(!mergeItemStack(itemStack, 10, 37, false)) { // to
-                                                                        // inventory
+                        if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
                             return null;
                         }
                     }
@@ -114,36 +93,28 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
 
                 slot.onSlotChange(itemStack, returnStack);
             } else if(slotPos >= 1 && slotPos < 10) { // from crafting matrix
-                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack
-                                                             // inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
                     if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
-                        if(!mergeItemStack(itemStack, 10, 37, false)) { // to
-                                                                        // inventory
+                        if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
                             return null;
                         }
                     }
                 }
             } else if(slotPos >= 10 && slotPos < 37) { // from inventory
-                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack
-                                                             // inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
                     if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
                         return null;
                     }
                 }
             } else if(slotPos >= 37 && slotPos < 46) { // from hotbar
-                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack
-                                                             // inventory
-                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to
-                                                                    // inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
+                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
                         return null;
                     }
                 }
-            } else if(upperInventoryRows > 0 && slotPos >= 46 && slotPos < 64) { // from
-                                                                                 // backpack
-                                                                                 // inventory
+            } else if(upperInventoryRows > 0 && slotPos >= 46 && slotPos < 64) { // from backpack inventory
                 if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
-                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to
-                                                                    // inventory
+                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
                         return null;
                     }
                 }

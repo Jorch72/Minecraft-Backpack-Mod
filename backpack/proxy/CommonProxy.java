@@ -1,10 +1,13 @@
 package backpack.proxy;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.world.World;
 import backpack.gui.GuiBackpack;
@@ -51,15 +54,25 @@ public class CommonProxy implements IGuiHandler {
                 return new ContainerWorkbenchBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true), backpack);
             case Constants.GUI_ID_COMBINED:
                 TileEntity te = world.getBlockTileEntity(x, y, z);
+                IInventory inventory;
                 backpack = player.getCurrentEquippedItem();
                 inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
                 if(inventoryBackpack == null) {
                     inventoryBackpack = new InventoryBasic("placebo", false, 9 * ConfigurationBackpack.BACKPACK_SIZE_L);
                 }
                 if(te instanceof TileEntityEnderChest) {
-                    return new ContainerBackpackCombined(player.inventory, player.getInventoryEnderChest(), inventoryBackpack, backpack);
+                    inventory = player.getInventoryEnderChest();
+                } else if(te instanceof TileEntityChest) {
+                    int id = world.getBlockId(x, y, z);
+                    if(id == Block.chestTrapped.blockID) {
+                        inventory = ((BlockChest) Block.chestTrapped).getInventory(world, x, y, z);
+                    } else {
+                        inventory = Block.chest.getInventory(world, x, y, z);
+                    }
+                } else {
+                    inventory = (IInventory) te;
                 }
-                return new ContainerBackpackCombined(player.inventory, (IInventory) te, inventoryBackpack, backpack);
+                return new ContainerBackpackCombined(player.inventory, inventory, inventoryBackpack, backpack);
         }
         return null;
     }
@@ -89,14 +102,24 @@ public class CommonProxy implements IGuiHandler {
                 return new GuiWorkbenchBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true));
             case Constants.GUI_ID_COMBINED:
                 TileEntity te = world.getBlockTileEntity(x, y, z);
+                IInventory inventory;
                 inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
                 if(inventoryBackpack == null) {
                     inventoryBackpack = new InventoryBasic("placebo", false, 9 * ConfigurationBackpack.BACKPACK_SIZE_L);
                 }
                 if(te instanceof TileEntityEnderChest) {
-                    return new GuiBackpackCombined(player.inventory, player.getInventoryEnderChest(), inventoryBackpack);
+                    inventory = player.getInventoryEnderChest();
+                } else if(te instanceof TileEntityChest) {
+                    int id = world.getBlockId(x, y, z);
+                    if(id == Block.chestTrapped.blockID) {
+                        inventory = ((BlockChest) Block.chestTrapped).getInventory(world, x, y, z);
+                    } else {
+                        inventory = Block.chest.getInventory(world, x, y, z);
+                    }
+                } else {
+                    inventory = (IInventory) te;
                 }
-                return new GuiBackpackCombined(player.inventory, (IInventory) te, inventoryBackpack);
+                return new GuiBackpackCombined(player.inventory, inventory, inventoryBackpack);
         }
         return null;
     }

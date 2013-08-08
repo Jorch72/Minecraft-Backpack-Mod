@@ -1,7 +1,5 @@
 package backpack.inventory;
 
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
@@ -13,86 +11,78 @@ import net.minecraft.tileentity.TileEntityDropper;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import backpack.gui.combined.GuiPart;
+import backpack.gui.combined.GuiPart.TEXTPOSITION;
 import backpack.gui.combined.GuiPartBrewing;
-import backpack.gui.combined.GuiPartChest;
-import backpack.gui.combined.GuiPartDispenser;
+import backpack.gui.combined.GuiPartFlexible;
 import backpack.gui.combined.GuiPartFurnace;
-import backpack.gui.combined.GuiPartHopper;
+import backpack.gui.combined.GuiPartPlayerInventory;
+import backpack.gui.combined.GuiPartScrolling;
 import backpack.util.IBackpack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ContainerBackpackCombined extends ContainerAdvanced {
-    protected ItemStack openedBackpack;
     protected int backpackStartSlot;
     protected int backpackEndSlot;
     public GuiPart top;
+    public GuiPart bottom;
+    public GuiPart hotbar;
 
     public ContainerBackpackCombined(IInventory playerInventory, IInventory otherInventory, IInventory backpackInventory, ItemStack backpack) {
         super(backpackInventory, otherInventory, backpack);
 
+        // init parts
         if(otherInventory instanceof TileEntityFurnace) {
-            top = new GuiPartFurnace(otherInventory, upperInventoryRows);
+            top = new GuiPartFurnace(this, otherInventory, upperInventoryRows);
+            top.setTextPosition(TEXTPOSITION.MIDDLE);
         } else if(otherInventory instanceof TileEntityDispenser || otherInventory instanceof TileEntityDropper) {
-            top = new GuiPartDispenser(otherInventory, upperInventoryRows);
+            top = new GuiPartFlexible(this, otherInventory, 3, 3);
+            top.setTextPosition(TEXTPOSITION.MIDDLE);
         } else if(otherInventory instanceof TileEntityHopper) {
-            top = new GuiPartHopper(otherInventory, upperInventoryRows);
+            top = new GuiPartFlexible(this, otherInventory, upperInventoryRows);
         } else if(otherInventory instanceof TileEntityBrewingStand) {
-            top = new GuiPartBrewing(otherInventory, upperInventoryRows);
+            top = new GuiPartBrewing(this, otherInventory, upperInventoryRows);
+            top.setTextPosition(TEXTPOSITION.MIDDLE);
         } else {
-            top = new GuiPartChest(otherInventory, upperInventoryRows);
+            top = new GuiPartFlexible(this, otherInventory, upperInventoryRows, 9, lowerInventoryRows <= 3);
+            ((GuiPartScrolling) top).setScrollbarOffset(-6);
         }
 
-        int x = LEFTSPACING;
-        int y = TOPSPACING;
+        bottom = new GuiPartFlexible(this, backpackInventory, lowerInventoryRows, 9, upperInventoryRows <= 3);
+        ((GuiPartScrolling) bottom).setScrollbarOffset(2);
 
-        // other inventory
-        top.addSlots(this);
+        hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
 
+        // set spacings
+        top.setSpacings(0, 6);
+        bottom.setSpacings(7, 6);
+
+        // set offsets
+        int offset = 16;
+        top.setOffsetY(offset);
+        offset += top.ySize;
+        bottom.setOffsetY(offset);
+        offset += bottom.ySize;
+        hotbar.setOffsetY(offset);
+
+        // add slots
+        top.addSlots();
         backpackStartSlot = inventorySlots.size();
-
-        int rows = lowerInventoryRows > 3 ? 3 : lowerInventoryRows;
-        y = top.ySize + INVENTORYSPACING + 1;
-
-        // backpack
-        for(int row = 0; row < rows; ++row) {
-            for(int col = 0; col < 9; ++col) {
-                addSlotToContainer(new SlotBackpack(backpackInventory, col + row * 9, x, y));
-                x += SLOT;
-            }
-            y += SLOT;
-            x = LEFTSPACING;
-        }
-
+        bottom.addSlots();
         backpackEndSlot = inventorySlots.size();
-
-        y += HOTBARSPACING;
-
-        // hot bar
-        for(int col = 0; col < 9; ++col) {
-            addSlotToContainer(new Slot(playerInventory, col, x, y));
-            x += SLOT;
-        }
-    }
-
-    public void addSlot(Slot slot) {
-        addSlotToContainer(slot);
-    }
-
-    public List<ICrafting> getCrafters() {
-        return crafters;
+        hotbar.addSlots();
     }
 
     @Override
     public void addCraftingToCrafters(ICrafting par1iCrafting) {
         super.addCraftingToCrafters(par1iCrafting);
-        top.addCraftingToCrafters(this, par1iCrafting);
+        top.addCraftingToCrafters(par1iCrafting);
     }
 
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        top.detectAndSendChanges(this);
+        top.detectAndSendChanges();
     }
 
     @Override

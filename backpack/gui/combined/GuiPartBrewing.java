@@ -1,76 +1,73 @@
 package backpack.gui.combined;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.util.ResourceLocation;
-import backpack.inventory.ContainerBackpackCombined;
+import backpack.inventory.ContainerAdvanced;
 import backpack.inventory.SlotBrewingStandIngredient;
 import backpack.inventory.SlotBrewingStandPotion;
 
+@SideOnly(Side.CLIENT)
 public class GuiPartBrewing extends GuiPart {
 
-    public GuiPartBrewing(IInventory inventory, int inventoryRows) {
-        super(inventory, inventoryRows);
-        ySize = 70;
-        background = new ResourceLocation("textures/gui/container/brewing_stand.png");
+    public GuiPartBrewing(ContainerAdvanced container, IInventory inventory, int inventoryRows) {
+        super(container, inventory, inventoryRows);
+        ySize = 54;
     }
 
     @Override
-    public void addSlots(ContainerBackpackCombined container) {
-        container.addSlot(new SlotBrewingStandPotion(inventory, 0, 56, 46));
-        container.addSlot(new SlotBrewingStandPotion(inventory, 1, 79, 53));
-        container.addSlot(new SlotBrewingStandPotion(inventory, 2, 102, 46));
-        container.addSlot(new SlotBrewingStandIngredient(inventory, 3, 79, 17));
-    }
+    public void addSlots() {
+        int offset = offsetY + topSpacing + 1;
 
-    @Override
-    public void drawForegroundLayer(FontRenderer fontRenderer, int x, int y) {
-        String s = inventory.isInvNameLocalized() ? inventory.getInvName() : I18n.func_135053_a(inventory.getInvName());
-        fontRenderer.drawString(s, xSize / 2 - fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+        container.addSlot(new SlotBrewingStandPotion(inventory, 0, 56, offset + 29));
+        container.addSlot(new SlotBrewingStandPotion(inventory, 1, 79, offset + 36));
+        container.addSlot(new SlotBrewingStandPotion(inventory, 2, 102, offset + 29));
+        container.addSlot(new SlotBrewingStandIngredient(inventory, 3, 79, offset));
     }
 
     @Override
     public void drawBackgroundLayer(float f, int x, int y) {
         super.drawBackgroundLayer(f, x, y);
 
-        int i1 = ((TileEntityBrewingStand) inventory).getBrewTime();
+        drawTexturedModalRect(guiLeft + 55, guiTop + offsetY - 1, 0, 167, 64, 55);
 
-        if(i1 > 0) {
-            int j1 = (int) (28.0F * (1.0F - i1 / 400.0F));
+        int brewTime = ((TileEntityBrewingStand) inventory).getBrewTime();
 
-            if(j1 > 0) {
-                drawTexturedModalRect(guiLeft + 97, guiTop + 16, 176, 0, 9, j1);
+        if(brewTime > 0) {
+            int barHeight = (int) (28.0F * (1.0F - brewTime / 400.0F));
+
+            if(barHeight > 0) {
+                drawTexturedModalRect(guiLeft + 98, guiTop + 17, 75, 167, 7, barHeight);
             }
 
-            int k1 = i1 / 2 % 7;
+            int workingState = brewTime / 2 % 7;
 
-            switch(k1) {
+            switch(workingState) {
                 case 0:
-                    j1 = 29;
+                    barHeight = 28;
                     break;
                 case 1:
-                    j1 = 24;
+                    barHeight = 24;
                     break;
                 case 2:
-                    j1 = 20;
+                    barHeight = 20;
                     break;
                 case 3:
-                    j1 = 16;
+                    barHeight = 16;
                     break;
                 case 4:
-                    j1 = 11;
+                    barHeight = 11;
                     break;
                 case 5:
-                    j1 = 6;
+                    barHeight = 6;
                     break;
                 case 6:
-                    j1 = 0;
+                    barHeight = 0;
             }
 
-            if(j1 > 0) {
-                drawTexturedModalRect(guiLeft + 65, guiTop + 14 + 29 - j1, 185, 29 - j1, 12, j1);
+            if(barHeight > 0) {
+                drawTexturedModalRect(guiLeft + 65, guiTop + 14 + 29 - barHeight, 64, 195 - barHeight, 11, barHeight);
             }
         }
     }
