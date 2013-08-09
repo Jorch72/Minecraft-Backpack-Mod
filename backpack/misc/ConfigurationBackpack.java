@@ -2,16 +2,11 @@ package backpack.misc;
 
 import java.io.File;
 
+import backpack.item.ItemInfo;
+
 import net.minecraftforge.common.Configuration;
 
 public class ConfigurationBackpack {
-    private Configuration config;
-
-    public static int BACKPACK_ID;
-    public static int WORKBENCHBACKPACK_ID;
-    public static int BOUND_LEATHER_ID;
-    public static int TANNED_LEATHER_ID;
-
     public static int ENDER_RECIPE;
     public static int BACKPACK_SIZE_M;
     public static int BACKPACK_SIZE_L;
@@ -23,19 +18,16 @@ public class ConfigurationBackpack {
     public static boolean DISABLE_ENDER_BACKPACKS;
     public static boolean DISABLE_WORKBENCH_BACKPACKS;
 
-    public ConfigurationBackpack(File configFile) {
-        config = new Configuration(configFile);
-    }
-
-    public void init() {
+    public static void init(File configFile) {
+        Configuration config = new Configuration(configFile);
         // load the content of the configuration file
         config.load();
 
         // gets the item id from the configuration or creates it if it doesn't exists
-        BACKPACK_ID = config.getItem("backpackId", Constants.BACKPACK_ID_DEFAULT).getInt();
-        WORKBENCHBACKPACK_ID = config.getItem("workbenchBackpackId", Constants.WORKBENCHBACKPACK_ID_DEFAULT).getInt();
-        BOUND_LEATHER_ID = config.getItem("boundLeatherId", Constants.BOUND_LEATHER_ID_DEFAULT).getInt();
-        TANNED_LEATHER_ID = config.getItem("tannedLeatherId", Constants.TANNED_LEATHER_ID_DEFAULT).getInt();
+        ItemInfo.ID_BACKPACK = config.getItem(ItemInfo.CONFIG_KEY_BACKPACK, ItemInfo.DEFAULT_ID_BACKPACK).getInt();
+        ItemInfo.ID_BACKPACK_WORKBENCH = config.getItem(ItemInfo.CONFIG_KEY_BACKPACK_WORKBENCH, ItemInfo.DEFAULT_ID_BACKPACK_WORKBENCH).getInt();
+        ItemInfo.ID_BOUND_LEATHER = config.getItem(ItemInfo.CONFIG_KEY_BOUND_LEATHER, ItemInfo.DEFAULT_ID_BOUND_LEATHER).getInt();
+        ItemInfo.ID_TANNED_LEATHER = config.getItem(ItemInfo.CONFIG_KEY_TANNED_LEATHER, ItemInfo.DEFAULT_ID_TANNED_LEATHER).getInt();
 
         ENDER_RECIPE = config.get(Configuration.CATEGORY_GENERAL, "enderRecipe", 0, getEnderRecipeComment()).getInt();
         if(ENDER_RECIPE < 0 || ENDER_RECIPE > 1) {
@@ -64,39 +56,39 @@ public class ConfigurationBackpack {
         config.save();
     }
 
-    private String getEnderRecipeComment() {
+    private static String getEnderRecipeComment() {
         return "##############\n" + "Recipe to craft ender backpack\n" + "0 ender chest\n" + "1 eye of the ender\n" + "##############";
     }
 
-    private String getBackpackSizeComment() {
+    private static String getBackpackSizeComment() {
         return "##############\n" + "Number of rows (9 slots) a backpack has\n" + "valid: integers 1-6\n" + "##############";
     }
 
-    private String getMaxBackpackAmountComment() {
+    private static String getMaxBackpackAmountComment() {
         return "##############\n" + "Number of backpacks a player can have in his inventory\n" + "valid: integers 0-36\n" + "0 = unlimited\n" + "##############";
     }
 
-    private String getOpenOnlyWearedBackpacksComment() {
+    private static String getOpenOnlyWearedBackpacksComment() {
         return "##############\n" + "If true you can only open a backpack that you wear in your chest slot\n" + "##############";
     }
 
-    private String getAirshipModCompatibilityComment() {
+    private static String getAirshipModCompatibilityComment() {
         return "##############\n" + "If true normal backpack requires a chest in the middle\n" + "##############";
     }
 
-    private String getDisableBackpacksComment() {
+    private static String getDisableBackpacksComment() {
         return "##############\n" + "If true small backpacks are not craftable\n" + "##############";
     }
 
-    private String getDisableBigBackpacksComment() {
+    private static String getDisableBigBackpacksComment() {
         return "##############\n" + "If true big backpacks are not craftable\n" + "##############";
     }
 
-    private String getDisableEnderBackpacksComment() {
+    private static String getDisableEnderBackpacksComment() {
         return "##############\n" + "If true ender backpacks are not craftable\n" + "##############";
     }
 
-    private String getDisableWorkbenchBackpacksComment() {
+    private static String getDisableWorkbenchBackpacksComment() {
         return "##############\n" + "If true workbench backpacks are not craftable\n" + "##############";
     }
 }

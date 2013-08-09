@@ -10,7 +10,8 @@ import cpw.mods.fml.common.FMLLog;
 
 public class ClientProxy extends CommonProxy {
     @Override
-    public void registerKeyBinding() {
+    public void registerHandler() {
+        super.registerHandler();
         KeyBindingRegistry.registerKeyBinding(new KeyHandlerBackpack());
     }
 

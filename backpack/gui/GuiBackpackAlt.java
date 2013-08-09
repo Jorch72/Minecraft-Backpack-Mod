@@ -3,14 +3,12 @@ package backpack.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import backpack.misc.Constants;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import backpack.util.PacketHandlerBackpack;
 
 public class GuiBackpackAlt extends GuiScreen {
     private String TITLE = "Rename your backpack";
@@ -85,7 +83,7 @@ public class GuiBackpackAlt extends GuiScreen {
                 String name = txt_backpackName.getText().trim();
 
                 // save the name
-                sendNewNameToServer(name);
+                PacketHandlerBackpack.sendBackpackNameToServer(name);
             case 1:
                 // remove the GUI
                 mc.displayGuiScreen(null);
@@ -158,23 +156,5 @@ public class GuiBackpackAlt extends GuiScreen {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.func_110434_K().func_110577_a(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, 240, 100);
-    }
-
-    /**
-     * Send the given name to the server.
-     * 
-     * @param name
-     *            The new name for the backpack.
-     */
-    protected void sendNewNameToServer(String name) {
-        // create packet set channel to send to, data as byte array and length
-        // of the data
-        Packet250CustomPayload packet = new Packet250CustomPayload();
-        packet.channel = Constants.CHANNEL_RENAME;
-        packet.data = name.getBytes();
-        packet.length = name.getBytes().length;
-
-        // send the packet to the server
-        PacketDispatcher.sendPacketToServer(packet);
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import backpack.Backpack;
+import backpack.item.ItemBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import backpack.util.IBackpack;
@@ -92,7 +92,7 @@ public class InventoryBackpack extends InventoryBasic {
      * @return The number of slots the inventory has.
      */
     protected static int getInventorySize(ItemStack is) {
-        if(is.itemID == Backpack.backpack.itemID) {
+        if(is.getItem() instanceof ItemBackpack) {
             return 9 * (is.getItemDamage() > 17 ? ConfigurationBackpack.BACKPACK_SIZE_L : ConfigurationBackpack.BACKPACK_SIZE_M);
         } else {
             return 9 * (is.getItemDamage() == 18 ? 0 : 2);
