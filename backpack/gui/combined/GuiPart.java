@@ -21,33 +21,33 @@ public abstract class GuiPart extends Gui {
 
     protected ContainerAdvanced container;
     protected IInventory inventory;
-    protected boolean big;
     protected int guiLeft;
     protected int guiTop;
     protected int offsetY;
     protected int textOffset;
     protected TEXTPOSITION textPosition = TEXTPOSITION.LEFT;
-    protected int inventoryRows;
     protected int topSpacing;
     protected int bottomSpacing;
-    protected int firstSlot;
-    protected int lastSlot;
+    public int inventoryRows;
+    public int inventoryCols;
+    public int firstSlot;
+    public int lastSlot;
     public int ySize;
     public int xSize = 176;
 
     public GuiPart(ContainerAdvanced container, IInventory inventory, int inventoryRows) {
-        this(container, inventory, inventoryRows, false);
+        this(container, inventory, inventoryRows, 9, false);
     }
 
-    public GuiPart(ContainerAdvanced container, IInventory inventory, int inventoryRows, boolean big) {
+    public GuiPart(ContainerAdvanced container, IInventory inventory, int inventoryRows, int inventoryCols, boolean big) {
         this.container = container;
         this.inventory = inventory;
-        this.big = big;
         if(big) {
             this.inventoryRows = inventoryRows > 6 ? 6 : inventoryRows;
         } else {
             this.inventoryRows = inventoryRows > 3 ? 3 : inventoryRows;
         }
+        this.inventoryCols = inventoryCols;
         ySize = this.inventoryRows * SLOT;
     }
 
@@ -76,6 +76,25 @@ public abstract class GuiPart extends Gui {
         }
     }
 
+    public void drawForegroundLayer(FontRenderer fontRenderer, int x, int y) {
+        String text = inventory.isInvNameLocalized() ? inventory.getInvName() : I18n.func_135053_a(inventory.getInvName());
+        int xOffset;
+        switch(textPosition) {
+            case LEFT:
+                xOffset = 8;
+                break;
+            case MIDDLE:
+                xOffset = xSize / 2 - fontRenderer.getStringWidth(text) / 2;
+                break;
+            case RIGHT:
+                xOffset = xSize - fontRenderer.getStringWidth(text) - 6;
+                break;
+            default:
+                xOffset = 0;
+        }
+        fontRenderer.drawString(text, xOffset, textOffset, 0x404040);
+    }
+
     public void drawBackgroundLayer(float f, int x, int y) {
         GL11.glPushMatrix();
 
@@ -96,26 +115,16 @@ public abstract class GuiPart extends Gui {
     public void detectAndSendChanges() {
     }
 
-    public abstract void addSlots();
+    public boolean isInRactangle(int mouseX, int mouseY) {
+        int x = guiLeft;
+        int y = guiTop + offsetY + topSpacing;
+        int width = xSize;
+        int height = ySize - topSpacing - bottomSpacing;
 
-    public void drawForegroundLayer(FontRenderer fontRenderer, int x, int y) {
-        String text = inventory.isInvNameLocalized() ? inventory.getInvName() : I18n.func_135053_a(inventory.getInvName());
-        int xOffset;
-        switch(textPosition) {
-            case LEFT:
-                xOffset = 8;
-                break;
-            case MIDDLE:
-                xOffset = xSize / 2 - fontRenderer.getStringWidth(text) / 2;
-                break;
-            case RIGHT:
-                xOffset = xSize - fontRenderer.getStringWidth(text) - 6;
-                break;
-            default:
-                xOffset = 0;
-        }
-        fontRenderer.drawString(text, xOffset, textOffset, 0x404040);
+        return x <= mouseX && mouseX <= x + width && y <= mouseY && mouseY <= y + height;
     }
+
+    public abstract void addSlots();
 
     public enum TEXTPOSITION {
         LEFT, MIDDLE, RIGHT

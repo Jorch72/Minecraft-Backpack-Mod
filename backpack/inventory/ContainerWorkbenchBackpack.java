@@ -22,6 +22,7 @@ import backpack.gui.combined.GuiPartBackpack;
 import backpack.gui.combined.GuiPartPlayerInventory;
 import backpack.gui.combined.GuiPartWorkbench;
 import backpack.util.IBackpack;
+import backpack.util.PacketHandlerBackpack;
 
 @ChestContainer
 public class ContainerWorkbenchBackpack extends ContainerAdvanced {
@@ -30,7 +31,6 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
     private World worldObj;
     public GuiPart workbench;
     public GuiPart player;
-    public GuiPart hotbar;
     public GuiPart backpack;
 
     public ContainerWorkbenchBackpack(InventoryPlayer playerInventory, IInventory backpackInventory, ItemStack backpackIS) {
@@ -41,7 +41,7 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
 
         // init parts
         workbench = new GuiPartWorkbench(this, backpackInventory, playerInventory);
-        backpack = new GuiPartBackpack(this, backpackInventory, upperInventoryRows, false);
+        backpack = new GuiPartBackpack(this, backpackInventory, 2, false);
         player = new GuiPartPlayerInventory(this, playerInventory, false);
         hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
 
@@ -164,5 +164,31 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
     @Override
     public boolean func_94530_a(ItemStack par1ItemStack, Slot par2Slot) {
         return par2Slot.inventory != craftResult && super.func_94530_a(par1ItemStack, par2Slot);
+    }
+    
+    @Override
+    public void sendScrollbarToServer(GuiPart guiPart, int offset) {
+        if(guiPart == backpack) {
+            PacketHandlerBackpack.sendScrollbarPositionToServer(0, offset);
+        }
+    }
+    
+    @Override
+    public void updateSlots(int part, int offset) {
+        int slotNumber = backpack.firstSlot;
+        int inventoryRows = backpack.inventoryRows;
+        int inventoryCols = backpack.inventoryCols;
+
+        for(int row = 0; row < inventoryRows; ++row) {
+            for(int col = 0; col < inventoryCols; ++col) {
+                int slotIndex = col + (row + offset) * inventoryCols;
+
+                SlotScrolling slot = (SlotScrolling)inventorySlots.get(slotNumber);
+                
+                slot.setSlotIndex(slotIndex);
+                slotNumber++;
+            }
+        }
+        detectAndSendChanges();
     }
 }

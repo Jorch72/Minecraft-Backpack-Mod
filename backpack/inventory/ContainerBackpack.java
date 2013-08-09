@@ -10,12 +10,12 @@ import backpack.gui.combined.GuiPartBackpack;
 import backpack.gui.combined.GuiPartPlayerInventory;
 import backpack.gui.combined.GuiPartScrolling;
 import backpack.util.IBackpack;
+import backpack.util.PacketHandlerBackpack;
 
 @ChestContainer
 public class ContainerBackpack extends ContainerAdvanced {
     public GuiPart top;
     public GuiPart bottom;
-    public GuiPart hotbar;
 
     public ContainerBackpack(IInventory playerInventory, IInventory backpackInventory, ItemStack backpack) {
         super(playerInventory, backpackInventory, backpack);
@@ -77,5 +77,31 @@ public class ContainerBackpack extends ContainerAdvanced {
         }
 
         return returnStack;
+    }
+    
+    @Override
+    public void sendScrollbarToServer(GuiPart guiPart, int offset) {
+        if(guiPart == top) {
+            PacketHandlerBackpack.sendScrollbarPositionToServer(0, offset);
+        }
+    }
+    
+    @Override
+    public void updateSlots(int part, int offset) {
+        int slotNumber = top.firstSlot;
+        int inventoryRows = top.inventoryRows;
+        int inventoryCols = top.inventoryCols;
+
+        for(int row = 0; row < inventoryRows; ++row) {
+            for(int col = 0; col < inventoryCols; ++col) {
+                int slotIndex = col + (row + offset) * inventoryCols;
+
+                SlotScrolling slot = (SlotScrolling)inventorySlots.get(slotNumber);
+                
+                slot.setSlotIndex(slotIndex);
+                slotNumber++;
+            }
+        }
+        detectAndSendChanges();
     }
 }

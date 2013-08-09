@@ -1,11 +1,10 @@
 package backpack.inventory;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import backpack.util.IBackpack;
 
-public class SlotBackpack extends Slot {
+public class SlotBackpack extends SlotScrolling {
     public SlotBackpack(IInventory inventory, int slotIndex, int xPos, int yPos) {
         super(inventory, slotIndex, xPos, yPos);
     }

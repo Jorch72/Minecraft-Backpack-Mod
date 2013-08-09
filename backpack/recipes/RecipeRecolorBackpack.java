@@ -8,9 +8,9 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-import backpack.Backpack;
 import backpack.item.ItemBackpack;
-import backpack.misc.Constants;
+import backpack.item.ItemInfo;
+import backpack.item.Items;
 
 public class RecipeRecolorBackpack implements IRecipe {
     ArrayList<Integer> allowedDyes = new ArrayList<Integer>();
@@ -18,7 +18,7 @@ public class RecipeRecolorBackpack implements IRecipe {
     public RecipeRecolorBackpack() {
         allowedDyes.add(Item.dyePowder.itemID);
         allowedDyes.add(Item.leather.itemID);
-        allowedDyes.add(Backpack.tannedLeather.itemID);
+        allowedDyes.add(Items.tannedLeather.itemID);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class RecipeRecolorBackpack implements IRecipe {
 
             if(slot != null) {
                 if(slot.getItem() instanceof ItemBackpack) {
-                    if(slot.getItemDamage() == Constants.ENDERBACKPACK || backpack != null) {
+                    if(slot.getItemDamage() == ItemInfo.ENDERBACKPACK || backpack != null) {
                         return false;
                     }
                     backpack = slot;
@@ -47,7 +47,7 @@ public class RecipeRecolorBackpack implements IRecipe {
         if(backpack != null && dye != null) {
             if(backpack.getItemDamage() > 17 && dye.itemID == Item.leather.itemID) {
                 return false;
-            } else if(backpack.getItemDamage() < 17 && dye.itemID == Backpack.tannedLeather.itemID) {
+            } else if(backpack.getItemDamage() < 17 && dye.itemID == Items.tannedLeather.itemID) {
                 return false;
             }
         }
@@ -92,5 +92,4 @@ public class RecipeRecolorBackpack implements IRecipe {
     public ItemStack getRecipeOutput() {
         return null;
     }
-
 }

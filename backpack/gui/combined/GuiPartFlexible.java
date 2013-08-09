@@ -1,14 +1,13 @@
 package backpack.gui.combined;
 
+import net.minecraft.inventory.IInventory;
+import backpack.inventory.ContainerAdvanced;
+import backpack.inventory.SlotScrolling;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import backpack.inventory.ContainerAdvanced;
 
 @SideOnly(Side.CLIENT)
 public class GuiPartFlexible extends GuiPartScrolling {
-    protected int inventoryCols;
 
     public GuiPartFlexible(ContainerAdvanced container, IInventory inventory, int inventoryRows) {
         this(container, inventory, inventoryRows, 9);
@@ -19,8 +18,7 @@ public class GuiPartFlexible extends GuiPartScrolling {
     }
 
     public GuiPartFlexible(ContainerAdvanced container, IInventory inventory, int inventoryRows, int inventoryCols, boolean big) {
-        super(container, inventory, inventoryRows, big);
-        this.inventoryCols = inventoryCols;
+        super(container, inventory, inventoryRows, inventoryCols, big);
     }
 
     @Override
@@ -36,7 +34,7 @@ public class GuiPartFlexible extends GuiPartScrolling {
                 x = (int) Math.round(xSize / 2. - cols * SLOT / 2.) + 1;
             }
             for(int col = 0; col < cols; ++col) {
-                container.addSlot(new Slot(inventory, col + row * inventoryCols, x, y));
+                container.addSlot(new SlotScrolling(inventory, col + row * inventoryCols, x, y));
                 x += SLOT;
             }
             y += SLOT;

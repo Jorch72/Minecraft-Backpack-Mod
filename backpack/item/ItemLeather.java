@@ -5,7 +5,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import backpack.Backpack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -15,7 +14,6 @@ public class ItemLeather extends Item {
     public ItemLeather(int id) {
         super(id);
         setMaxStackSize(64);
-        setUnlocalizedName("leather");
         setCreativeTab(CreativeTabs.tabMaterials);
     }
 
@@ -26,14 +24,13 @@ public class ItemLeather extends Item {
      */
     @Override
     public String getUnlocalizedName(ItemStack itemStack) {
-        String name = super.getUnlocalizedName();
-
-        if(itemID == Backpack.boundLeather.itemID) {
-            name += "Bound";
+        if(itemID == Items.boundLeather.itemID) {
+            setUnlocalizedName(ItemInfo.UNLOCALIZED_NAME_BOUND_LEATHER);
         } else {
-            name += "Tanned";
+            setUnlocalizedName(ItemInfo.UNLOCALIZED_NAME_TANNED_LEATHER);
         }
-        return name;
+        
+        return super.getUnlocalizedName();
     }
 
     /**
@@ -57,7 +54,7 @@ public class ItemLeather extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getIconFromDamage(int damage) {
-        if(itemID == Backpack.boundLeather.itemID) {
+        if(itemID == Items.boundLeather.itemID) {
             return icons[0];
         } else {
             return icons[1];

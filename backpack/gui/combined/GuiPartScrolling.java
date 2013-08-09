@@ -1,27 +1,35 @@
 package backpack.gui.combined;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import backpack.gui.helper.GuiRectangle;
 import backpack.inventory.ContainerAdvanced;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class GuiPartScrolling extends GuiPart {
     protected boolean hasScrollbar;
     protected int scrollbarOffset = -6;
+    protected GuiRectangle slider;
+    protected GuiRectangle scrollbar;
+    protected boolean isSliding = false;
+    protected float currentScroll = 0.F;
 
-    public GuiPartScrolling(ContainerAdvanced container, IInventory inventory, int inventoryRows) {
-        this(container, inventory, inventoryRows, false);
-    }
-
-    public GuiPartScrolling(ContainerAdvanced container, IInventory inventory, int inventoryRows, boolean big) {
-        super(container, inventory, inventoryRows, big);
+    public GuiPartScrolling(ContainerAdvanced container, IInventory inventory, int inventoryRows, int inventoryCols, boolean big) {
+        super(container, inventory, inventoryRows, inventoryCols, big);
         if(big) {
             hasScrollbar = inventoryRows > 6;
         } else {
             hasScrollbar = inventoryRows > 3;
         }
+    }
+
+    @Override
+    public void initGui(int guiLeft, int guiTop) {
+        super.initGui(guiLeft, guiTop);
+        slider = new GuiRectangle(guiLeft + xSize + 2, guiTop + offsetY + scrollbarOffset + 7, 12, 15);
+        scrollbar = new GuiRectangle(guiLeft + xSize + 2, guiTop + offsetY + scrollbarOffset + 7, 12, inventoryRows * SLOT - 2);
     }
 
     @Override
@@ -34,17 +42,71 @@ public abstract class GuiPartScrolling extends GuiPart {
         }
 
         if(hasScrollbar) {
-            int yOffset = guiTop + offsetY + scrollbarOffset;
-            if(big) {
-                drawTexturedModalRect(guiLeft + xSize - 3, yOffset, xSize, 0, 25, 120);
-            } else {
-                drawTexturedModalRect(guiLeft + xSize - 3, yOffset, xSize, 0, 25, 59);
-                drawTexturedModalRect(guiLeft + xSize - 3, yOffset + 59, xSize, 113, 25, 7);
-            }
+            drawTexturedModalRect(scrollbar.x - 5, scrollbar.y - 7, xSize, 0, 25, 7);
+            drawTexturedModalRect(scrollbar.x - 5, scrollbar.y, xSize, 7, 25, scrollbar.height);
+            drawTexturedModalRect(scrollbar.x - 5, scrollbar.y + scrollbar.height, xSize, 113, 25, 7);
+
+            drawTexturedModalRect(slider.x, slider.y, 232, 0, slider.width, slider.height);
         }
     }
 
     public void setScrollbarOffset(int offset) {
         scrollbarOffset = offset;
+    }
+
+    public void mouseClicked(int x, int y) {
+        if(slider.isInRectangle(x, y)) {
+            isSliding = true;
+        } else if(scrollbar.isInRectangle(x, y)) {
+            setSliderByMouse(y);
+        }
+    }
+
+    public void mouseClickMove(int x, int y) {
+        if(isSliding || slider.isInRectangle(x, y)) {
+            setSliderByMouse(y);
+        }
+    }
+
+    public void mouseReleased(int x, int y) {
+        isSliding = false;
+    }
+
+    public void mouseScrollWheel(int scrollDirection) {
+        if(scrollDirection != 0 && hasScrollbar) {
+            int maxScroll = inventory.getSizeInventory() / 9 - inventoryRows;
+            currentScroll = (float) ((double) currentScroll - (double) scrollDirection / (double) maxScroll);
+            updateSliderPosition();
+        }
+    }
+
+    protected void setSliderByMouse(int y) {
+        currentScroll = ((float) (y - scrollbar.y) - 7.5F) / ((float) scrollbar.height - 15.0F);
+        updateSliderPosition();
+    }
+
+    protected void updateSliderPosition() {
+        checkScrollbarBoundaries();
+
+        slider.y = slider.origY + (int) ((float) (scrollbar.height - slider.height) * currentScroll);
+
+        int lastRow = inventory.getSizeInventory() / 9 - inventoryRows;
+        int offset = (int) ((double) (currentScroll * (float) lastRow) + 0.5D);
+
+        if(offset < 0) {
+            offset = 0;
+        }
+
+        container.sendScrollbarToServer(this, offset);
+    }
+
+    protected void checkScrollbarBoundaries() {
+        if(currentScroll < 0F) {
+            currentScroll = 0F;
+        }
+
+        if(currentScroll > 1F) {
+            currentScroll = 1F;
+        }
     }
 }

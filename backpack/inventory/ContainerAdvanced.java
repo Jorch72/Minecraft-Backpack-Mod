@@ -9,6 +9,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import backpack.gui.combined.GuiPart;
 import backpack.misc.Constants;
 import backpack.util.NBTUtil;
 
@@ -18,6 +19,7 @@ public abstract class ContainerAdvanced extends Container {
     protected final IInventory upperInventory;
     public final int upperInventoryRows;
     public final int lowerInventoryRows;
+    public GuiPart hotbar;
 
     public ContainerAdvanced(IInventory lowerInventory, IInventory upperInventory, ItemStack backpack) {
         this.lowerInventory = lowerInventory;
@@ -75,5 +77,11 @@ public abstract class ContainerAdvanced extends Container {
 
     public List<ICrafting> getCrafters() {
         return crafters;
+    }
+    
+    public void sendScrollbarToServer(GuiPart guiPart, int offset) {
+    }
+    
+    public void updateSlots(int guiPart, int offset) {
     }
 }

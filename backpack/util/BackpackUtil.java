@@ -6,8 +6,8 @@ import net.minecraft.item.ItemStack;
 import backpack.inventory.InventoryBackpack;
 import backpack.inventory.InventoryWorkbenchBackpack;
 import backpack.item.ItemBackpack;
+import backpack.item.ItemInfo;
 import backpack.item.ItemWorkbenchBackpack;
-import backpack.misc.Constants;
 
 public class BackpackUtil {
     /**
@@ -32,7 +32,7 @@ public class BackpackUtil {
             if(backpack.getItem() instanceof ItemWorkbenchBackpack) {
                 inventoryBackpack = new InventoryWorkbenchBackpack(player, backpack);
             } else if(backpack.getItem() instanceof ItemBackpack) {
-                if(backpack.getItemDamage() == Constants.ENDERBACKPACK) {
+                if(backpack.getItemDamage() == ItemInfo.ENDERBACKPACK) {
                     inventoryBackpack = player.getInventoryEnderChest();
                 } else {
                     inventoryBackpack = new InventoryBackpack(player, backpack);

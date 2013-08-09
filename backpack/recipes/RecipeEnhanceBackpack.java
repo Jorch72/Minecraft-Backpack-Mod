@@ -4,8 +4,8 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-import backpack.Backpack;
 import backpack.item.ItemLeather;
+import backpack.item.Items;
 import backpack.util.IBackpack;
 
 public class RecipeEnhanceBackpack implements IRecipe {
@@ -30,7 +30,7 @@ public class RecipeEnhanceBackpack implements IRecipe {
                     if(!(slot.getItem() instanceof ItemLeather)) {
                         return false;
                     }
-                    if(slot.itemID != Backpack.tannedLeather.itemID) {
+                    if(slot.itemID != Items.tannedLeather.itemID) {
                         return false;
                     }
                 }

@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.world.World;
+import backpack.Backpack;
 import backpack.gui.GuiBackpack;
 import backpack.gui.GuiBackpackAlt;
 import backpack.gui.GuiBackpackCombined;
@@ -19,9 +20,11 @@ import backpack.inventory.ContainerBackpackCombined;
 import backpack.inventory.ContainerWorkbenchBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
+import backpack.network.ConnectionHandlerBackpack;
 import backpack.util.BackpackUtil;
 import backpack.util.ServerTickHandlerBackpack;
 import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
@@ -123,16 +126,19 @@ public class CommonProxy implements IGuiHandler {
         }
         return null;
     }
-
-    public void registerKeyBinding() {
-        // Nothing here as this is the server side proxy
+    
+    public void registerHandler() {
+        // register GuiHandler
+        NetworkRegistry.instance().registerGuiHandler(Backpack.instance, this);
+        // register ConnectionHandler
+        NetworkRegistry.instance().registerConnectionHandler(new ConnectionHandlerBackpack());
+        // register tick handler
+        if(ConfigurationBackpack.MAX_BACKPACK_AMOUNT > 0) {
+            TickRegistry.registerTickHandler(new ServerTickHandlerBackpack(), Side.SERVER);
+        }
     }
 
     public void addNeiSupport() {
         // Nothing here as this is the server side proxy
-    }
-
-    public void registerServerTickHandler() {
-        TickRegistry.registerTickHandler(new ServerTickHandlerBackpack(), Side.SERVER);
     }
 }

@@ -32,10 +32,10 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
     protected ModelBiped backpackModel = null;
 
     public ItemWorkbenchBackpack(int id) {
-        super(id, Backpack.backpackMaterial, 0, 1);
+        super(id, ItemInfo.backpackMaterial, 0, 1);
         setMaxStackSize(1);
         setHasSubtypes(true);
-        setUnlocalizedName("backpack");
+        setUnlocalizedName(ItemInfo.UNLOCALIZED_NAME_BACKPACK_WORKBENCH);
         setCreativeTab(CreativeTabs.tabMisc);
         setFull3D();
     }
@@ -51,10 +51,10 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
         int damage = itemStack.getItemDamage();
 
         if(damage == 18) {
-            name += "." + Constants.BACKPACK_COLORS[17];
+            name += "." + ItemInfo.BACKPACK_COLORS[17];
         }
         if(damage == 50) {
-            name += ".big_" + Constants.BACKPACK_COLORS[17];
+            name += ".big_" + ItemInfo.BACKPACK_COLORS[17];
         }
 
         return name;
@@ -160,7 +160,7 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
         // if world.isRemote than we are on the client side
         if(world.isRemote) {
             // display rename GUI if player is sneaking
-            if(player.isSneaking() && is.getItemDamage() != Constants.ENDERBACKPACK) {
+            if(player.isSneaking() && is.getItemDamage() != ItemInfo.ENDERBACKPACK) {
                 player.openGui(Backpack.instance, Constants.GUI_ID_RENAME_BACKPACK, world, 0, 0, 0);
             }
             return is;
@@ -195,13 +195,13 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
 
         int dmg = itemstack.getItemDamage();
         if(dmg == 18) {
-            return Constants.BACKPACK_NAMES[dmg];
+            return ItemInfo.NAME_BACKPACK_WORKBENCH;
         }
         if(dmg == 50) {
-            return "Big " + Constants.BACKPACK_NAMES[dmg - 32];
+            return "Big " + ItemInfo.NAME_BACKPACK_WORKBENCH;
         }
 
-        return Constants.BACKPACK_NAMES[18];
+        return ItemInfo.NAME_BACKPACK_WORKBENCH;
     }
 
     /**

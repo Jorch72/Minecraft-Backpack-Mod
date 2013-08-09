@@ -12,12 +12,14 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import backpack.gui.combined.GuiPart;
 import backpack.gui.combined.GuiPart.TEXTPOSITION;
+import backpack.gui.combined.GuiPartBackpack;
 import backpack.gui.combined.GuiPartBrewing;
 import backpack.gui.combined.GuiPartFlexible;
 import backpack.gui.combined.GuiPartFurnace;
 import backpack.gui.combined.GuiPartPlayerInventory;
 import backpack.gui.combined.GuiPartScrolling;
 import backpack.util.IBackpack;
+import backpack.util.PacketHandlerBackpack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -26,7 +28,6 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
     protected int backpackEndSlot;
     public GuiPart top;
     public GuiPart bottom;
-    public GuiPart hotbar;
 
     public ContainerBackpackCombined(IInventory playerInventory, IInventory otherInventory, IInventory backpackInventory, ItemStack backpack) {
         super(backpackInventory, otherInventory, backpack);
@@ -48,7 +49,7 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
             ((GuiPartScrolling) top).setScrollbarOffset(-6);
         }
 
-        bottom = new GuiPartFlexible(this, backpackInventory, lowerInventoryRows, 9, upperInventoryRows <= 3);
+        bottom = new GuiPartBackpack(this, backpackInventory, lowerInventoryRows, upperInventoryRows <= 3);
         ((GuiPartScrolling) bottom).setScrollbarOffset(2);
 
         hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
@@ -127,5 +128,40 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
         }
 
         return returnStack;
+    }
+    
+    @Override
+    public void sendScrollbarToServer(GuiPart guiPart, int offset) {
+        if(guiPart == top) {
+            PacketHandlerBackpack.sendScrollbarPositionToServer(0, offset);
+        } else if(guiPart == bottom) {
+            PacketHandlerBackpack.sendScrollbarPositionToServer(1, offset);
+        }
+    }
+    
+    @Override
+    public void updateSlots(int part, int offset) {
+        int slotNumber, inventoryRows, inventoryCols;
+        if(part == 0) {
+            slotNumber = top.firstSlot;
+            inventoryRows = top.inventoryRows;
+            inventoryCols = top.inventoryCols;
+        } else {
+            slotNumber = bottom.firstSlot;
+            inventoryRows = bottom.inventoryRows;
+            inventoryCols = bottom.inventoryCols;
+        }
+
+        for(int row = 0; row < inventoryRows; ++row) {
+            for(int col = 0; col < inventoryCols; ++col) {
+                int slotIndex = col + (row + offset) * inventoryCols;
+
+                SlotScrolling slot = (SlotScrolling)inventorySlots.get(slotNumber);
+                
+                slot.setSlotIndex(slotIndex);
+                slotNumber++;
+            }
+        }
+        detectAndSendChanges();
     }
 }
