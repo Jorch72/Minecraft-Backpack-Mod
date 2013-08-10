@@ -18,8 +18,8 @@ import backpack.gui.combined.GuiPartFlexible;
 import backpack.gui.combined.GuiPartFurnace;
 import backpack.gui.combined.GuiPartPlayerInventory;
 import backpack.gui.combined.GuiPartScrolling;
+import backpack.handler.PacketHandlerBackpack;
 import backpack.util.IBackpack;
-import backpack.util.PacketHandlerBackpack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

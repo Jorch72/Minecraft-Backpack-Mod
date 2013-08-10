@@ -1,4 +1,4 @@
-package backpack.util;
+package backpack.handler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -13,6 +13,9 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import backpack.inventory.ContainerAdvanced;
 import backpack.inventory.InventoryBackpack;
 import backpack.misc.Constants;
+import backpack.util.IBackpack;
+import backpack.util.IHasKeyBinding;
+import backpack.util.NBTUtil;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;

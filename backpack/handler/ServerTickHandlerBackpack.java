@@ -1,10 +1,11 @@
-package backpack.util;
+package backpack.handler;
 
 import java.util.EnumSet;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import backpack.misc.ConfigurationBackpack;
+import backpack.util.IBackpack;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 

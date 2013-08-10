@@ -7,8 +7,8 @@ import net.minecraft.client.gui.GuiTextField;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import backpack.handler.PacketHandlerBackpack;
 import backpack.misc.Constants;
-import backpack.util.PacketHandlerBackpack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

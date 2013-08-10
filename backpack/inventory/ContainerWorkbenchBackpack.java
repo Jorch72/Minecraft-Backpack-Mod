@@ -21,8 +21,8 @@ import backpack.gui.combined.GuiPart;
 import backpack.gui.combined.GuiPartBackpack;
 import backpack.gui.combined.GuiPartPlayerInventory;
 import backpack.gui.combined.GuiPartWorkbench;
+import backpack.handler.PacketHandlerBackpack;
 import backpack.util.IBackpack;
-import backpack.util.PacketHandlerBackpack;
 
 @ChestContainer
 public class ContainerWorkbenchBackpack extends ContainerAdvanced {

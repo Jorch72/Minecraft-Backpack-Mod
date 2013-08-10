@@ -3,8 +3,8 @@ package backpack.proxy;
 import java.lang.reflect.Method;
 
 import backpack.gui.GuiWorkbenchBackpack;
+import backpack.handler.KeyHandlerBackpack;
 import backpack.nei.OverlayHandlerBackpack;
-import backpack.util.KeyHandlerBackpack;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.FMLLog;
 

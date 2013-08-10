@@ -1,4 +1,4 @@
-package backpack.util;
+package backpack.handler;
 
 import java.util.EnumSet;
 
@@ -10,6 +10,7 @@ import org.lwjgl.input.Keyboard;
 
 import backpack.gui.GuiWorkbenchBackpack;
 import backpack.misc.Constants;
+import backpack.util.IBackpack;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;

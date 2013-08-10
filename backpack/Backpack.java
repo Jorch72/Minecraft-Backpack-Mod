@@ -1,12 +1,12 @@
 package backpack;
 
+import backpack.handler.PacketHandlerBackpack;
 import backpack.item.Items;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import backpack.misc.Version;
 import backpack.proxy.CommonProxy;
 import backpack.recipes.RecipeHelper;
-import backpack.util.PacketHandlerBackpack;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
