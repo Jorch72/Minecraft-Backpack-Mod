@@ -244,4 +244,9 @@ public class ItemWorkbenchBackpack extends ItemArmor implements IBackpack, IHasK
     @Override
     public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
     }
+
+    @Override
+    public boolean isBookEnchantable(ItemStack itemstack1, ItemStack itemstack2) {
+        return false;
+    }
 }
