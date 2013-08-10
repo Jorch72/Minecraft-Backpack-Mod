@@ -2,9 +2,8 @@ package backpack.misc;
 
 import java.io.File;
 
-import backpack.item.ItemInfo;
-
 import net.minecraftforge.common.Configuration;
+import backpack.item.ItemInfo;
 
 public class ConfigurationBackpack {
     public static int ENDER_RECIPE;
@@ -55,7 +54,6 @@ public class ConfigurationBackpack {
         // save the file so it will be generated if it doesn't exists
         config.save();
     }
-
 
     private static String getEnderRecipeComment() {
         return "##############\n" + "Recipe to craft ender backpack\n" + "0 ender chest\n" + "1 eye of the ender\n" + "##############";

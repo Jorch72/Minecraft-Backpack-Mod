@@ -2,7 +2,7 @@ package backpack.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
-import backpack.inventory.ContainerWorkbenchBackpack;
+import backpack.inventory.container.ContainerWorkbenchBackpack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

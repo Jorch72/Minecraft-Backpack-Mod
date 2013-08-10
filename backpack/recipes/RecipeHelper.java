@@ -28,7 +28,7 @@ public class RecipeHelper {
             backpackStack = new ItemStack(Items.backpack, 1, 48);
             GameRegistry.addRecipe(backpackStack, "LLL", "L L", "LLL", 'L', Items.tannedLeather);
         }
-        
+
         String[] dyes = { "dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple", "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta",
                 "dyeOrange", "dyeWhite" };
 
@@ -62,7 +62,7 @@ public class RecipeHelper {
             // workbench Backpacks
             backpackStack = new ItemStack(Items.workbenchBackpack, 1, 18);
             GameRegistry.addRecipe(backpackStack, "LLL", "LWL", "LLL", 'L', Item.leather, 'W', Block.workbench);
-    
+
             backpackStack = new ItemStack(Items.workbenchBackpack, 1, 50);
             GameRegistry.addRecipe(backpackStack, "LLL", "LWL", "LLL", 'L', Items.tannedLeather, 'W', Block.workbench);
         }

@@ -1,4 +1,4 @@
-package backpack.inventory;
+package backpack.inventory.container;
 
 import java.util.List;
 
@@ -9,7 +9,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import backpack.gui.combined.GuiPart;
+import backpack.Backpack;
+import backpack.gui.parts.GuiPart;
+import backpack.inventory.IInventoryBackpack;
 import backpack.misc.Constants;
 import backpack.util.NBTUtil;
 
@@ -44,7 +46,7 @@ public abstract class ContainerAdvanced extends Container {
     public boolean canInteractWith(EntityPlayer entityplayer) {
         ItemStack itemStack = null;
         if(openedBackpack != null && NBTUtil.getBoolean(openedBackpack, Constants.WEARED_BACKPACK_OPEN)) {
-            itemStack = entityplayer.getCurrentArmor(2);
+            itemStack = Backpack.proxy.backpackSlot.getBackpack();
         } else if(entityplayer.getCurrentEquippedItem() != null) {
             itemStack = entityplayer.getCurrentEquippedItem();
         }
@@ -62,7 +64,7 @@ public abstract class ContainerAdvanced extends Container {
         upperInventory.closeChest();
 
         if(!entityplayer.worldObj.isRemote) {
-            ItemStack itemStack = entityplayer.getCurrentArmor(2);
+            ItemStack itemStack = Backpack.proxy.backpackSlot.getBackpack();
             if(itemStack != null) {
                 if(NBTUtil.hasTag(itemStack, Constants.WEARED_BACKPACK_OPEN)) {
                     NBTUtil.removeTag(itemStack, Constants.WEARED_BACKPACK_OPEN);
@@ -78,10 +80,10 @@ public abstract class ContainerAdvanced extends Container {
     public List<ICrafting> getCrafters() {
         return crafters;
     }
-    
+
     public void sendScrollbarToServer(GuiPart guiPart, int offset) {
     }
-    
+
     public void updateSlots(int guiPart, int offset) {
     }
 }

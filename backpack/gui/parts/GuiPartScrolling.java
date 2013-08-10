@@ -1,9 +1,9 @@
-package backpack.gui.combined;
+package backpack.gui.parts;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import backpack.gui.helper.GuiRectangle;
-import backpack.inventory.ContainerAdvanced;
+import backpack.inventory.container.ContainerAdvanced;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -75,23 +75,23 @@ public abstract class GuiPartScrolling extends GuiPart {
     public void mouseScrollWheel(int scrollDirection) {
         if(scrollDirection != 0 && hasScrollbar) {
             int maxScroll = inventory.getSizeInventory() / 9 - inventoryRows;
-            currentScroll = (float) ((double) currentScroll - (double) scrollDirection / (double) maxScroll);
+            currentScroll = (float) (currentScroll - (double) scrollDirection / (double) maxScroll);
             updateSliderPosition();
         }
     }
 
     protected void setSliderByMouse(int y) {
-        currentScroll = ((float) (y - scrollbar.y) - 7.5F) / ((float) scrollbar.height - 15.0F);
+        currentScroll = (y - scrollbar.y - 7.5F) / (scrollbar.height - 15.0F);
         updateSliderPosition();
     }
 
     protected void updateSliderPosition() {
         checkScrollbarBoundaries();
 
-        slider.y = slider.origY + (int) ((float) (scrollbar.height - slider.height) * currentScroll);
+        slider.y = slider.origY + (int) ((scrollbar.height - slider.height) * currentScroll);
 
         int lastRow = inventory.getSizeInventory() / 9 - inventoryRows;
-        int offset = (int) ((double) (currentScroll * (float) lastRow) + 0.5D);
+        int offset = (int) (currentScroll * lastRow + 0.5D);
 
         if(offset < 0) {
             offset = 0;

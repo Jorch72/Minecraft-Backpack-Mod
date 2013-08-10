@@ -1,16 +1,17 @@
-package backpack.inventory;
+package backpack.inventory.container;
 
 import invtweaks.api.container.ChestContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import backpack.gui.combined.GuiPart;
-import backpack.gui.combined.GuiPartBackpack;
-import backpack.gui.combined.GuiPartPlayerInventory;
-import backpack.gui.combined.GuiPartScrolling;
+import backpack.gui.parts.GuiPart;
+import backpack.gui.parts.GuiPartBackpack;
+import backpack.gui.parts.GuiPartPlayerInventory;
+import backpack.gui.parts.GuiPartScrolling;
 import backpack.handler.PacketHandlerBackpack;
-import backpack.util.IBackpack;
+import backpack.inventory.slot.SlotScrolling;
+import backpack.item.ItemBackpackBase;
 
 @ChestContainer
 public class ContainerBackpack extends ContainerAdvanced {
@@ -56,17 +57,29 @@ public class ContainerBackpack extends ContainerAdvanced {
 
         if(slot != null && slot.getHasStack()) {
             ItemStack itemStack = slot.getStack();
-            if(itemStack.getItem() instanceof IBackpack) {
+            if(itemStack.getItem() instanceof ItemBackpackBase) {
                 return returnStack;
             }
             returnStack = itemStack.copy();
 
-            if(slotPos < upperInventoryRows * 9) {
-                if(!mergeItemStack(itemStack, upperInventoryRows * 9, inventorySlots.size(), true)) {
-                    return null;
+            if(slotPos < top.lastSlot) { // from backpack
+                if(!mergeItemStack(itemStack, hotbar.firstSlot, hotbar.lastSlot, true)) { // to hotbar
+                    if(!mergeItemStack(itemStack, bottom.firstSlot, bottom.lastSlot, false)) { // to inventory
+                        return null;
+                    }
                 }
-            } else if(!mergeItemStack(itemStack, 0, upperInventoryRows * 9, false)) {
-                return null;
+            } else if(slotPos >= bottom.firstSlot && slotPos < bottom.lastSlot) { // from inventory
+                if(!mergeItemStack(itemStack, top.firstSlot, top.lastSlot, false)) { // to backpack
+                    if(!mergeItemStack(itemStack, hotbar.firstSlot, hotbar.lastSlot, true)) { // to hotbar
+                        return null;
+                    }
+                }
+            } else { // from hotbar
+                if(!mergeItemStack(itemStack, top.firstSlot, top.lastSlot, false)) { // to backpack
+                    if(!mergeItemStack(itemStack, bottom.firstSlot, bottom.lastSlot, true)) { // to inventory
+                        return null;
+                    }
+                }
             }
 
             if(itemStack.stackSize == 0) {
@@ -78,14 +91,14 @@ public class ContainerBackpack extends ContainerAdvanced {
 
         return returnStack;
     }
-    
+
     @Override
     public void sendScrollbarToServer(GuiPart guiPart, int offset) {
         if(guiPart == top) {
             PacketHandlerBackpack.sendScrollbarPositionToServer(0, offset);
         }
     }
-    
+
     @Override
     public void updateSlots(int part, int offset) {
         int slotNumber = top.firstSlot;
@@ -96,8 +109,8 @@ public class ContainerBackpack extends ContainerAdvanced {
             for(int col = 0; col < inventoryCols; ++col) {
                 int slotIndex = col + (row + offset) * inventoryCols;
 
-                SlotScrolling slot = (SlotScrolling)inventorySlots.get(slotNumber);
-                
+                SlotScrolling slot = (SlotScrolling) inventorySlots.get(slotNumber);
+
                 slot.setSlotIndex(slotIndex);
                 slotNumber++;
             }

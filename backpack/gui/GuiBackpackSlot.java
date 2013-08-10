@@ -1,18 +1,15 @@
 package backpack.gui;
 
 import net.minecraft.inventory.IInventory;
-import backpack.inventory.container.ContainerBackpack;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import backpack.inventory.container.ContainerBackpackSlot;
 
-@SideOnly(Side.CLIENT)
-public class GuiBackpack extends GuiAdvanced {
-    protected ContainerBackpack container;
+public class GuiBackpackSlot extends GuiAdvanced {
+    protected ContainerBackpackSlot container;
 
-    public GuiBackpack(IInventory inventoryPlayer, IInventory inventoryBackpack) {
-        super(new ContainerBackpack(inventoryPlayer, inventoryBackpack, null));
+    public GuiBackpackSlot(IInventory lowerInventory, IInventory upperInventory) {
+        super(new ContainerBackpackSlot(lowerInventory, upperInventory));
 
-        container = (ContainerBackpack) inventorySlots;
+        container = (ContainerBackpackSlot) inventorySlots;
 
         ySize = TOPSPACING + container.top.ySize + container.bottom.ySize + container.hotbar.ySize + BOTTOMSPACING;
     }

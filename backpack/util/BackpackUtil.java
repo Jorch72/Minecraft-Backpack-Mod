@@ -3,6 +3,7 @@ package backpack.util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import backpack.Backpack;
 import backpack.inventory.InventoryBackpack;
 import backpack.inventory.InventoryWorkbenchBackpack;
 import backpack.item.ItemBackpack;
@@ -23,7 +24,7 @@ public class BackpackUtil {
         IInventory inventoryBackpack = null;
 
         if(weared) {
-            backpack = player.getCurrentArmor(2);
+            backpack = Backpack.proxy.backpackSlot.getBackpack();
         } else {
             backpack = player.getCurrentEquippedItem();
         }

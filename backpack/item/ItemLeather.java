@@ -29,7 +29,7 @@ public class ItemLeather extends Item {
         } else {
             setUnlocalizedName(ItemInfo.UNLOCALIZED_NAME_TANNED_LEATHER);
         }
-        
+
         return super.getUnlocalizedName();
     }
 

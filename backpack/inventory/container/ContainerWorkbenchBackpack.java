@@ -1,4 +1,4 @@
-package backpack.inventory;
+package backpack.inventory.container;
 
 import invtweaks.api.container.ChestContainer;
 import invtweaks.api.container.ContainerSection;
@@ -17,12 +17,14 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.world.World;
-import backpack.gui.combined.GuiPart;
-import backpack.gui.combined.GuiPartBackpack;
-import backpack.gui.combined.GuiPartPlayerInventory;
-import backpack.gui.combined.GuiPartWorkbench;
+import backpack.gui.parts.GuiPart;
+import backpack.gui.parts.GuiPartBackpack;
+import backpack.gui.parts.GuiPartPlayerInventory;
+import backpack.gui.parts.GuiPartWorkbench;
 import backpack.handler.PacketHandlerBackpack;
-import backpack.util.IBackpack;
+import backpack.inventory.InventoryCraftingAdvanced;
+import backpack.inventory.slot.SlotScrolling;
+import backpack.item.ItemBackpackBase;
 
 @ChestContainer
 public class ContainerWorkbenchBackpack extends ContainerAdvanced {
@@ -140,7 +142,7 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
     }
 
     protected boolean mergeItemStackWithBackpack(ItemStack itemStack) {
-        if(upperInventoryRows > 0 && !(itemStack.getItem() instanceof IBackpack)) {
+        if(upperInventoryRows > 0 && !(itemStack.getItem() instanceof ItemBackpackBase)) {
             return mergeItemStack(itemStack, 46, 64, false);
         }
         return false;
@@ -165,14 +167,14 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
     public boolean func_94530_a(ItemStack par1ItemStack, Slot par2Slot) {
         return par2Slot.inventory != craftResult && super.func_94530_a(par1ItemStack, par2Slot);
     }
-    
+
     @Override
     public void sendScrollbarToServer(GuiPart guiPart, int offset) {
         if(guiPart == backpack) {
             PacketHandlerBackpack.sendScrollbarPositionToServer(0, offset);
         }
     }
-    
+
     @Override
     public void updateSlots(int part, int offset) {
         int slotNumber = backpack.firstSlot;
@@ -183,8 +185,8 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
             for(int col = 0; col < inventoryCols; ++col) {
                 int slotIndex = col + (row + offset) * inventoryCols;
 
-                SlotScrolling slot = (SlotScrolling)inventorySlots.get(slotNumber);
-                
+                SlotScrolling slot = (SlotScrolling) inventorySlots.get(slotNumber);
+
                 slot.setSlotIndex(slotIndex);
                 slotNumber++;
             }

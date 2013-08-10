@@ -1,4 +1,4 @@
-package backpack.inventory;
+package backpack.inventory.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ICrafting;
@@ -10,16 +10,17 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityDropper;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
-import backpack.gui.combined.GuiPart;
-import backpack.gui.combined.GuiPart.TEXTPOSITION;
-import backpack.gui.combined.GuiPartBackpack;
-import backpack.gui.combined.GuiPartBrewing;
-import backpack.gui.combined.GuiPartFlexible;
-import backpack.gui.combined.GuiPartFurnace;
-import backpack.gui.combined.GuiPartPlayerInventory;
-import backpack.gui.combined.GuiPartScrolling;
+import backpack.gui.parts.GuiPart;
+import backpack.gui.parts.GuiPart.TEXTPOSITION;
+import backpack.gui.parts.GuiPartBackpack;
+import backpack.gui.parts.GuiPartBrewing;
+import backpack.gui.parts.GuiPartFlexible;
+import backpack.gui.parts.GuiPartFurnace;
+import backpack.gui.parts.GuiPartPlayerInventory;
+import backpack.gui.parts.GuiPartScrolling;
 import backpack.handler.PacketHandlerBackpack;
-import backpack.util.IBackpack;
+import backpack.inventory.slot.SlotScrolling;
+import backpack.item.ItemBackpackBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -103,7 +104,7 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
 
         if(slot != null && slot.getHasStack()) {
             ItemStack itemStack = slot.getStack();
-            if(itemStack.getItem() instanceof IBackpack) {
+            if(itemStack.getItem() instanceof ItemBackpackBase) {
                 return returnStack;
             }
             returnStack = itemStack.copy();
@@ -129,7 +130,7 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
 
         return returnStack;
     }
-    
+
     @Override
     public void sendScrollbarToServer(GuiPart guiPart, int offset) {
         if(guiPart == top) {
@@ -138,7 +139,7 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
             PacketHandlerBackpack.sendScrollbarPositionToServer(1, offset);
         }
     }
-    
+
     @Override
     public void updateSlots(int part, int offset) {
         int slotNumber, inventoryRows, inventoryCols;
@@ -156,8 +157,8 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
             for(int col = 0; col < inventoryCols; ++col) {
                 int slotIndex = col + (row + offset) * inventoryCols;
 
-                SlotScrolling slot = (SlotScrolling)inventorySlots.get(slotNumber);
-                
+                SlotScrolling slot = (SlotScrolling) inventorySlots.get(slotNumber);
+
                 slot.setSlotIndex(slotIndex);
                 slotNumber++;
             }

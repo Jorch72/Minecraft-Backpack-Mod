@@ -1,4 +1,4 @@
-package backpack.network;
+package backpack.handler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
@@ -16,7 +16,7 @@ public class ConnectionHandlerBackpack implements IConnectionHandler {
     public void playerLoggedIn(Player player, NetHandler netHandler, INetworkManager manager) {
         if(!Version.seen && Version.isOutdated()) {
             Version.seen = true;
-            ((EntityPlayer) player).addChatMessage("Version " + Version.latestVersion + " of backpacks is now available!");
+            ((EntityPlayer) player).addChatMessage("Version " + Version.latestVersion + " of Backpacks is now available!");
         } else if(!Version.seen && !Version.isOutdated()) {
             Version.seen = true;
             ((EntityPlayer) player).addChatMessage("Backpacks are up to date");

@@ -1,4 +1,4 @@
-package backpack.gui.combined;
+package backpack.gui.parts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -9,7 +9,7 @@ import net.minecraft.inventory.IInventory;
 
 import org.lwjgl.opengl.GL11;
 
-import backpack.inventory.ContainerAdvanced;
+import backpack.inventory.container.ContainerAdvanced;
 import backpack.misc.Constants;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

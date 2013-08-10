@@ -1,8 +1,8 @@
-package backpack.inventory;
+package backpack.inventory.slot;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import backpack.util.IBackpack;
+import backpack.item.ItemBackpackBase;
 
 public class SlotBackpack extends SlotScrolling {
     public SlotBackpack(IInventory inventory, int slotIndex, int xPos, int yPos) {
@@ -15,6 +15,6 @@ public class SlotBackpack extends SlotScrolling {
      */
     @Override
     public boolean isItemValid(ItemStack is) {
-        return is != null && is.getItem() instanceof IBackpack ? false : true;
+        return is != null && is.getItem() instanceof ItemBackpackBase ? false : true;
     }
 }

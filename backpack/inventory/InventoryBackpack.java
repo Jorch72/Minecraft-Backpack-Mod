@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import backpack.item.ItemBackpack;
+import backpack.item.ItemBackpackBase;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
-import backpack.util.IBackpack;
 import backpack.util.NBTUtil;
 
 public class InventoryBackpack extends InventoryBasic implements IInventoryBackpack {
@@ -133,7 +133,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
     protected void setNBT() {
         if(!NBTUtil.getBoolean(originalIS, Constants.WEARED_BACKPACK_OPEN)) {
             for(ItemStack itemStack : playerEntity.inventory.mainInventory) {
-                if(itemStack != null && itemStack.getItem() instanceof IBackpack) {
+                if(itemStack != null && itemStack.getItem() instanceof ItemBackpackBase) {
                     if(itemStack.getDisplayName() == originalIS.getDisplayName()) {
                         itemStack.setTagCompound(originalIS.getTagCompound());
                         break;

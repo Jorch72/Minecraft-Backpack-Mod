@@ -2,15 +2,16 @@ package backpack.handler;
 
 import java.util.EnumSet;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 
-import backpack.gui.GuiWorkbenchBackpack;
+import backpack.Backpack;
+import backpack.gui.GuiAdvanced;
 import backpack.misc.Constants;
-import backpack.util.IBackpack;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
@@ -31,21 +32,25 @@ public class KeyHandlerBackpack extends KeyHandler {
     public void keyDown(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd, boolean isRepeat) {
         // Only operate at the end of the tick
         if(tickEnd && kb.keyDescription.equals(Constants.KEY_OPEN)) {
-            // If we are not in a GUI of any kind or we are in the backpack gui continue execution
-            if(FMLClientHandler.instance().getClient().inGameHasFocus || FMLClientHandler.instance().getClient().currentScreen instanceof GuiWorkbenchBackpack) {
+            Minecraft mc = FMLClientHandler.instance().getClient();
+            // If we are not in a GUI of any kind
+            if(mc.inGameHasFocus) {
                 // get the current player which has pressed the key
-                EntityPlayer player = FMLClientHandler.instance().getClient().thePlayer;
+                EntityPlayer player = mc.thePlayer;
                 if(player != null) {
-                    ItemStack backpack = player.getCurrentArmor(2);
+                    // if player is sneaking open the slot gui else open the backpack
+                    if(player.isSneaking()) {
+                        PacketHandlerBackpack.sendGuiOpenCloseToServer(Constants.PACKET_ID_OPEN_SLOT);
+                    } else {
+                        ItemStack backpack = Backpack.proxy.backpackSlot.getBackpack();
 
-                    if(backpack != null) {
-                        if(backpack.getItem() instanceof IBackpack) {
-                            if(player.worldObj.isRemote) {
-                                PacketHandlerBackpack.sendOpenBackpackToServer();
-                            }
+                        if(backpack != null) {
+                            PacketHandlerBackpack.sendGuiOpenCloseToServer(Constants.PACKET_ID_OPEN_BACKPACK);
                         }
                     }
                 }
+            } else if(mc.currentScreen instanceof GuiAdvanced) {
+                PacketHandlerBackpack.sendGuiOpenCloseToServer(Constants.PACKET_ID_CLOSE_GUI);
             }
         }
     }

@@ -12,7 +12,6 @@ import backpack.misc.Constants;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-
 @SideOnly(Side.CLIENT)
 public class GuiBackpackAlt extends GuiScreen {
     private String TITLE = "Rename your backpack";

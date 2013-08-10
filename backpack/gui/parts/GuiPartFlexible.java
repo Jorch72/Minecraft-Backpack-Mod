@@ -1,8 +1,8 @@
-package backpack.gui.combined;
+package backpack.gui.parts;
 
 import net.minecraft.inventory.IInventory;
-import backpack.inventory.ContainerAdvanced;
-import backpack.inventory.SlotScrolling;
+import backpack.inventory.container.ContainerAdvanced;
+import backpack.inventory.slot.SlotScrolling;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

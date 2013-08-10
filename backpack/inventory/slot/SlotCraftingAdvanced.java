@@ -1,4 +1,4 @@
-package backpack.inventory;
+package backpack.inventory.slot;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

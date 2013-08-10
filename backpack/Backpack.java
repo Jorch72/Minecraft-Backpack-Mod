@@ -42,7 +42,7 @@ public class Backpack {
     @Mod.EventHandler
     public void load(FMLInitializationEvent event) {
         Version.checkForUpdate();
-        
+
         Items.addNames();
 
         // register recipes

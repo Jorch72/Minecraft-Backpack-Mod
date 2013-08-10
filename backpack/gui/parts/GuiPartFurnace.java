@@ -1,4 +1,4 @@
-package backpack.gui.combined;
+package backpack.gui.parts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.ICrafting;
@@ -6,7 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.tileentity.TileEntityFurnace;
-import backpack.inventory.ContainerAdvanced;
+import backpack.inventory.container.ContainerAdvanced;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

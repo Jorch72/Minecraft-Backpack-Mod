@@ -1,15 +1,15 @@
-package backpack.gui.combined;
+package backpack.gui.parts;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.StatCollector;
-import backpack.inventory.ContainerAdvanced;
-import backpack.inventory.ContainerWorkbenchBackpack;
-import backpack.inventory.SlotCraftingAdvanced;
+import backpack.inventory.container.ContainerAdvanced;
+import backpack.inventory.container.ContainerWorkbenchBackpack;
+import backpack.inventory.slot.SlotCraftingAdvanced;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiPartWorkbench extends GuiPart {

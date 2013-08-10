@@ -4,8 +4,8 @@ import net.minecraft.inventory.IInventory;
 
 import org.lwjgl.input.Mouse;
 
-import backpack.gui.combined.GuiPartScrolling;
-import backpack.inventory.ContainerBackpackCombined;
+import backpack.gui.parts.GuiPartScrolling;
+import backpack.inventory.container.ContainerBackpackCombined;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -84,7 +84,7 @@ public class GuiBackpackCombined extends GuiAdvanced {
             ((GuiPartScrolling) container.bottom).mouseClickMove(x, y);
         }
     }
-    
+
     @Override
     protected void mouseMovedOrUp(int x, int y, int button) {
         super.mouseMovedOrUp(x, y, button);
@@ -99,9 +99,9 @@ public class GuiBackpackCombined extends GuiAdvanced {
     @Override
     public void handleMouseInput() {
         super.handleMouseInput();
-        
-        int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
-        int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+
+        int mouseX = Mouse.getEventX() * width / mc.displayWidth;
+        int mouseY = height - Mouse.getEventY() * height / mc.displayHeight - 1;
         int mouseWheelDirection = Mouse.getEventDWheel();
 
         if(mouseWheelDirection > 0) {

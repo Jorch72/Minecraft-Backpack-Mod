@@ -16,7 +16,7 @@ public class GuiRectangle {
         this.width = width;
         this.height = height;
     }
-    
+
     public boolean isInRectangle(int mouseX, int mouseY) {
         return x <= mouseX && mouseX <= x + width && y <= mouseY && mouseY <= y + height;
     }

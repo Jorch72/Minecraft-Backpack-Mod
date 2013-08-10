@@ -1,12 +1,12 @@
-package backpack.gui.combined;
+package backpack.gui.parts;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityBrewingStand;
-import backpack.inventory.ContainerAdvanced;
-import backpack.inventory.SlotBrewingStandIngredient;
-import backpack.inventory.SlotBrewingStandPotion;
+import backpack.inventory.container.ContainerAdvanced;
+import backpack.inventory.slot.SlotBrewingStandIngredient;
+import backpack.inventory.slot.SlotBrewingStandPotion;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiPartBrewing extends GuiPart {
