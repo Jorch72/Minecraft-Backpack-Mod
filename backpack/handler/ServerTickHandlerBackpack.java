@@ -2,6 +2,7 @@ package backpack.handler;
 
 import java.util.EnumSet;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import backpack.item.ItemBackpackBase;
@@ -31,8 +32,10 @@ public class ServerTickHandlerBackpack implements ITickHandler {
         }
         counter -= ConfigurationBackpack.MAX_BACKPACK_AMOUNT;
         if(counter > 0) {
-            player.addChatMessage("[Backpacks] You are not allowed to have more than " + ConfigurationBackpack.MAX_BACKPACK_AMOUNT + " backpacks in your inventory.");
-            player.addChatMessage("[Backpacks] " + counter + " backpacks were removed from your inventory. Look on the ground.");
+            String message = I18n.func_135052_a("text.backpack.allowed_backpacks", ConfigurationBackpack.MAX_BACKPACK_AMOUNT);
+            player.addChatMessage("[Backpacks] " + message);
+            message = I18n.func_135052_a("text.backpack.dropped_backpacks", counter);
+            player.addChatMessage("[Backpacks] " + message);
         }
     }
 
@@ -43,6 +46,6 @@ public class ServerTickHandlerBackpack implements ITickHandler {
 
     @Override
     public String getLabel() {
-        return "Backpack server tick handler";
+        return "Backpack:ServerTickHandlerBackpack";
     }
 }

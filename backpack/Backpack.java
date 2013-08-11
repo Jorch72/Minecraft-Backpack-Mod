@@ -4,9 +4,10 @@ import backpack.handler.PacketHandlerBackpack;
 import backpack.item.Items;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
-import backpack.misc.Version;
 import backpack.proxy.CommonProxy;
 import backpack.recipes.RecipeHelper;
+import backpack.util.Localizations;
+import backpack.util.Version;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
@@ -43,7 +44,7 @@ public class Backpack {
     public void load(FMLInitializationEvent event) {
         Version.checkForUpdate();
 
-        Items.addNames();
+        Localizations.addLocalizations();
 
         // register recipes
         RecipeHelper.registerRecipes();

@@ -9,7 +9,7 @@ public class InventoryBackpackSlot extends InventoryBasic {
     protected EntityPlayer player;
 
     public InventoryBackpackSlot(EntityPlayer player) {
-        super("Backpack Slot", false, 1);
+        super("text.backpack.backpack_slot", false, 1);
         this.player = player;
     }
 

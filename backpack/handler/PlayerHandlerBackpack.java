@@ -10,6 +10,7 @@ public class PlayerHandlerBackpack implements IPlayerTracker {
     @Override
     public void onPlayerLogin(EntityPlayer player) {
         Backpack.proxy.backpackSlot = new InventoryBackpackSlot(player);
+        Backpack.proxy.backpackSlot.openChest();
     }
 
     @Override
@@ -31,5 +32,6 @@ public class PlayerHandlerBackpack implements IPlayerTracker {
         }
 
         Backpack.proxy.backpackSlot = new InventoryBackpackSlot(player);
+        Backpack.proxy.backpackSlot.openChest();
     }
 }

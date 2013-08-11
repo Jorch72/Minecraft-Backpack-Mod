@@ -3,6 +3,7 @@ package backpack.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -14,7 +15,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiBackpackAlt extends GuiScreen {
-    private String TITLE = "Rename your backpack";
+    private String TITLE = I18n.func_135053_a("text.backpack.rename");
+    private String NEW_NAME = I18n.func_135053_a("text.backpack.new_name");
 
     private GuiTextField txt_backpackName;
     private GuiButton btn_ok, btn_cancel;
@@ -51,11 +53,11 @@ public class GuiBackpackAlt extends GuiScreen {
         buttonList.clear();
 
         // create button for ok and disable it at the beginning
-        btn_ok = new GuiButton(0, guiLeft + xSize - 100, guiTop + 70, 60, 20, "OK");
+        btn_ok = new GuiButton(0, guiLeft + xSize - 100, guiTop + 70, 60, 20, I18n.func_135053_a("button.backpack.ok"));
         btn_ok.enabled = false;
 
         // create button for cancel
-        btn_cancel = new GuiButton(1, guiLeft + 40, guiTop + 70, 60, 20, "Cancel");
+        btn_cancel = new GuiButton(1, guiLeft + 40, guiTop + 70, 60, 20, I18n.func_135053_a("button.backpack.cancel"));
 
         // add buttons to control list
         buttonList.add(btn_ok);
@@ -140,7 +142,7 @@ public class GuiBackpackAlt extends GuiScreen {
         fontRenderer.drawString(TITLE, posX, guiTop + 10, 0x000000);
 
         // draw "New name:" at the left site above the GuiTextField
-        fontRenderer.drawString("New name:", guiLeft + 20, guiTop + 30, 0x404040);
+        fontRenderer.drawString(NEW_NAME, guiLeft + 20, guiTop + 30, 0x404040);
 
         // draw the GuiTextField
         txt_backpackName.drawTextBox();
