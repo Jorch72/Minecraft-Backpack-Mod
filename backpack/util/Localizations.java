@@ -1,30 +1,26 @@
 package backpack.util;
 
-import java.io.File;
-import java.net.URISyntaxException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class Localizations {
     protected static final String path = "/assets/backpack/lang/";
-    
+
     public static void addLocalizations() {
-        File folder;
+        InputStream is = Localizations.class.getResourceAsStream(path + "languages.txt");
+        BufferedReader in = new BufferedReader(new InputStreamReader(is));
         try {
-            folder = new File(Localizations.class.getResource(path).toURI());
-        
-            if(folder.exists()) {
-                for(File langFile : folder.listFiles()) {
-                    String fileName  = langFile.getName();
-                    if(fileName.endsWith(".properties")) {
-                        String lang = fileName.split("\\.")[0];
-                        LanguageRegistry.instance().loadLocalization(path + fileName, lang , false);
-                    }
-                }
+            while(in.ready()) {
+                String lang = in.readLine();
+                LanguageRegistry.instance().loadLocalization(path + lang + ".properties", lang, false);
             }
         }
-        catch (URISyntaxException e) {
+        catch (IOException e) {
             FMLLog.info("[Backpacks] Failed to load localizations.");
         }
     }
