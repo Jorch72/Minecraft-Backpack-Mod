@@ -27,6 +27,14 @@ public class InventoryBackpackSlot extends InventoryBasic {
     public void closeChest() {
         writeToNBT(player);
     }
+    
+    @Override
+    public void onInventoryChanged() {
+        if(getBackpack() != null && getBackpack().stackTagCompound == null) {
+            getBackpack().stackTagCompound = new NBTTagCompound();
+        }
+        super.onInventoryChanged();
+    }
 
     public ItemStack getBackpack() {
         return getStackInSlot(0);

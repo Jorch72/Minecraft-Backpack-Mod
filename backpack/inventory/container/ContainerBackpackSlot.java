@@ -10,16 +10,13 @@ import backpack.gui.parts.GuiPartPlayerInventory;
 import backpack.item.ItemBackpackBase;
 
 public class ContainerBackpackSlot extends ContainerAdvanced {
-    public GuiPart top;
-    public GuiPart bottom;
-
     public ContainerBackpackSlot(IInventory playerInventory, IInventory backpackInventory) {
         super(playerInventory, backpackInventory, null);
 
         // init gui parts
-        top = new GuiPartBackpackSlot(this, backpackInventory);
-        bottom = new GuiPartPlayerInventory(this, playerInventory, false);
-        hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
+        GuiPart top = new GuiPartBackpackSlot(this, backpackInventory);
+        GuiPart bottom = new GuiPartPlayerInventory(this, playerInventory, false);
+        GuiPart hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
 
         // set spacings
         top.setSpacings(0, 6);
@@ -37,6 +34,10 @@ public class ContainerBackpackSlot extends ContainerAdvanced {
         top.addSlots();
         bottom.addSlots();
         hotbar.addSlots();
+        
+        parts.add(top);
+        parts.add(bottom);
+        parts.add(hotbar);
     }
 
     @Override
@@ -57,30 +58,30 @@ public class ContainerBackpackSlot extends ContainerAdvanced {
             returnStack = itemStack.copy();
 
             if(slotPos == 0) { // from backpack slot
-                if(!mergeItemStack(itemStack, bottom.firstSlot, hotbar.lastSlot, true)) { // to inventory + hotbar
+                if(!mergeItemStack(itemStack, parts.get(1).firstSlot, parts.get(2).lastSlot, true)) { // to inventory + hotbar
                     return null;
                 }
-            } else if(slotPos >= bottom.firstSlot && slotPos < bottom.lastSlot) { // from inventory
+            } else if(slotPos >= parts.get(1).firstSlot && slotPos < parts.get(1).lastSlot) { // from inventory
                 if(itemStack.getItem() instanceof ItemBackpackBase) { // if backpack
                     if(!mergeItemStack(itemStack, 0, 1, false)) { // to backpack slot
-                        if(!mergeItemStack(itemStack, hotbar.firstSlot, hotbar.lastSlot, true)) { // to hotbar
+                        if(!mergeItemStack(itemStack, parts.get(2).firstSlot, parts.get(2).lastSlot, true)) { // to hotbar
                             return null;
                         }
                     }
                 } else { // if not a backpack
-                    if(!mergeItemStack(itemStack, hotbar.firstSlot, hotbar.lastSlot, true)) { // to hotbar
+                    if(!mergeItemStack(itemStack, parts.get(2).firstSlot, parts.get(2).lastSlot, true)) { // to hotbar
                         return null;
                     }
                 }
             } else { // from hotbar
                 if(itemStack.getItem() instanceof ItemBackpackBase) { // if backpack
                     if(!mergeItemStack(itemStack, 0, 1, false)) { // to backpack slot
-                        if(!mergeItemStack(itemStack, bottom.firstSlot, bottom.lastSlot, false)) { // to inventory
+                        if(!mergeItemStack(itemStack, parts.get(1).firstSlot, parts.get(1).lastSlot, false)) { // to inventory
                             return null;
                         }
                     }
                 } else { // if not a backpack
-                    if(!mergeItemStack(itemStack, bottom.firstSlot, bottom.lastSlot, false)) { // to inventory
+                    if(!mergeItemStack(itemStack, parts.get(1).firstSlot, parts.get(1).lastSlot, false)) { // to inventory
                         return null;
                     }
                 }

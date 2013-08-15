@@ -4,6 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import backpack.gui.helper.GuiRectangle;
 import backpack.inventory.container.ContainerAdvanced;
+import backpack.inventory.slot.SlotScrolling;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -38,7 +39,11 @@ public abstract class GuiPartScrolling extends GuiPart {
 
         for(int i = firstSlot; i < lastSlot; i++) {
             Slot slot = (Slot) container.inventorySlots.get(i);
-            drawTexturedModalRect(guiLeft + slot.xDisplayPosition - 1, guiTop + slot.yDisplayPosition - 1, 201, 0, 18, 18);
+            int offset = 0;
+            if(slot instanceof SlotScrolling && ((SlotScrolling)slot).isDisabled()) {
+                offset = 18;
+            }
+            drawTexturedModalRect(guiLeft + slot.xDisplayPosition - 1, guiTop + slot.yDisplayPosition - 1, 201 + offset, 0, 18, 18);
         }
 
         if(hasScrollbar) {
@@ -46,7 +51,7 @@ public abstract class GuiPartScrolling extends GuiPart {
             drawTexturedModalRect(scrollbar.x - 5, scrollbar.y, xSize, 7, 25, scrollbar.height);
             drawTexturedModalRect(scrollbar.x - 5, scrollbar.y + scrollbar.height, xSize, 113, 25, 7);
 
-            drawTexturedModalRect(slider.x, slider.y, 232, 0, slider.width, slider.height);
+            drawTexturedModalRect(slider.x, slider.y, 244, 0, slider.width, slider.height);
         }
     }
 
@@ -90,7 +95,7 @@ public abstract class GuiPartScrolling extends GuiPart {
 
         slider.y = slider.origY + (int) ((scrollbar.height - slider.height) * currentScroll);
 
-        int lastRow = inventory.getSizeInventory() / 9 - inventoryRows;
+        int lastRow = (int) Math.ceil(inventory.getSizeInventory() / 9. - inventoryRows);
         int offset = (int) (currentScroll * lastRow + 0.5D);
 
         if(offset < 0) {

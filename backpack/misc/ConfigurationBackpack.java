@@ -7,8 +7,8 @@ import backpack.item.ItemInfo;
 
 public class ConfigurationBackpack {
     public static int ENDER_RECIPE;
-    public static int BACKPACK_SIZE_M;
-    public static int BACKPACK_SIZE_L;
+    public static int BACKPACK_SLOTS_S;
+    public static int BACKPACK_SLOTS_L;
     public static int MAX_BACKPACK_AMOUNT;
     public static boolean OPEN_ONLY_WEARED_BACKPACK;
     public static boolean AIRSHIP_MOD_COMPATIBILITY;
@@ -32,13 +32,13 @@ public class ConfigurationBackpack {
         if(ENDER_RECIPE < 0 || ENDER_RECIPE > 1) {
             ENDER_RECIPE = 0;
         }
-        BACKPACK_SIZE_L = config.get(Configuration.CATEGORY_GENERAL, "backpackSizeL", 6, getBackpackSizeComment()).getInt();
-        if(BACKPACK_SIZE_L < 1 || BACKPACK_SIZE_L > 6) {
-            BACKPACK_SIZE_L = 6;
+        BACKPACK_SLOTS_S = config.get(Configuration.CATEGORY_GENERAL, "backpackSlotsS", 27, getBackpackSlotComment()).getInt();
+        if(BACKPACK_SLOTS_S < 1 || BACKPACK_SLOTS_S > 128) {
+            BACKPACK_SLOTS_S = 27;
         }
-        BACKPACK_SIZE_M = config.get(Configuration.CATEGORY_GENERAL, "backpackSizeM", 3).getInt();
-        if(BACKPACK_SIZE_M < 1 || BACKPACK_SIZE_M > 6) {
-            BACKPACK_SIZE_M = 6;
+        BACKPACK_SLOTS_L = config.get(Configuration.CATEGORY_GENERAL, "backpackSlotsL", 54, getBackpackSlotComment()).getInt();
+        if(BACKPACK_SLOTS_L < 1 || BACKPACK_SLOTS_L > 128) {
+            BACKPACK_SLOTS_L = 54;
         }
         MAX_BACKPACK_AMOUNT = config.get(Configuration.CATEGORY_GENERAL, "maxBackpackAmount", 0, getMaxBackpackAmountComment()).getInt();
         if(MAX_BACKPACK_AMOUNT < 0 || MAX_BACKPACK_AMOUNT > 36) {
@@ -59,8 +59,8 @@ public class ConfigurationBackpack {
         return "##############\n" + "Recipe to craft ender backpack\n" + "0 ender chest\n" + "1 eye of the ender\n" + "##############";
     }
 
-    private static String getBackpackSizeComment() {
-        return "##############\n" + "Number of rows (9 slots) a backpack has\n" + "valid: integers 1-6\n" + "##############";
+    private static String getBackpackSlotComment() {
+        return "##############\n" + "Number of slots a backpack has\n" + "valid: integers 1-128\n" + "##############";
     }
 
     private static String getMaxBackpackAmountComment() {

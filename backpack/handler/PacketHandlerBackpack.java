@@ -86,7 +86,7 @@ public class PacketHandlerBackpack implements IPacketHandler {
                 if(!entityPlayer.worldObj.isRemote) {
                     Container container = entityPlayer.openContainer;
                     if(container != null && container instanceof ContainerAdvanced) {
-                        ((ContainerAdvanced) container).updateSlots(reader.readByte(), reader.readByte());
+                        ((ContainerAdvanced) container).updateSlots(reader.readByte(), reader.readByte(), true);
                     }
                 }
                 break;

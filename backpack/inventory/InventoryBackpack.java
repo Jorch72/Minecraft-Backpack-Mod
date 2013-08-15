@@ -19,7 +19,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
     protected EntityPlayer playerEntity;
     // the original ItemStack to compare with the player inventory
     protected ItemStack originalIS;
-
+    
     // if class is reading from NBT tag
     protected boolean reading = false;
 
@@ -93,7 +93,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      */
     protected static int getInventorySize(ItemStack is) {
         if(is.getItem() instanceof ItemBackpack) {
-            return 9 * (is.getItemDamage() > 17 ? ConfigurationBackpack.BACKPACK_SIZE_L : ConfigurationBackpack.BACKPACK_SIZE_M);
+            return (is.getItemDamage() > 17 ? ConfigurationBackpack.BACKPACK_SLOTS_L : ConfigurationBackpack.BACKPACK_SLOTS_S);
         } else {
             return 9 * (is.getItemDamage() == 18 ? 0 : 2);
         }
@@ -185,7 +185,6 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
         NBTTagCompound inventory = new NBTTagCompound();
         inventory.setTag("Items", itemList);
         NBTUtil.setCompoundTag(originalIS, "Inventory", inventory);
-        // return outerTag;
     }
 
     /**

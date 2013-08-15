@@ -9,22 +9,18 @@ import backpack.gui.parts.GuiPart;
 import backpack.gui.parts.GuiPartBackpack;
 import backpack.gui.parts.GuiPartPlayerInventory;
 import backpack.gui.parts.GuiPartScrolling;
-import backpack.handler.PacketHandlerBackpack;
-import backpack.inventory.slot.SlotScrolling;
 import backpack.item.ItemBackpackBase;
 
 @ChestContainer
 public class ContainerBackpack extends ContainerAdvanced {
-    public GuiPart top;
-    public GuiPart bottom;
 
     public ContainerBackpack(IInventory playerInventory, IInventory backpackInventory, ItemStack backpack) {
         super(playerInventory, backpackInventory, backpack);
 
         // init gui parts
-        top = new GuiPartBackpack(this, backpackInventory, upperInventoryRows, true);
-        bottom = new GuiPartPlayerInventory(this, playerInventory, false);
-        hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
+        GuiPart top = new GuiPartBackpack(this, backpackInventory, upperInventoryRows, true);
+        GuiPart bottom = new GuiPartPlayerInventory(this, playerInventory, false);
+        GuiPart hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
 
         // init scrollbar
         ((GuiPartScrolling) top).setScrollbarOffset(-6);
@@ -45,6 +41,10 @@ public class ContainerBackpack extends ContainerAdvanced {
         top.addSlots();
         bottom.addSlots();
         hotbar.addSlots();
+        
+        parts.add(top);
+        parts.add(bottom);
+        parts.add(hotbar);
     }
 
     /**
@@ -62,21 +62,21 @@ public class ContainerBackpack extends ContainerAdvanced {
             }
             returnStack = itemStack.copy();
 
-            if(slotPos < top.lastSlot) { // from backpack
-                if(!mergeItemStack(itemStack, hotbar.firstSlot, hotbar.lastSlot, true)) { // to hotbar
-                    if(!mergeItemStack(itemStack, bottom.firstSlot, bottom.lastSlot, false)) { // to inventory
+            if(slotPos < parts.get(0).lastSlot) { // from backpack
+                if(!mergeItemStack(itemStack, parts.get(2).firstSlot, parts.get(2).lastSlot, true)) { // to hotbar
+                    if(!mergeItemStack(itemStack, parts.get(1).firstSlot, parts.get(1).lastSlot, false)) { // to inventory
                         return null;
                     }
                 }
-            } else if(slotPos >= bottom.firstSlot && slotPos < bottom.lastSlot) { // from inventory
-                if(!mergeItemStack(itemStack, top.firstSlot, top.lastSlot, false)) { // to backpack
-                    if(!mergeItemStack(itemStack, hotbar.firstSlot, hotbar.lastSlot, true)) { // to hotbar
+            } else if(slotPos >= parts.get(1).firstSlot && slotPos < parts.get(1).lastSlot) { // from inventory
+                if(!mergeItemStack(itemStack, parts.get(0).firstSlot, parts.get(0).lastSlot, false)) { // to backpack
+                    if(!mergeItemStack(itemStack, parts.get(2).firstSlot, parts.get(2).lastSlot, true)) { // to hotbar
                         return null;
                     }
                 }
             } else { // from hotbar
-                if(!mergeItemStack(itemStack, top.firstSlot, top.lastSlot, false)) { // to backpack
-                    if(!mergeItemStack(itemStack, bottom.firstSlot, bottom.lastSlot, true)) { // to inventory
+                if(!mergeItemStack(itemStack, parts.get(0).firstSlot, parts.get(0).lastSlot, false)) { // to backpack
+                    if(!mergeItemStack(itemStack, parts.get(1).firstSlot, parts.get(1).lastSlot, true)) { // to inventory
                         return null;
                     }
                 }
@@ -90,31 +90,5 @@ public class ContainerBackpack extends ContainerAdvanced {
         }
 
         return returnStack;
-    }
-
-    @Override
-    public void sendScrollbarToServer(GuiPart guiPart, int offset) {
-        if(guiPart == top) {
-            PacketHandlerBackpack.sendScrollbarPositionToServer(0, offset);
-        }
-    }
-
-    @Override
-    public void updateSlots(int part, int offset) {
-        int slotNumber = top.firstSlot;
-        int inventoryRows = top.inventoryRows;
-        int inventoryCols = top.inventoryCols;
-
-        for(int row = 0; row < inventoryRows; ++row) {
-            for(int col = 0; col < inventoryCols; ++col) {
-                int slotIndex = col + (row + offset) * inventoryCols;
-
-                SlotScrolling slot = (SlotScrolling) inventorySlots.get(slotNumber);
-
-                slot.setSlotIndex(slotIndex);
-                slotNumber++;
-            }
-        }
-        detectAndSendChanges();
     }
 }

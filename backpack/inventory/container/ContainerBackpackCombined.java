@@ -18,8 +18,6 @@ import backpack.gui.parts.GuiPartFlexible;
 import backpack.gui.parts.GuiPartFurnace;
 import backpack.gui.parts.GuiPartPlayerInventory;
 import backpack.gui.parts.GuiPartScrolling;
-import backpack.handler.PacketHandlerBackpack;
-import backpack.inventory.slot.SlotScrolling;
 import backpack.item.ItemBackpackBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,12 +25,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ContainerBackpackCombined extends ContainerAdvanced {
     protected int backpackStartSlot;
     protected int backpackEndSlot;
-    public GuiPart top;
-    public GuiPart bottom;
 
     public ContainerBackpackCombined(IInventory playerInventory, IInventory otherInventory, IInventory backpackInventory, ItemStack backpack) {
         super(backpackInventory, otherInventory, backpack);
 
+
+        GuiPart top;
         // init parts
         if(otherInventory instanceof TileEntityFurnace) {
             top = new GuiPartFurnace(this, otherInventory, upperInventoryRows);
@@ -50,10 +48,10 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
             ((GuiPartScrolling) top).setScrollbarOffset(-6);
         }
 
-        bottom = new GuiPartBackpack(this, backpackInventory, lowerInventoryRows, upperInventoryRows <= 3);
+        GuiPart bottom = new GuiPartBackpack(this, backpackInventory, lowerInventoryRows, upperInventoryRows <= 3);
         ((GuiPartScrolling) bottom).setScrollbarOffset(2);
 
-        hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
+        GuiPart hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
 
         // set spacings
         top.setSpacings(0, 6);
@@ -73,25 +71,29 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
         bottom.addSlots();
         backpackEndSlot = inventorySlots.size();
         hotbar.addSlots();
+        
+        parts.add(top);
+        parts.add(bottom);
+        parts.add(hotbar);
     }
 
     @Override
     public void addCraftingToCrafters(ICrafting par1iCrafting) {
         super.addCraftingToCrafters(par1iCrafting);
-        top.addCraftingToCrafters(par1iCrafting);
+        parts.get(0).addCraftingToCrafters(par1iCrafting);
     }
 
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        top.detectAndSendChanges();
+        parts.get(0).detectAndSendChanges();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int par1, int par2) {
         super.updateProgressBar(par1, par2);
-        top.updateProgressBar(par1, par2);
+        parts.get(0).updateProgressBar(par1, par2);
     }
 
     /**
@@ -109,12 +111,12 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
             }
             returnStack = itemStack.copy();
 
-            if(slotPos < backpackStartSlot) {
-                if(!mergeItemStack(itemStack, backpackStartSlot, backpackEndSlot, false)) {
+            if(slotPos < backpackStartSlot) { // from other inventory
+                if(!mergeItemStack(itemStack, backpackStartSlot, backpackEndSlot, false)) { // to backpack
                     return null;
                 }
-            } else if(slotPos >= backpackStartSlot && slotPos < backpackEndSlot) {
-                if(!mergeItemStack(itemStack, 0, backpackStartSlot, false)) {
+            } else if(slotPos >= backpackStartSlot && slotPos < backpackEndSlot) { // from backpack
+                if(!mergeItemStack(itemStack, 0, backpackStartSlot, false)) { // to other inventory
                     return null;
                 }
             } else if(!mergeItemStack(itemStack, 0, backpackEndSlot, false)) {
@@ -129,40 +131,5 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
         }
 
         return returnStack;
-    }
-
-    @Override
-    public void sendScrollbarToServer(GuiPart guiPart, int offset) {
-        if(guiPart == top) {
-            PacketHandlerBackpack.sendScrollbarPositionToServer(0, offset);
-        } else if(guiPart == bottom) {
-            PacketHandlerBackpack.sendScrollbarPositionToServer(1, offset);
-        }
-    }
-
-    @Override
-    public void updateSlots(int part, int offset) {
-        int slotNumber, inventoryRows, inventoryCols;
-        if(part == 0) {
-            slotNumber = top.firstSlot;
-            inventoryRows = top.inventoryRows;
-            inventoryCols = top.inventoryCols;
-        } else {
-            slotNumber = bottom.firstSlot;
-            inventoryRows = bottom.inventoryRows;
-            inventoryCols = bottom.inventoryCols;
-        }
-
-        for(int row = 0; row < inventoryRows; ++row) {
-            for(int col = 0; col < inventoryCols; ++col) {
-                int slotIndex = col + (row + offset) * inventoryCols;
-
-                SlotScrolling slot = (SlotScrolling) inventorySlots.get(slotNumber);
-
-                slot.setSlotIndex(slotIndex);
-                slotNumber++;
-            }
-        }
-        detectAndSendChanges();
     }
 }

@@ -46,7 +46,7 @@ public class CommonProxy implements IGuiHandler {
                 backpack = player.getCurrentEquippedItem();
                 inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
                 if(inventoryBackpack == null) {
-                    inventoryBackpack = new InventoryBasic("placebo", false, 9 * ConfigurationBackpack.BACKPACK_SIZE_L);
+                    inventoryBackpack = new InventoryBasic("placebo", false, 128);
                 }
                 return new ContainerBackpack(player.inventory, inventoryBackpack, backpack);
             case Constants.GUI_ID_BACKPACK_WEARED:
@@ -68,7 +68,7 @@ public class CommonProxy implements IGuiHandler {
                 backpack = player.getCurrentEquippedItem();
                 inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
                 if(inventoryBackpack == null) {
-                    inventoryBackpack = new InventoryBasic("placebo", false, 9 * ConfigurationBackpack.BACKPACK_SIZE_L);
+                    inventoryBackpack = new InventoryBasic("placebo", false, 128);
                 }
                 if(te instanceof TileEntityEnderChest) {
                     inventory = player.getInventoryEnderChest();
@@ -84,7 +84,8 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new ContainerBackpackCombined(player.inventory, inventory, inventoryBackpack, backpack);
             case Constants.GUI_ID_BACKPACK_SLOT:
-                backpackSlot = new InventoryBackpackSlot(player);
+                //TODO test if needed
+                //backpackSlot = new InventoryBackpackSlot(player);
                 return new ContainerBackpackSlot(player.inventory, backpackSlot);
         }
         return null;
@@ -98,7 +99,7 @@ public class CommonProxy implements IGuiHandler {
             case Constants.GUI_ID_BACKPACK:
                 inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
                 if(inventoryBackpack == null) {
-                    inventoryBackpack = new InventoryBasic("placebo", false, 9 * ConfigurationBackpack.BACKPACK_SIZE_L);
+                    inventoryBackpack = new InventoryBasic("placebo", false, 128);
                 }
                 return new GuiBackpack(player.inventory, inventoryBackpack);
             case Constants.GUI_ID_BACKPACK_WEARED:
@@ -118,7 +119,7 @@ public class CommonProxy implements IGuiHandler {
                 IInventory inventory;
                 inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
                 if(inventoryBackpack == null) {
-                    inventoryBackpack = new InventoryBasic("placebo", false, 9 * ConfigurationBackpack.BACKPACK_SIZE_L);
+                    inventoryBackpack = new InventoryBasic("placebo", false, 128);
                 }
                 if(te instanceof TileEntityEnderChest) {
                     inventory = player.getInventoryEnderChest();

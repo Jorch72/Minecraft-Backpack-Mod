@@ -21,9 +21,7 @@ import backpack.gui.parts.GuiPart;
 import backpack.gui.parts.GuiPartBackpack;
 import backpack.gui.parts.GuiPartPlayerInventory;
 import backpack.gui.parts.GuiPartWorkbench;
-import backpack.handler.PacketHandlerBackpack;
 import backpack.inventory.InventoryCraftingAdvanced;
-import backpack.inventory.slot.SlotScrolling;
 import backpack.item.ItemBackpackBase;
 
 @ChestContainer
@@ -31,9 +29,6 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
     private World worldObj;
-    public GuiPart workbench;
-    public GuiPart player;
-    public GuiPart backpack;
 
     public ContainerWorkbenchBackpack(InventoryPlayer playerInventory, IInventory backpackInventory, ItemStack backpackIS) {
         super(playerInventory, backpackInventory, backpackIS);
@@ -42,10 +37,10 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
         craftMatrix = new InventoryCraftingAdvanced(this, backpackInventory);
 
         // init parts
-        workbench = new GuiPartWorkbench(this, backpackInventory, playerInventory);
-        backpack = new GuiPartBackpack(this, backpackInventory, 2, false);
-        player = new GuiPartPlayerInventory(this, playerInventory, false);
-        hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
+        GuiPart workbench = new GuiPartWorkbench(this, backpackInventory, playerInventory);
+        GuiPart backpack = new GuiPartBackpack(this, backpackInventory, upperInventoryRows, false);
+        GuiPart player = new GuiPartPlayerInventory(this, playerInventory, false);
+        GuiPart hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
 
         // set spacings
         backpack.setSpacings(6, 0);
@@ -66,6 +61,11 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
         player.addSlots();
         hotbar.addSlots();
         backpack.addSlots();
+        
+        parts.add(workbench);
+        parts.add(backpack);
+        parts.add(player);
+        parts.add(hotbar);
 
         onCraftMatrixChanged(craftMatrix);
     }
@@ -166,31 +166,5 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
     @Override
     public boolean func_94530_a(ItemStack par1ItemStack, Slot par2Slot) {
         return par2Slot.inventory != craftResult && super.func_94530_a(par1ItemStack, par2Slot);
-    }
-
-    @Override
-    public void sendScrollbarToServer(GuiPart guiPart, int offset) {
-        if(guiPart == backpack) {
-            PacketHandlerBackpack.sendScrollbarPositionToServer(0, offset);
-        }
-    }
-
-    @Override
-    public void updateSlots(int part, int offset) {
-        int slotNumber = backpack.firstSlot;
-        int inventoryRows = backpack.inventoryRows;
-        int inventoryCols = backpack.inventoryCols;
-
-        for(int row = 0; row < inventoryRows; ++row) {
-            for(int col = 0; col < inventoryCols; ++col) {
-                int slotIndex = col + (row + offset) * inventoryCols;
-
-                SlotScrolling slot = (SlotScrolling) inventorySlots.get(slotNumber);
-
-                slot.setSlotIndex(slotIndex);
-                slotNumber++;
-            }
-        }
-        detectAndSendChanges();
     }
 }

@@ -15,6 +15,6 @@ public class SlotBackpack extends SlotScrolling {
      */
     @Override
     public boolean isItemValid(ItemStack is) {
-        return is != null && is.getItem() instanceof ItemBackpackBase ? false : true;
+        return is != null && is.getItem() instanceof ItemBackpackBase ? false : super.isItemValid(is);
     }
 }

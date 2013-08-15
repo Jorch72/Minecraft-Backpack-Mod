@@ -6,14 +6,19 @@ import net.minecraft.item.ItemStack;
 
 public class SlotScrolling extends Slot {
     protected int slotIndex;
+    protected boolean isDisabled;
 
     public SlotScrolling(IInventory inventory, int slotIndex, int x, int y) {
         super(inventory, slotIndex, x, y);
         this.slotIndex = slotIndex;
+        isDisabled = false;
     }
 
     @Override
     public ItemStack getStack() {
+        if(isDisabled) {
+            return null;
+        }
         return inventory.getStackInSlot(slotIndex);
     }
 
@@ -40,5 +45,18 @@ public class SlotScrolling extends Slot {
 
     public void setSlotIndex(int slotIndex) {
         this.slotIndex = slotIndex;
+    }
+    
+    public void setDisabled(boolean newValue) {
+        isDisabled = newValue;
+    }
+    
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+    
+    @Override
+    public boolean isItemValid(ItemStack itemStack) {
+        return !isDisabled;
     }
 }
