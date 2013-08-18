@@ -30,14 +30,10 @@ public class InventoryBackpackSlot extends InventoryBasic {
     
     @Override
     public void onInventoryChanged() {
-        if(getBackpack() != null && getBackpack().stackTagCompound == null) {
-            getBackpack().stackTagCompound = new NBTTagCompound();
+        if(getStackInSlot(0) != null && getStackInSlot(0).stackTagCompound == null) {
+            getStackInSlot(0).stackTagCompound = new NBTTagCompound();
         }
         super.onInventoryChanged();
-    }
-
-    public ItemStack getBackpack() {
-        return getStackInSlot(0);
     }
 
     public void readFromNBT(EntityPlayer player) {
@@ -53,8 +49,8 @@ public class InventoryBackpackSlot extends InventoryBasic {
     public void writeToNBT(EntityPlayer player) {
         NBTTagCompound playerData = player.getEntityData();
         NBTTagCompound backpack = new NBTTagCompound();
-        if(getBackpack() != null) {
-            getBackpack().writeToNBT(backpack);
+        if(getStackInSlot(0) != null) {
+            getStackInSlot(0).writeToNBT(backpack);
             playerData.setCompoundTag("backpack", backpack);
         } else {
             playerData.removeTag("backpack");

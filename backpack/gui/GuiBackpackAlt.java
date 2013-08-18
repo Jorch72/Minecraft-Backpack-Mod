@@ -89,7 +89,6 @@ public class GuiBackpackAlt extends GuiScreen {
                 PacketHandlerBackpack.sendBackpackNameToServer(name);
             case 1:
                 // remove the GUI
-                mc.displayGuiScreen(null);
                 mc.setIngameFocus();
                 break;
             default:

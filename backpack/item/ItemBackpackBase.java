@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityEnderChest;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import backpack.Backpack;
 import backpack.misc.ConfigurationBackpack;
@@ -160,11 +161,14 @@ public abstract class ItemBackpackBase extends Item {
      */
     @Override
     public String getItemDisplayName(ItemStack itemstack) {
+        String name = "";
         // it ItemStack has a NBTTagCompound load name from it.
-        if(NBTUtil.hasTag(itemstack, "display")) {
-            return NBTUtil.getCompoundTag(itemstack, "display").getString("Name");
+        if(NBTUtil.hasTag(itemstack, "Name")) {
+            name = NBTUtil.getString(itemstack, "Name");
+        } else {
+            name = getLocalizedName(itemstack) + ".name";
         }
-        return super.getItemDisplayName(itemstack);
+        return StatCollector.translateToLocal(name);
     }
 
     @Override

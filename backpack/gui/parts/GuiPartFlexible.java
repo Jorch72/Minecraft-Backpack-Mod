@@ -3,10 +3,7 @@ package backpack.gui.parts;
 import net.minecraft.inventory.IInventory;
 import backpack.inventory.container.ContainerAdvanced;
 import backpack.inventory.slot.SlotScrolling;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class GuiPartFlexible extends GuiPartScrolling {
 
     public GuiPartFlexible(ContainerAdvanced container, IInventory inventory, int inventoryRows) {

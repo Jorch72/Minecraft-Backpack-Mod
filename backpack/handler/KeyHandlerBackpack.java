@@ -5,11 +5,9 @@ import java.util.EnumSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 
-import backpack.Backpack;
 import backpack.gui.GuiAdvanced;
 import backpack.misc.Constants;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -42,15 +40,11 @@ public class KeyHandlerBackpack extends KeyHandler {
                     if(player.isSneaking()) {
                         PacketHandlerBackpack.sendGuiOpenCloseToServer(Constants.PACKET_ID_OPEN_SLOT);
                     } else {
-                        ItemStack backpack = Backpack.proxy.backpackSlot.getBackpack();
-
-                        if(backpack != null) {
-                            PacketHandlerBackpack.sendGuiOpenCloseToServer(Constants.PACKET_ID_OPEN_BACKPACK);
-                        }
+                        PacketHandlerBackpack.sendGuiOpenCloseToServer(Constants.PACKET_ID_OPEN_BACKPACK);
                     }
                 }
-            } else if(mc.currentScreen instanceof GuiAdvanced) {
-                PacketHandlerBackpack.sendGuiOpenCloseToServer(Constants.PACKET_ID_CLOSE_GUI);
+            } else {
+                ((GuiAdvanced)mc.currentScreen).closeGui();
             }
         }
     }

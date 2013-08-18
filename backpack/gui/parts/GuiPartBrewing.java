@@ -1,5 +1,6 @@
 package backpack.gui.parts;
 
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import backpack.inventory.container.ContainerAdvanced;
@@ -8,12 +9,14 @@ import backpack.inventory.slot.SlotBrewingStandPotion;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class GuiPartBrewing extends GuiPart {
+    private int brewTime;
+    private TileEntityBrewingStand brewingStand;
 
     public GuiPartBrewing(ContainerAdvanced container, IInventory inventory, int inventoryRows) {
         super(container, inventory, inventoryRows);
         ySize = 54;
+        brewingStand = (TileEntityBrewingStand) inventory;
     }
 
     @Override
@@ -69,6 +72,32 @@ public class GuiPartBrewing extends GuiPart {
             if(barHeight > 0) {
                 drawTexturedModalRect(guiLeft + 65, guiTop + 14 + 29 - barHeight, 64, 195 - barHeight, 11, barHeight);
             }
+        }
+    }
+
+    @Override
+    public void addCraftingToCrafters(ICrafting player) {
+        player.sendProgressBarUpdate(container, 0, brewingStand.getBrewTime());
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        for(int i = 0; i < container.getCrafters().size(); ++i) {
+            ICrafting icrafting = container.getCrafters().get(i);
+
+            if(brewTime != brewingStand.getBrewTime()) {
+                icrafting.sendProgressBarUpdate(container, 0, brewingStand.getBrewTime());
+            }
+        }
+
+        this.brewTime = brewingStand.getBrewTime();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int value) {
+        if(id == 0) {
+            brewingStand.setBrewTime(value);
         }
     }
 }

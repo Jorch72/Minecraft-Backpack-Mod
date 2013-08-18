@@ -50,7 +50,7 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new ContainerBackpack(player.inventory, inventoryBackpack, backpack);
             case Constants.GUI_ID_BACKPACK_WEARED:
-                backpack = backpackSlot.getBackpack();
+                backpack = getBackpack();
                 return new ContainerBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true), backpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK:
                 backpack = player.getCurrentEquippedItem();
@@ -60,7 +60,7 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new ContainerWorkbenchBackpack(player.inventory, inventoryBackpack, backpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK_WEARED:
-                backpack = backpackSlot.getBackpack();
+                backpack = getBackpack();
                 return new ContainerWorkbenchBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true), backpack);
             case Constants.GUI_ID_COMBINED:
                 TileEntity te = world.getBlockTileEntity(x, y, z);
@@ -84,8 +84,7 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new ContainerBackpackCombined(player.inventory, inventory, inventoryBackpack, backpack);
             case Constants.GUI_ID_BACKPACK_SLOT:
-                //TODO test if needed
-                //backpackSlot = new InventoryBackpackSlot(player);
+                backpackSlot = new InventoryBackpackSlot(player);
                 return new ContainerBackpackSlot(player.inventory, backpackSlot);
         }
         return null;
@@ -135,7 +134,8 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new GuiBackpackCombined(player.inventory, inventory, inventoryBackpack);
             case Constants.GUI_ID_BACKPACK_SLOT:
-                return new GuiBackpackSlot(player.inventory, new InventoryBackpackSlot(player));
+                backpackSlot = new InventoryBackpackSlot(player);
+                return new GuiBackpackSlot(player.inventory, backpackSlot);
         }
         return null;
     }
@@ -155,5 +155,12 @@ public class CommonProxy implements IGuiHandler {
 
     public void addNeiSupport() {
         // Nothing here as this is the server side proxy
+    }
+    
+    public ItemStack getBackpack() {
+        if(backpackSlot != null) {
+            return backpackSlot.getStackInSlot(0);
+        }
+        return null;
     }
 }

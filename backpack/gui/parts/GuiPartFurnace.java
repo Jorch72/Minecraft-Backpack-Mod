@@ -1,6 +1,6 @@
 package backpack.gui.parts;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -10,17 +10,18 @@ import backpack.inventory.container.ContainerAdvanced;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class GuiPartFurnace extends GuiPart {
     private int lastCookTime;
     private int lastBurnTime;
     private int lastItemBurnTime;
     private TileEntityFurnace furnace;
+    private EntityPlayer player;
 
-    public GuiPartFurnace(ContainerAdvanced container, IInventory inventory, int inventoryRows) {
+    public GuiPartFurnace(ContainerAdvanced container, EntityPlayer player, IInventory inventory, int inventoryRows) {
         super(container, inventory, inventoryRows);
         ySize = 54;
         furnace = (TileEntityFurnace) inventory;
+        this.player = player;
     }
 
     @Override
@@ -31,7 +32,7 @@ public class GuiPartFurnace extends GuiPart {
 
         container.addSlot(new Slot(inventory, 0, 56, offset));
         container.addSlot(new Slot(inventory, 1, 56, offset + 36));
-        container.addSlot(new SlotFurnace(Minecraft.getMinecraft().thePlayer, inventory, 2, 116, offset + 18));
+        container.addSlot(new SlotFurnace(player, inventory, 2, 116, offset + 18));
 
         lastSlot = container.inventorySlots.size();
     }
@@ -64,10 +65,10 @@ public class GuiPartFurnace extends GuiPart {
     }
 
     @Override
-    public void addCraftingToCrafters(ICrafting par1iCrafting) {
-        par1iCrafting.sendProgressBarUpdate(container, 0, furnace.furnaceCookTime);
-        par1iCrafting.sendProgressBarUpdate(container, 1, furnace.furnaceBurnTime);
-        par1iCrafting.sendProgressBarUpdate(container, 2, furnace.currentItemBurnTime);
+    public void addCraftingToCrafters(ICrafting player) {
+        player.sendProgressBarUpdate(container, 0, furnace.furnaceCookTime);
+        player.sendProgressBarUpdate(container, 1, furnace.furnaceBurnTime);
+        player.sendProgressBarUpdate(container, 2, furnace.currentItemBurnTime);
     }
 
     @Override
@@ -95,17 +96,17 @@ public class GuiPartFurnace extends GuiPart {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int par1, int par2) {
-        if(par1 == 0) {
-            furnace.furnaceCookTime = par2;
+    public void updateProgressBar(int id, int value) {
+        if(id == 0) {
+            furnace.furnaceCookTime = value;
         }
 
-        if(par1 == 1) {
-            furnace.furnaceBurnTime = par2;
+        if(id == 1) {
+            furnace.furnaceBurnTime = value;
         }
 
-        if(par1 == 2) {
-            furnace.currentItemBurnTime = par2;
+        if(id == 2) {
+            furnace.currentItemBurnTime = value;
         }
     }
 }

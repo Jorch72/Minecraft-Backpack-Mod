@@ -1,6 +1,7 @@
 package backpack.inventory.container;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -29,11 +30,10 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
     public ContainerBackpackCombined(IInventory playerInventory, IInventory otherInventory, IInventory backpackInventory, ItemStack backpack) {
         super(backpackInventory, otherInventory, backpack);
 
-
         GuiPart top;
         // init parts
         if(otherInventory instanceof TileEntityFurnace) {
-            top = new GuiPartFurnace(this, otherInventory, upperInventoryRows);
+            top = new GuiPartFurnace(this, ((InventoryPlayer)playerInventory).player, otherInventory, upperInventoryRows);
             top.setTextPosition(TEXTPOSITION.MIDDLE);
         } else if(otherInventory instanceof TileEntityDispenser || otherInventory instanceof TileEntityDropper) {
             top = new GuiPartFlexible(this, otherInventory, 3, 3);

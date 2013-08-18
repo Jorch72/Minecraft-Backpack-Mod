@@ -167,11 +167,8 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      * @return The written NBT Node.
      */
     protected void writeToNBT() {
-        // save name in display->Name
-        NBTTagCompound name = new NBTTagCompound();
-        name.setString("Name", getInvName());
-        NBTUtil.setCompoundTag(originalIS, "display", name);
-
+        NBTUtil.setString(originalIS, "Name", getInvName());
+        
         NBTTagList itemList = new NBTTagList();
         for(int i = 0; i < getSizeInventory(); i++) {
             if(getStackInSlot(i) != null) {
@@ -195,11 +192,12 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      */
     protected void readFromNBT() {
         reading = true;
-        // TODO for backwards compatibility
-        if(NBTUtil.getCompoundTag(originalIS, "Inventory").hasKey("title")) {
-            setInvName(NBTUtil.getCompoundTag(originalIS, "Inventory").getString("title"));
-        } else {
+        // for backwards compatibility
+        if(NBTUtil.hasTag(originalIS, "display")) {
             setInvName(NBTUtil.getCompoundTag(originalIS, "display").getString("Name"));
+            NBTUtil.removeTag(originalIS, "display");
+        } else {
+            setInvName(NBTUtil.getString(originalIS, "Name"));
         }
 
         NBTTagList itemList = NBTUtil.getCompoundTag(originalIS, "Inventory").getTagList("Items");

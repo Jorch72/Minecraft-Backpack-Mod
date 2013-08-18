@@ -5,10 +5,7 @@ import net.minecraft.inventory.Slot;
 import backpack.gui.helper.GuiRectangle;
 import backpack.inventory.container.ContainerAdvanced;
 import backpack.inventory.slot.SlotScrolling;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public abstract class GuiPartScrolling extends GuiPart {
     protected boolean hasScrollbar;
     protected int scrollbarOffset = -6;

@@ -8,10 +8,7 @@ import net.minecraft.util.StatCollector;
 import backpack.inventory.container.ContainerAdvanced;
 import backpack.inventory.container.ContainerWorkbenchBackpack;
 import backpack.inventory.slot.SlotCraftingAdvanced;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class GuiPartWorkbench extends GuiPart {
     protected InventoryPlayer playerInventory;
 

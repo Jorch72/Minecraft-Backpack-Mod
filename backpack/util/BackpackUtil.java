@@ -24,7 +24,7 @@ public class BackpackUtil {
         IInventory inventoryBackpack = null;
 
         if(weared) {
-            backpack = Backpack.proxy.backpackSlot.getBackpack();
+            backpack = Backpack.proxy.getBackpack();
         } else {
             backpack = player.getCurrentEquippedItem();
         }

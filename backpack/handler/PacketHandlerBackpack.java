@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -64,7 +63,7 @@ public class PacketHandlerBackpack implements IPacketHandler {
                 break;
             case Constants.PACKET_ID_OPEN_BACKPACK:
                 if(!entityPlayer.worldObj.isRemote) {
-                    ItemStack backpack = Backpack.proxy.backpackSlot.getBackpack();
+                    ItemStack backpack = Backpack.proxy.getBackpack();
                     if(backpack != null) {
                         NBTUtil.setBoolean(backpack, Constants.WEARED_BACKPACK_OPEN, true);
                         if(backpack.itemID == Items.backpack.itemID) {
@@ -80,7 +79,7 @@ public class PacketHandlerBackpack implements IPacketHandler {
                 break;
             case Constants.PACKET_ID_CLOSE_GUI:
                 entityPlayer.openContainer.onContainerClosed(entityPlayer);
-                Minecraft.getMinecraft().setIngameFocus();
+                
                 break;
             case Constants.PACKET_ID_UPDATE_SCROLLBAR:
                 if(!entityPlayer.worldObj.isRemote) {

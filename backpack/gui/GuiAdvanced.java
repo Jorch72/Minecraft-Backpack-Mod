@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import backpack.gui.parts.GuiPart;
 import backpack.gui.parts.GuiPartScrolling;
+import backpack.handler.PacketHandlerBackpack;
 import backpack.inventory.container.ContainerAdvanced;
 import backpack.misc.Constants;
 import cpw.mods.fml.relauncher.Side;
@@ -18,6 +19,7 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
     protected static final int TOPSPACING = 16;
     protected static final int BOTTOMSPACING = 7;
     protected T container;
+    protected boolean close = false;
 
     public GuiAdvanced(Container container) {
         super(container);
@@ -99,6 +101,16 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
             }
         }
     }
+    
+    @Override
+    protected void keyTyped(char charTyped, int idTyped) {
+        super.keyTyped(charTyped, idTyped);
+        
+        if(charTyped == 'b') {
+            PacketHandlerBackpack.sendGuiOpenCloseToServer(Constants.PACKET_ID_CLOSE_GUI);
+            close = true;
+        }
+    }
 
     protected void drawTopBorder() {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -114,5 +126,12 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
         mc.func_110434_K().func_110577_a(Constants.guiCombined);
 
         drawTexturedModalRect(guiLeft, guiTop + ySize - BOTTOMSPACING, 0, 160, xSize, BOTTOMSPACING);
+    }
+    
+    public void closeGui() {
+        if(close) {
+            mc.thePlayer.closeScreen();
+            close = false;
+        }
     }
 }

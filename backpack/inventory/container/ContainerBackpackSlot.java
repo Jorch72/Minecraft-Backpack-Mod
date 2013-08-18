@@ -1,5 +1,6 @@
 package backpack.inventory.container;
 
+import invtweaks.api.container.ChestContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -9,6 +10,7 @@ import backpack.gui.parts.GuiPartBackpackSlot;
 import backpack.gui.parts.GuiPartPlayerInventory;
 import backpack.item.ItemBackpackBase;
 
+@ChestContainer
 public class ContainerBackpackSlot extends ContainerAdvanced {
     public ContainerBackpackSlot(IInventory playerInventory, IInventory backpackInventory) {
         super(playerInventory, backpackInventory, null);

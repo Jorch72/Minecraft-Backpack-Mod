@@ -51,11 +51,11 @@ public abstract class ContainerAdvanced extends Container {
     public boolean canInteractWith(EntityPlayer entityplayer) {
         ItemStack itemStack = null;
         if(openedBackpack != null && NBTUtil.getBoolean(openedBackpack, Constants.WEARED_BACKPACK_OPEN)) {
-            itemStack = Backpack.proxy.backpackSlot.getBackpack();
+            itemStack = Backpack.proxy.getBackpack();
         } else if(entityplayer.getCurrentEquippedItem() != null) {
             itemStack = entityplayer.getCurrentEquippedItem();
         }
-        if(itemStack != null && openedBackpack != null && itemStack.getDisplayName() == openedBackpack.getDisplayName()) {
+        if(itemStack != null && openedBackpack != null && itemStack.getDisplayName().equals(openedBackpack.getDisplayName())) {
             return true;
         }
         return false;
@@ -69,7 +69,7 @@ public abstract class ContainerAdvanced extends Container {
         upperInventory.closeChest();
 
         if(!entityplayer.worldObj.isRemote) {
-            ItemStack itemStack = Backpack.proxy.backpackSlot.getBackpack();
+            ItemStack itemStack = Backpack.proxy.getBackpack();
             if(itemStack != null) {
                 if(NBTUtil.hasTag(itemStack, Constants.WEARED_BACKPACK_OPEN)) {
                     NBTUtil.removeTag(itemStack, Constants.WEARED_BACKPACK_OPEN);

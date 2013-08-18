@@ -2,7 +2,7 @@ package backpack.gui.parts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
@@ -14,8 +14,7 @@ import backpack.misc.Constants;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-public abstract class GuiPart extends Gui {
+public abstract class GuiPart {
     protected int LEFTSPACING = 8;
     protected int SLOT = 18;
 
@@ -105,14 +104,14 @@ public abstract class GuiPart extends Gui {
         GL11.glPopMatrix();
     }
 
-    @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int par1, int par2) {
-    }
-
-    public void addCraftingToCrafters(ICrafting par1iCrafting) {
+    public void addCraftingToCrafters(ICrafting player) {
     }
 
     public void detectAndSendChanges() {
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int value) {
     }
 
     public boolean isInRactangle(int mouseX, int mouseY) {
@@ -125,6 +124,18 @@ public abstract class GuiPart extends Gui {
     }
 
     public abstract void addSlots();
+
+    protected void drawTexturedModalRect(int par1, int par2, int par3, int par4, int par5, int par6) {
+        float f = 0.00390625F;
+        float f1 = 0.00390625F;
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV((double) (par1 + 0), (double) (par2 + par6), (double) 0, (double) ((float) (par3 + 0) * f), (double) ((float) (par4 + par6) * f1));
+        tessellator.addVertexWithUV((double) (par1 + par5), (double) (par2 + par6), (double) 0, (double) ((float) (par3 + par5) * f), (double) ((float) (par4 + par6) * f1));
+        tessellator.addVertexWithUV((double) (par1 + par5), (double) (par2 + 0), (double) 0, (double) ((float) (par3 + par5) * f), (double) ((float) (par4 + 0) * f1));
+        tessellator.addVertexWithUV((double) (par1 + 0), (double) (par2 + 0), (double) 0, (double) ((float) (par3 + 0) * f), (double) ((float) (par4 + 0) * f1));
+        tessellator.draw();
+    }
 
     public enum TEXTPOSITION {
         LEFT, MIDDLE, RIGHT

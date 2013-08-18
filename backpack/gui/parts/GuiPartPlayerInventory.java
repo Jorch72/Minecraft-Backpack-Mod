@@ -5,10 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.StatCollector;
 import backpack.inventory.container.ContainerAdvanced;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class GuiPartPlayerInventory extends GuiPart {
     protected int slotOffset;
 
