@@ -39,6 +39,14 @@ public class OverlayHandlerBackpack extends DefaultOverlayHandler {
         }
     }
 
+    /**
+     * Returns a list of items in the recipe with the amount of the item needed
+     * in the recipe.
+     * 
+     * @param ingredients
+     *            The items in the recipe as a list of single items.
+     * @return List of the items with the amount.
+     */
     private List<DistributedIngred> getPermutationIngredients(List<PositionedStack> ingredients) {
         ArrayList<DistributedIngred> ingredStacks = new ArrayList<DistributedIngred>();
         for(PositionedStack posstack : ingredients) {
@@ -53,6 +61,40 @@ public class OverlayHandlerBackpack extends DefaultOverlayHandler {
         return ingredStacks;
     }
 
+    /**
+     * Fills the items in the ingredStack List with the amount of items
+     * available in the inventory.
+     * 
+     * @param gui
+     *            The current open gui.
+     * @param ingredStacks
+     *            A list of items and the amount their in the recipe.
+     */
+    private void findInventoryQuantities(GuiContainer gui, List<DistributedIngred> ingredStacks) {
+        for(Slot slot : (List<Slot>) gui.inventorySlots.inventorySlots) {
+            if(slot.getHasStack()) {
+                if(slot.inventory instanceof InventoryPlayer || slot.inventory instanceof InventoryWorkbenchBackpack) {
+                    ItemStack pstack = slot.getStack();
+                    DistributedIngred istack = findIngred(ingredStacks, pstack);
+                    if(istack != null) {
+                        istack.invAmount += pstack.stackSize;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Calculates how many items per slot of the recipe are possible with the
+     * content of the inventory.
+     * 
+     * @param ingredients
+     *            A List of the items in the recipe.
+     * @param ingredStacks
+     *            A List of the items with their amount in the recipe and the
+     *            amount in the inventory.
+     * @return A List of ingredients and how much is needed for balanced stacks.
+     */
     private List<IngredientDistribution> assignIngredients(List<PositionedStack> ingredients, List<DistributedIngred> ingredStacks) {
         ArrayList<IngredientDistribution> assignedIngredients = new ArrayList<IngredientDistribution>();
         for(PositionedStack posstack : ingredients) {
@@ -87,6 +129,13 @@ public class OverlayHandlerBackpack extends DefaultOverlayHandler {
         return assignedIngredients;
     }
 
+    /**
+     * 
+     * @param gui
+     * @param ingredients
+     * @param assignedIngredients
+     * @return
+     */
     private Slot[][] assignIngredSlots(GuiContainer gui, List<PositionedStack> ingredients, List<IngredientDistribution> assignedIngredients) {
         Slot[][] recipeSlots = mapIngredSlots(gui, ingredients);
 
@@ -202,20 +251,6 @@ public class OverlayHandlerBackpack extends DefaultOverlayHandler {
                 FastTransferManger.clickSlot(gui, slot.slotNumber);
                 if(transferred >= transferCap || dest == null) {
                     break;
-                }
-            }
-        }
-    }
-
-    private void findInventoryQuantities(GuiContainer gui, List<DistributedIngred> ingredStacks) {
-        for(Slot slot : (List<Slot>) gui.inventorySlots.inventorySlots) {
-            if(slot.getHasStack()) {
-                if(slot.inventory instanceof InventoryPlayer || slot.inventory instanceof InventoryWorkbenchBackpack) {
-                    ItemStack pstack = slot.getStack();
-                    DistributedIngred istack = findIngred(ingredStacks, pstack);
-                    if(istack != null) {
-                        istack.invAmount += pstack.stackSize;
-                    }
                 }
             }
         }

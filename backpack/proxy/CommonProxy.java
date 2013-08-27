@@ -1,26 +1,40 @@
 package backpack.proxy;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import backpack.Backpack;
 import backpack.gui.GuiBackpack;
 import backpack.gui.GuiBackpackAlt;
+import backpack.gui.GuiBackpackCombined;
+import backpack.gui.GuiBackpackSlot;
 import backpack.gui.GuiWorkbenchBackpack;
-import backpack.inventory.ContainerBackpack;
-import backpack.inventory.ContainerWorkbenchBackpack;
-import backpack.item.ItemBackpack;
-import backpack.item.ItemWorkbenchBackpack;
+import backpack.handler.ConnectionHandlerBackpack;
+import backpack.handler.EventHandlerBackpack;
+import backpack.handler.ServerTickHandlerBackpack;
+import backpack.inventory.InventoryBackpackSlot;
+import backpack.inventory.container.ContainerBackpack;
+import backpack.inventory.container.ContainerBackpackCombined;
+import backpack.inventory.container.ContainerBackpackSlot;
+import backpack.inventory.container.ContainerWorkbenchBackpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
-import backpack.util.ServerTickHandlerBackpack;
+import backpack.util.BackpackUtil;
 import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy implements IGuiHandler {
-    public static String TEXTURES_PATH = "/mods/backpack/textures/";
+    public InventoryBackpackSlot backpackSlot;
 
     // returns an instance of the Container
     @Override
@@ -30,24 +44,48 @@ public class CommonProxy implements IGuiHandler {
         switch(ID) {
             case Constants.GUI_ID_BACKPACK:
                 backpack = player.getCurrentEquippedItem();
-                inventoryBackpack = ItemBackpack.getBackpackInv(player, false);
+                inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
                 if(inventoryBackpack == null) {
-                    inventoryBackpack = new InventoryBasic("placebo", false, 9 * ConfigurationBackpack.BACKPACK_SIZE_L);
+                    inventoryBackpack = new InventoryBasic("placebo", false, 128);
                 }
                 return new ContainerBackpack(player.inventory, inventoryBackpack, backpack);
             case Constants.GUI_ID_BACKPACK_WEARED:
-                backpack = player.getCurrentArmor(2);
-                return new ContainerBackpack(player.inventory, ItemBackpack.getBackpackInv(player, true), backpack);
+                backpack = getBackpack();
+                return new ContainerBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true), backpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK:
                 backpack = player.getCurrentEquippedItem();
-                inventoryBackpack = ItemWorkbenchBackpack.getBackpackInv(player, false);
+                inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
                 if(inventoryBackpack == null) {
                     inventoryBackpack = new InventoryBasic("placebo", false, 18);
                 }
                 return new ContainerWorkbenchBackpack(player.inventory, inventoryBackpack, backpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK_WEARED:
-                backpack = player.getCurrentArmor(2);
-                return new ContainerWorkbenchBackpack(player.inventory, ItemWorkbenchBackpack.getBackpackInv(player, true), backpack);
+                backpack = getBackpack();
+                return new ContainerWorkbenchBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true), backpack);
+            case Constants.GUI_ID_COMBINED:
+                TileEntity te = world.getBlockTileEntity(x, y, z);
+                IInventory inventory;
+                backpack = player.getCurrentEquippedItem();
+                inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
+                if(inventoryBackpack == null) {
+                    inventoryBackpack = new InventoryBasic("placebo", false, 128);
+                }
+                if(te instanceof TileEntityEnderChest) {
+                    inventory = player.getInventoryEnderChest();
+                } else if(te instanceof TileEntityChest) {
+                    int id = world.getBlockId(x, y, z);
+                    if(id == Block.chestTrapped.blockID) {
+                        inventory = ((BlockChest) Block.chestTrapped).getInventory(world, x, y, z);
+                    } else {
+                        inventory = Block.chest.getInventory(world, x, y, z);
+                    }
+                } else {
+                    inventory = (IInventory) te;
+                }
+                return new ContainerBackpackCombined(player.inventory, inventory, inventoryBackpack, backpack);
+            case Constants.GUI_ID_BACKPACK_SLOT:
+                backpackSlot = new InventoryBackpackSlot(player);
+                return new ContainerBackpackSlot(player.inventory, backpackSlot);
         }
         return null;
     }
@@ -58,36 +96,71 @@ public class CommonProxy implements IGuiHandler {
         IInventory inventoryBackpack;
         switch(ID) {
             case Constants.GUI_ID_BACKPACK:
-                inventoryBackpack = ItemBackpack.getBackpackInv(player, false);
+                inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
                 if(inventoryBackpack == null) {
-                    inventoryBackpack = new InventoryBasic("placebo", false, 9 * ConfigurationBackpack.BACKPACK_SIZE_L);
+                    inventoryBackpack = new InventoryBasic("placebo", false, 128);
                 }
                 return new GuiBackpack(player.inventory, inventoryBackpack);
             case Constants.GUI_ID_BACKPACK_WEARED:
-                return new GuiBackpack(player.inventory, ItemBackpack.getBackpackInv(player, true));
+                return new GuiBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true));
             case Constants.GUI_ID_RENAME_BACKPACK:
                 return new GuiBackpackAlt();
             case Constants.GUI_ID_WORKBENCH_BACKPACK:
-                inventoryBackpack = ItemWorkbenchBackpack.getBackpackInv(player, false);
+                inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
                 if(inventoryBackpack == null) {
                     inventoryBackpack = new InventoryBasic("placebo", false, 18);
                 }
                 return new GuiWorkbenchBackpack(player.inventory, inventoryBackpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK_WEARED:
-                return new GuiWorkbenchBackpack(player.inventory, ItemWorkbenchBackpack.getBackpackInv(player, true));
+                return new GuiWorkbenchBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true));
+            case Constants.GUI_ID_COMBINED:
+                TileEntity te = world.getBlockTileEntity(x, y, z);
+                IInventory inventory;
+                inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
+                if(inventoryBackpack == null) {
+                    inventoryBackpack = new InventoryBasic("placebo", false, 128);
+                }
+                if(te instanceof TileEntityEnderChest) {
+                    inventory = player.getInventoryEnderChest();
+                } else if(te instanceof TileEntityChest) {
+                    int id = world.getBlockId(x, y, z);
+                    if(id == Block.chestTrapped.blockID) {
+                        inventory = ((BlockChest) Block.chestTrapped).getInventory(world, x, y, z);
+                    } else {
+                        inventory = Block.chest.getInventory(world, x, y, z);
+                    }
+                } else {
+                    inventory = (IInventory) te;
+                }
+                return new GuiBackpackCombined(player.inventory, inventory, inventoryBackpack);
+            case Constants.GUI_ID_BACKPACK_SLOT:
+                backpackSlot = new InventoryBackpackSlot(player);
+                return new GuiBackpackSlot(player.inventory, backpackSlot);
         }
         return null;
     }
 
-    public void registerKeyBinding() {
-        // Nothing here as this is the server side proxy
+    public void registerHandler() {
+        // register GuiHandler
+        NetworkRegistry.instance().registerGuiHandler(Backpack.instance, this);
+        // register ConnectionHandler
+        NetworkRegistry.instance().registerConnectionHandler(new ConnectionHandlerBackpack());
+        // register event handler
+        MinecraftForge.EVENT_BUS.register(new EventHandlerBackpack());
+        // register tick handler
+        if(ConfigurationBackpack.MAX_BACKPACK_AMOUNT > 0) {
+            TickRegistry.registerTickHandler(new ServerTickHandlerBackpack(), Side.SERVER);
+        }
     }
 
     public void addNeiSupport() {
         // Nothing here as this is the server side proxy
     }
-
-    public void registerServerTickHandler() {
-        TickRegistry.registerTickHandler(new ServerTickHandlerBackpack(), Side.SERVER);
+    
+    public ItemStack getBackpack() {
+        if(backpackSlot != null) {
+            return backpackSlot.getStackInSlot(0);
+        }
+        return null;
     }
 }

@@ -1,9 +1,11 @@
-package backpack.util;
+package backpack.handler;
 
 import java.util.EnumSet;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
+import backpack.item.ItemBackpackBase;
 import backpack.misc.ConfigurationBackpack;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
@@ -20,7 +22,7 @@ public class ServerTickHandlerBackpack implements ITickHandler {
         ItemStack[] inventory = player.inventory.mainInventory;
         int counter = 0;
         for(int i = 0; i < inventory.length; i++) {
-            if(inventory[i] != null && inventory[i].getItem() instanceof IBackpack) {
+            if(inventory[i] != null && inventory[i].getItem() instanceof ItemBackpackBase) {
                 counter++;
                 if(counter > ConfigurationBackpack.MAX_BACKPACK_AMOUNT) {
                     player.dropPlayerItem(inventory[i].copy());
@@ -30,8 +32,10 @@ public class ServerTickHandlerBackpack implements ITickHandler {
         }
         counter -= ConfigurationBackpack.MAX_BACKPACK_AMOUNT;
         if(counter > 0) {
-            player.addChatMessage("[Backpacks] You are not allowed to have more than " + ConfigurationBackpack.MAX_BACKPACK_AMOUNT + " backpacks in your inventory.");
-            player.addChatMessage("[Backpacks] " + counter + " backpacks were removed from your inventory. Look on the ground.");
+            String message = StatCollector.translateToLocalFormatted("text.backpack.allowed_backpacks", ConfigurationBackpack.MAX_BACKPACK_AMOUNT);
+            player.addChatMessage("[Backpacks] " + message);
+            message = StatCollector.translateToLocalFormatted("text.backpack.dropped_backpacks", counter);
+            player.addChatMessage("[Backpacks] " + message);
         }
     }
 
@@ -42,6 +46,6 @@ public class ServerTickHandlerBackpack implements ITickHandler {
 
     @Override
     public String getLabel() {
-        return "Backpack server tick handler";
+        return "Backpack:ServerTickHandlerBackpack";
     }
 }
