@@ -19,6 +19,7 @@ import backpack.gui.GuiBackpackSlot;
 import backpack.gui.GuiWorkbenchBackpack;
 import backpack.handler.ConnectionHandlerBackpack;
 import backpack.handler.EventHandlerBackpack;
+import backpack.handler.PlayerHandlerBackpack;
 import backpack.handler.ServerTickHandlerBackpack;
 import backpack.inventory.InventoryBackpackSlot;
 import backpack.inventory.container.ContainerBackpack;
@@ -30,11 +31,13 @@ import backpack.misc.Constants;
 import backpack.util.BackpackUtil;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy implements IGuiHandler {
     public InventoryBackpackSlot backpackSlot;
+    public ItemStack clientBackpack;
 
     // returns an instance of the Container
     @Override
@@ -50,8 +53,8 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new ContainerBackpack(player.inventory, inventoryBackpack, backpack);
             case Constants.GUI_ID_BACKPACK_WEARED:
-                backpack = getBackpack();
-                return new ContainerBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true), backpack);
+                backpack = Backpack.playerTracker.getBackpack(player);
+                return new ContainerBackpack(player.inventory, BackpackUtil.getBackpackInv(backpack, player), backpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK:
                 backpack = player.getCurrentEquippedItem();
                 inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
@@ -60,8 +63,8 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new ContainerWorkbenchBackpack(player.inventory, inventoryBackpack, backpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK_WEARED:
-                backpack = getBackpack();
-                return new ContainerWorkbenchBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true), backpack);
+                backpack = Backpack.playerTracker.getBackpack(player);
+                return new ContainerWorkbenchBackpack(player.inventory, BackpackUtil.getBackpackInv(backpack, player), backpack);
             case Constants.GUI_ID_COMBINED:
                 TileEntity te = world.getBlockTileEntity(x, y, z);
                 IInventory inventory;
@@ -84,7 +87,7 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new ContainerBackpackCombined(player.inventory, inventory, inventoryBackpack, backpack);
             case Constants.GUI_ID_BACKPACK_SLOT:
-                backpackSlot = new InventoryBackpackSlot(player);
+                InventoryBackpackSlot backpackSlot = Backpack.playerTracker.getInventoryBackpackSlot(player);
                 return new ContainerBackpackSlot(player.inventory, backpackSlot);
         }
         return null;
@@ -102,7 +105,7 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new GuiBackpack(player.inventory, inventoryBackpack);
             case Constants.GUI_ID_BACKPACK_WEARED:
-                return new GuiBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true));
+                return new GuiBackpack(player.inventory, BackpackUtil.getBackpackInv(clientBackpack, player));
             case Constants.GUI_ID_RENAME_BACKPACK:
                 return new GuiBackpackAlt();
             case Constants.GUI_ID_WORKBENCH_BACKPACK:
@@ -112,7 +115,7 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new GuiWorkbenchBackpack(player.inventory, inventoryBackpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK_WEARED:
-                return new GuiWorkbenchBackpack(player.inventory, BackpackUtil.getBackpackInv(player, true));
+                return new GuiWorkbenchBackpack(player.inventory, BackpackUtil.getBackpackInv(clientBackpack, player));
             case Constants.GUI_ID_COMBINED:
                 TileEntity te = world.getBlockTileEntity(x, y, z);
                 IInventory inventory;
@@ -134,7 +137,7 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new GuiBackpackCombined(player.inventory, inventory, inventoryBackpack);
             case Constants.GUI_ID_BACKPACK_SLOT:
-                backpackSlot = new InventoryBackpackSlot(player);
+                InventoryBackpackSlot backpackSlot = new InventoryBackpackSlot(player);
                 return new GuiBackpackSlot(player.inventory, backpackSlot);
         }
         return null;
@@ -151,16 +154,12 @@ public class CommonProxy implements IGuiHandler {
         if(ConfigurationBackpack.MAX_BACKPACK_AMOUNT > 0) {
             TickRegistry.registerTickHandler(new ServerTickHandlerBackpack(), Side.SERVER);
         }
+        Backpack.playerTracker = new PlayerHandlerBackpack();
+        GameRegistry.registerPlayerTracker(Backpack.playerTracker);
+        MinecraftForge.EVENT_BUS.register(Backpack.playerTracker);
     }
 
     public void addNeiSupport() {
         // Nothing here as this is the server side proxy
-    }
-    
-    public ItemStack getBackpack() {
-        if(backpackSlot != null) {
-            return backpackSlot.getStackInSlot(0);
-        }
-        return null;
     }
 }

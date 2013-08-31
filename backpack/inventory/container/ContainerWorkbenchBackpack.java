@@ -61,7 +61,7 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
         player.addSlots();
         hotbar.addSlots();
         backpack.addSlots();
-        
+
         parts.add(workbench);
         parts.add(backpack);
         parts.add(player);
@@ -73,6 +73,21 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
     @Override
     public void onCraftMatrixChanged(IInventory par1IInventory) {
         craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftMatrix, worldObj));
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer entityplayer) {
+        if(!worldObj.isRemote) {
+            for(int i = 0; i < 9; ++i) {
+                ItemStack itemstack = craftMatrix.getStackInSlotOnClosing(i);
+
+                if(itemstack != null && itemstack.getItem() instanceof ItemBackpackBase) {
+                    entityplayer.dropPlayerItem(itemstack);
+                }
+            }
+        }
+
+        super.onContainerClosed(entityplayer);
     }
 
     @Override

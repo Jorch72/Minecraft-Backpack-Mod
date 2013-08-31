@@ -43,8 +43,8 @@ public class KeyHandlerBackpack extends KeyHandler {
                         PacketHandlerBackpack.sendGuiOpenCloseToServer(Constants.PACKET_ID_OPEN_BACKPACK);
                     }
                 }
-            } else {
-                ((GuiAdvanced)mc.currentScreen).closeGui();
+            } else if(mc.currentScreen instanceof GuiAdvanced) {
+                ((GuiAdvanced) mc.currentScreen).closeGui();
             }
         }
     }

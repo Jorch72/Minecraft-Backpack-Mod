@@ -130,10 +130,10 @@ public abstract class GuiPart {
         float f1 = 0.00390625F;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV((double) (par1 + 0), (double) (par2 + par6), (double) 0, (double) ((float) (par3 + 0) * f), (double) ((float) (par4 + par6) * f1));
-        tessellator.addVertexWithUV((double) (par1 + par5), (double) (par2 + par6), (double) 0, (double) ((float) (par3 + par5) * f), (double) ((float) (par4 + par6) * f1));
-        tessellator.addVertexWithUV((double) (par1 + par5), (double) (par2 + 0), (double) 0, (double) ((float) (par3 + par5) * f), (double) ((float) (par4 + 0) * f1));
-        tessellator.addVertexWithUV((double) (par1 + 0), (double) (par2 + 0), (double) 0, (double) ((float) (par3 + 0) * f), (double) ((float) (par4 + 0) * f1));
+        tessellator.addVertexWithUV(par1 + 0, par2 + par6, 0, (par3 + 0) * f, (par4 + par6) * f1);
+        tessellator.addVertexWithUV(par1 + par5, par2 + par6, 0, (par3 + par5) * f, (par4 + par6) * f1);
+        tessellator.addVertexWithUV(par1 + par5, par2 + 0, 0, (par3 + par5) * f, (par4 + 0) * f1);
+        tessellator.addVertexWithUV(par1 + 0, par2 + 0, 0, (par3 + 0) * f, (par4 + 0) * f1);
         tessellator.draw();
     }
 

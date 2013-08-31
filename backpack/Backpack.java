@@ -1,6 +1,7 @@
 package backpack;
 
 import backpack.handler.PacketHandlerBackpack;
+import backpack.handler.PlayerHandlerBackpack;
 import backpack.item.Items;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
@@ -29,6 +30,8 @@ public class Backpack {
 
     @SidedProxy(clientSide = "backpack.proxy.ClientProxy", serverSide = "backpack.proxy.CommonProxy")
     public static CommonProxy proxy;
+
+    public static PlayerHandlerBackpack playerTracker;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {

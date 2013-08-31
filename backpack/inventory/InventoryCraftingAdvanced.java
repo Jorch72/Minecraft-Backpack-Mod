@@ -4,6 +4,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import backpack.item.ItemBackpackBase;
 
 public class InventoryCraftingAdvanced extends InventoryCrafting implements IInventoryBackpack {
     protected InventoryWorkbenchBackpack backpackInventory = null;
@@ -39,5 +40,14 @@ public class InventoryCraftingAdvanced extends InventoryCrafting implements IInv
             }
             backpackInventory.onInventoryChanged();
         }
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int pos) {
+        ItemStack itemstack = getStackInSlot(pos);
+        if(itemstack != null && itemstack.getItem() instanceof ItemBackpackBase) {
+            setInventorySlotContents(pos, null);
+        }
+        return itemstack;
     }
 }

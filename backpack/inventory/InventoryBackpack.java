@@ -5,10 +5,9 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import backpack.item.ItemBackpack;
 import backpack.item.ItemBackpackBase;
-import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
+import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
 
 public class InventoryBackpack extends InventoryBasic implements IInventoryBackpack {
@@ -19,7 +18,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
     protected EntityPlayer playerEntity;
     // the original ItemStack to compare with the player inventory
     protected ItemStack originalIS;
-    
+
     // if class is reading from NBT tag
     protected boolean reading = false;
 
@@ -32,7 +31,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      *            The ItemStack which holds the backpack.
      */
     public InventoryBackpack(EntityPlayer player, ItemStack is) {
-        super("", false, getInventorySize(is));
+        super("", false, BackpackUtil.getInventorySize(is));
 
         playerEntity = player;
         originalIS = is;
@@ -84,21 +83,6 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
     }
 
     // ***** custom methods which are not in IInventory *****
-    /**
-     * Returns the size of the inventory based on the ItemStack.
-     * 
-     * @param is
-     *            The ItemStack to check for the size.
-     * @return The number of slots the inventory has.
-     */
-    protected static int getInventorySize(ItemStack is) {
-        if(is.getItem() instanceof ItemBackpack) {
-            return (is.getItemDamage() > 17 ? ConfigurationBackpack.BACKPACK_SLOTS_L : ConfigurationBackpack.BACKPACK_SLOTS_S);
-        } else {
-            return 9 * (is.getItemDamage() == 18 ? 0 : 2);
-        }
-    }
-
     /**
      * Returns if an Inventory is saved in the NBT.
      * 
@@ -168,7 +152,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      */
     protected void writeToNBT() {
         NBTUtil.setString(originalIS, "Name", getInvName());
-        
+
         NBTTagList itemList = new NBTTagList();
         for(int i = 0; i < getSizeInventory(); i++) {
             if(getStackInSlot(i) != null) {
@@ -196,6 +180,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
         if(NBTUtil.hasTag(originalIS, "display")) {
             setInvName(NBTUtil.getCompoundTag(originalIS, "display").getString("Name"));
             NBTUtil.removeTag(originalIS, "display");
+            NBTUtil.setString(originalIS, "Name", getInvName());
         } else {
             setInvName(NBTUtil.getString(originalIS, "Name"));
         }

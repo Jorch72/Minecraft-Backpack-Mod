@@ -33,7 +33,7 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
         GuiPart top;
         // init parts
         if(otherInventory instanceof TileEntityFurnace) {
-            top = new GuiPartFurnace(this, ((InventoryPlayer)playerInventory).player, otherInventory, upperInventoryRows);
+            top = new GuiPartFurnace(this, ((InventoryPlayer) playerInventory).player, otherInventory, upperInventoryRows);
             top.setTextPosition(TEXTPOSITION.MIDDLE);
         } else if(otherInventory instanceof TileEntityDispenser || otherInventory instanceof TileEntityDropper) {
             top = new GuiPartFlexible(this, otherInventory, 3, 3);
@@ -71,7 +71,7 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
         bottom.addSlots();
         backpackEndSlot = inventorySlots.size();
         hotbar.addSlots();
-        
+
         parts.add(top);
         parts.add(bottom);
         parts.add(hotbar);

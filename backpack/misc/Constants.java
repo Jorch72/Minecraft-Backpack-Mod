@@ -7,13 +7,14 @@ import backpack.model.ModelBackpack;
 public class Constants {
     public static final String MOD_ID = "Backpack";
     public static final String MOD_NAME = "Backpack";
-    public static final String MOD_VERSION = "1.18.15";
+    public static final String MOD_VERSION = "1.18.17";
 
     public static final int PACKET_ID_RENAME = 0;
     public static final int PACKET_ID_OPEN_BACKPACK = 1;
     public static final int PACKET_ID_OPEN_SLOT = 2;
     public static final int PACKET_ID_CLOSE_GUI = 3;
     public static final int PACKET_ID_UPDATE_SCROLLBAR = 4;
+    public static final int PACKET_ID_WEARED_BACKPACK_DATA = 5;
 
     public static final int GUI_ID_BACKPACK = 1;
     public static final int GUI_ID_BACKPACK_WEARED = 2;
@@ -29,7 +30,7 @@ public class Constants {
 
     public static final String WEARED_BACKPACK_OPEN = "wearedBackpackOpen";
 
-    public static final String KEY_OPEN = "Open Backpack";
+    public static final String KEY_OPEN = "key.backpack.openBackpack";
 
     public static final ResourceLocation guiCombined = new ResourceLocation(DOMAIN, "textures/gui/guiCombined.png");
     public static final ResourceLocation guiAlt = new ResourceLocation(DOMAIN, "textures/gui/guiBackpackAlt.png");

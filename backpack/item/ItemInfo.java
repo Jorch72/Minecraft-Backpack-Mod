@@ -1,6 +1,5 @@
 package backpack.item;
 
-
 public class ItemInfo {
     public static final String CONFIG_KEY_BACKPACK = "backpackId";
     public static final String UNLOCALIZED_NAME_BACKPACK = "backpack";

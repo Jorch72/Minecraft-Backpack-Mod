@@ -28,7 +28,7 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
     @Override
     public void initGui() {
         super.initGui();
-        
+
         for(GuiPart guiPart : container.parts) {
             guiPart.initGui(guiLeft, guiTop);
         }
@@ -101,11 +101,11 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
             }
         }
     }
-    
+
     @Override
     protected void keyTyped(char charTyped, int idTyped) {
         super.keyTyped(charTyped, idTyped);
-        
+
         if(charTyped == 'b') {
             PacketHandlerBackpack.sendGuiOpenCloseToServer(Constants.PACKET_ID_CLOSE_GUI);
             close = true;
@@ -127,7 +127,7 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
 
         drawTexturedModalRect(guiLeft, guiTop + ySize - BOTTOMSPACING, 0, 160, xSize, BOTTOMSPACING);
     }
-    
+
     public void closeGui() {
         if(close) {
             mc.thePlayer.closeScreen();

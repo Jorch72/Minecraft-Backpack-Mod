@@ -48,12 +48,12 @@ public abstract class ContainerAdvanced extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer entityplayer) {
+    public boolean canInteractWith(EntityPlayer player) {
         ItemStack itemStack = null;
         if(openedBackpack != null && NBTUtil.getBoolean(openedBackpack, Constants.WEARED_BACKPACK_OPEN)) {
-            itemStack = Backpack.proxy.getBackpack();
-        } else if(entityplayer.getCurrentEquippedItem() != null) {
-            itemStack = entityplayer.getCurrentEquippedItem();
+            itemStack = Backpack.playerTracker.getBackpack(player);
+        } else if(player.getCurrentEquippedItem() != null) {
+            itemStack = player.getCurrentEquippedItem();
         }
         if(itemStack != null && openedBackpack != null && itemStack.getDisplayName().equals(openedBackpack.getDisplayName())) {
             return true;
@@ -62,14 +62,14 @@ public abstract class ContainerAdvanced extends Container {
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer entityplayer) {
-        super.onContainerClosed(entityplayer);
+    public void onContainerClosed(EntityPlayer player) {
+        super.onContainerClosed(player);
 
         lowerInventory.closeChest();
         upperInventory.closeChest();
 
-        if(!entityplayer.worldObj.isRemote) {
-            ItemStack itemStack = Backpack.proxy.getBackpack();
+        if(!player.worldObj.isRemote) {
+            ItemStack itemStack = Backpack.playerTracker.getBackpack(player);
             if(itemStack != null) {
                 if(NBTUtil.hasTag(itemStack, Constants.WEARED_BACKPACK_OPEN)) {
                     NBTUtil.removeTag(itemStack, Constants.WEARED_BACKPACK_OPEN);
@@ -92,14 +92,14 @@ public abstract class ContainerAdvanced extends Container {
 
         if(sourceStack.isStackable()) {
             while(sourceStack.stackSize > 0 && (!backwards && currentSlotIndex < lastSlot || backwards && currentSlotIndex >= firstSlot)) {
-                slot = (Slot) this.inventorySlots.get(currentSlotIndex);
-                if(!(slot instanceof SlotScrolling && ((SlotScrolling)slot).isDisabled())) {
+                slot = (Slot) inventorySlots.get(currentSlotIndex);
+                if(!(slot instanceof SlotScrolling && ((SlotScrolling) slot).isDisabled())) {
                     slotStack = slot.getStack();
-    
+
                     if(slotStack != null && slotStack.itemID == sourceStack.itemID && (!sourceStack.getHasSubtypes() || sourceStack.getItemDamage() == slotStack.getItemDamage())
                             && ItemStack.areItemStackTagsEqual(sourceStack, slotStack)) {
                         int l = slotStack.stackSize + sourceStack.stackSize;
-    
+
                         if(l <= sourceStack.getMaxStackSize()) {
                             sourceStack.stackSize = 0;
                             slotStack.stackSize = l;
@@ -130,10 +130,10 @@ public abstract class ContainerAdvanced extends Container {
             }
 
             while(!backwards && currentSlotIndex < lastSlot || backwards && currentSlotIndex >= firstSlot) {
-                slot = (Slot) this.inventorySlots.get(currentSlotIndex);
-                if(!(slot instanceof SlotScrolling && ((SlotScrolling)slot).isDisabled())) {
+                slot = (Slot) inventorySlots.get(currentSlotIndex);
+                if(!(slot instanceof SlotScrolling && ((SlotScrolling) slot).isDisabled())) {
                     slotStack = slot.getStack();
-    
+
                     if(slotStack == null) {
                         slot.putStack(sourceStack.copy());
                         slot.onSlotChanged();
@@ -184,7 +184,7 @@ public abstract class ContainerAdvanced extends Container {
 
                 SlotScrolling slot = (SlotScrolling) inventorySlots.get(slotNumber);
 
-                if(slotIndex < slot.inventory.getSizeInventory()){
+                if(slotIndex < slot.inventory.getSizeInventory()) {
                     if(isServer) {
                         slot.setSlotIndex(slotIndex);
                     }
@@ -192,7 +192,7 @@ public abstract class ContainerAdvanced extends Container {
                 } else {
                     slot.setDisabled(true);
                 }
-                
+
                 slotNumber++;
             }
         }
@@ -200,7 +200,7 @@ public abstract class ContainerAdvanced extends Container {
             detectAndSendChanges();
         }
     }
-    
+
     public int calculatePartHeight() {
         int height = 0;
         for(GuiPart guiPart : parts) {
