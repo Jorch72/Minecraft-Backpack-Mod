@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import backpack.gui.parts.GuiPart;
 import backpack.gui.parts.GuiPartScrolling;
+import backpack.handler.KeyHandlerBackpack;
 import backpack.handler.PacketHandlerBackpack;
 import backpack.inventory.container.ContainerAdvanced;
 import backpack.misc.Constants;
@@ -103,10 +104,10 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
     }
 
     @Override
-    protected void keyTyped(char charTyped, int idTyped) {
-        super.keyTyped(charTyped, idTyped);
+    protected void keyTyped(char charTyped, int keyCode) {
+        super.keyTyped(charTyped, keyCode);
 
-        if(charTyped == 'b') {
+        if(keyCode == KeyHandlerBackpack.openBackpack.keyCode) {
             PacketHandlerBackpack.sendGuiOpenCloseToServer(Constants.PACKET_ID_CLOSE_GUI);
             close = true;
         }
