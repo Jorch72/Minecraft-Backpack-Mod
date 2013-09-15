@@ -10,9 +10,9 @@ import backpack.Backpack;
 public class EventHandlerBackpack {
     @ForgeSubscribe
     public void playerDropOnDeath(PlayerDropsEvent event) {
-        ItemStack backpack = Backpack.proxy.getBackpack();
+        EntityPlayer player = event.entityPlayer;
+        ItemStack backpack = Backpack.playerTracker.getBackpack(player);
         if(backpack != null) {
-            EntityPlayer player = event.entityPlayer;
             event.drops.add(new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, backpack));
         }
     }

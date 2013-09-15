@@ -4,6 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import backpack.handler.PacketHandlerBackpack;
+import backpack.util.BackpackUtil;
 
 public class InventoryBackpackSlot extends InventoryBasic {
     protected EntityPlayer player;
@@ -27,11 +29,14 @@ public class InventoryBackpackSlot extends InventoryBasic {
     public void closeChest() {
         writeToNBT(player);
     }
-    
+
     @Override
     public void onInventoryChanged() {
-        if(getStackInSlot(0) != null && getStackInSlot(0).stackTagCompound == null) {
-            getStackInSlot(0).stackTagCompound = new NBTTagCompound();
+        if(!player.worldObj.isRemote) {
+            if(getStackInSlot(0) != null && getStackInSlot(0).stackTagCompound == null) {
+                getStackInSlot(0).stackTagCompound = new NBTTagCompound();
+            }
+            PacketHandlerBackpack.sendWearedBackpackDataToClient(player);
         }
         super.onInventoryChanged();
     }
@@ -47,13 +52,6 @@ public class InventoryBackpackSlot extends InventoryBasic {
     }
 
     public void writeToNBT(EntityPlayer player) {
-        NBTTagCompound playerData = player.getEntityData();
-        NBTTagCompound backpack = new NBTTagCompound();
-        if(getStackInSlot(0) != null) {
-            getStackInSlot(0).writeToNBT(backpack);
-            playerData.setCompoundTag("backpack", backpack);
-        } else {
-            playerData.removeTag("backpack");
-        }
+        BackpackUtil.writeBackpackToPlayer(player, getStackInSlot(0));
     }
 }

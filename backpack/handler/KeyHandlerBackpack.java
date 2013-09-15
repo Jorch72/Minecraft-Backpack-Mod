@@ -15,7 +15,7 @@ import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
 
 public class KeyHandlerBackpack extends KeyHandler {
-    protected static KeyBinding openBackpack = new KeyBinding(Constants.KEY_OPEN, Keyboard.KEY_B);
+    public static KeyBinding openBackpack = new KeyBinding(Constants.KEY_OPEN, Keyboard.KEY_B);
 
     public KeyHandlerBackpack() {
         super(new KeyBinding[] { openBackpack }, new boolean[] { false });
@@ -44,7 +44,7 @@ public class KeyHandlerBackpack extends KeyHandler {
                     }
                 }
             } else if(mc.currentScreen instanceof GuiAdvanced) {
-                ((GuiAdvanced)mc.currentScreen).closeGui();
+                ((GuiAdvanced) mc.currentScreen).closeGui();
             }
         }
     }

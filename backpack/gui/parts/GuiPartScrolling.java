@@ -37,7 +37,7 @@ public abstract class GuiPartScrolling extends GuiPart {
         for(int i = firstSlot; i < lastSlot; i++) {
             Slot slot = (Slot) container.inventorySlots.get(i);
             int offset = 0;
-            if(slot instanceof SlotScrolling && ((SlotScrolling)slot).isDisabled()) {
+            if(slot instanceof SlotScrolling && ((SlotScrolling) slot).isDisabled()) {
                 offset = 18;
             }
             drawTexturedModalRect(guiLeft + slot.xDisplayPosition - 1, guiTop + slot.yDisplayPosition - 1, 201 + offset, 0, 18, 18);

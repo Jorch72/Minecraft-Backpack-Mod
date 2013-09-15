@@ -8,7 +8,6 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import backpack.misc.Constants;
-
 import cpw.mods.fml.common.Loader;
 
 public class Version implements Runnable {

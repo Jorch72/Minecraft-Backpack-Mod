@@ -15,6 +15,7 @@ import backpack.inventory.container.ContainerAdvanced;
 import backpack.item.ItemBackpackBase;
 import backpack.item.Items;
 import backpack.misc.Constants;
+import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -63,7 +64,7 @@ public class PacketHandlerBackpack implements IPacketHandler {
                 break;
             case Constants.PACKET_ID_OPEN_BACKPACK:
                 if(!entityPlayer.worldObj.isRemote) {
-                    ItemStack backpack = Backpack.proxy.getBackpack();
+                    ItemStack backpack = Backpack.playerTracker.getBackpack(entityPlayer);
                     if(backpack != null) {
                         NBTUtil.setBoolean(backpack, Constants.WEARED_BACKPACK_OPEN, true);
                         if(backpack.itemID == Items.backpack.itemID) {
@@ -79,7 +80,6 @@ public class PacketHandlerBackpack implements IPacketHandler {
                 break;
             case Constants.PACKET_ID_CLOSE_GUI:
                 entityPlayer.openContainer.onCraftGuiClosed(entityPlayer);
-                
                 break;
             case Constants.PACKET_ID_UPDATE_SCROLLBAR:
                 if(!entityPlayer.worldObj.isRemote) {
@@ -89,6 +89,22 @@ public class PacketHandlerBackpack implements IPacketHandler {
                     }
                 }
                 break;
+            case Constants.PACKET_ID_WEARED_BACKPACK_DATA:
+                if(entityPlayer.worldObj.isRemote) {
+                    int itemId = reader.readInt();
+                    if(itemId > 0) {
+                        Backpack.proxy.clientBackpack = new ItemStack(itemId, 1, reader.readByte());
+                        InventoryBackpack inv = new InventoryBackpack(entityPlayer, Backpack.proxy.clientBackpack);
+                        // set new name
+                        inv.setInvName(reader.readUTF());
+                        // save the new data
+                        inv.saveInventory();
+
+                        BackpackUtil.writeBackpackToPlayer(entityPlayer, Backpack.proxy.clientBackpack);
+                    } else {
+                        Backpack.proxy.clientBackpack = null;
+                    }
+                }
         }
     }
 
@@ -149,6 +165,28 @@ public class PacketHandlerBackpack implements IPacketHandler {
                     break;
             }
             FMLLog.warning("[" + Constants.MOD_ID + "] Failed to send " + message + " to server.");
+        }
+    }
+
+    public static void sendWearedBackpackDataToClient(EntityPlayer player) {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+        try {
+            dataStream.writeByte(Constants.PACKET_ID_WEARED_BACKPACK_DATA);
+            ItemStack backpack = Backpack.playerTracker.getBackpack(player);
+            if(backpack == null) {
+                dataStream.writeInt(-1);
+            } else {
+                dataStream.writeInt(backpack.itemID);
+                dataStream.writeByte(backpack.getItemDamage());
+                dataStream.writeUTF(backpack.getDisplayName());
+            }
+
+            PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(Constants.CHANNEL, byteStream.toByteArray()), (Player) player);
+        }
+        catch (IOException e) {
+            FMLLog.warning("[" + Constants.MOD_ID + "] Failed to send backpack data to client.");
         }
     }
 }

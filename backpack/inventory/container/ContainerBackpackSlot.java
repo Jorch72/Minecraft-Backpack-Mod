@@ -34,7 +34,7 @@ public class ContainerBackpackSlot extends ContainerAdvanced {
         top.addSlots();
         bottom.addSlots();
         hotbar.addSlots();
-        
+
         parts.add(top);
         parts.add(bottom);
         parts.add(hotbar);

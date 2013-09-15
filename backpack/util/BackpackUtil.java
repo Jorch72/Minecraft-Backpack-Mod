@@ -3,12 +3,14 @@ package backpack.util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import backpack.Backpack;
 import backpack.inventory.InventoryBackpack;
 import backpack.inventory.InventoryWorkbenchBackpack;
 import backpack.item.ItemBackpack;
 import backpack.item.ItemInfo;
 import backpack.item.ItemWorkbenchBackpack;
+import backpack.misc.ConfigurationBackpack;
 
 public class BackpackUtil {
     /**
@@ -21,26 +23,57 @@ public class BackpackUtil {
      */
     public static IInventory getBackpackInv(EntityPlayer player, boolean weared) {
         ItemStack backpack;
-        IInventory inventoryBackpack = null;
 
         if(weared) {
-            backpack = Backpack.proxy.getBackpack();
+            backpack = Backpack.playerTracker.getBackpack(player);
         } else {
             backpack = player.getCurrentEquippedItem();
         }
 
+        return getBackpackInv(backpack, player);
+    }
+
+    public static IInventory getBackpackInv(ItemStack backpack, EntityPlayer player) {
         if(backpack != null) {
             if(backpack.getItem() instanceof ItemWorkbenchBackpack) {
-                inventoryBackpack = new InventoryWorkbenchBackpack(player, backpack);
+                return new InventoryWorkbenchBackpack(player, backpack);
             } else if(backpack.getItem() instanceof ItemBackpack) {
                 if(backpack.getItemDamage() == ItemInfo.ENDERBACKPACK) {
-                    inventoryBackpack = player.getInventoryEnderChest();
+                    return player.getInventoryEnderChest();
                 } else {
-                    inventoryBackpack = new InventoryBackpack(player, backpack);
+                    return new InventoryBackpack(player, backpack);
                 }
             }
         }
+        return null;
+    }
 
-        return inventoryBackpack;
+    public static void writeBackpackToPlayer(EntityPlayer player, ItemStack backpack) {
+        NBTTagCompound playerData = player.getEntityData();
+        NBTTagCompound backpackTag = new NBTTagCompound();
+        if(backpack != null) {
+            backpack.writeToNBT(backpackTag);
+            playerData.setCompoundTag("backpack", backpackTag);
+        } else {
+            playerData.removeTag("backpack");
+        }
+    }
+
+    /**
+     * Returns the size of the inventory based on the ItemStack.
+     * 
+     * @param is
+     *            The ItemStack to check for the size.
+     * @return The number of slots the inventory has.
+     */
+    public static int getInventorySize(ItemStack is) {
+        if(is == null) {
+            return -1;
+        }
+        if(is.getItem() instanceof ItemBackpack) {
+            return is.getItemDamage() > 17 ? ConfigurationBackpack.BACKPACK_SLOTS_L : ConfigurationBackpack.BACKPACK_SLOTS_S;
+        } else {
+            return 9 * (is.getItemDamage() == 18 ? 0 : 2);
+        }
     }
 }

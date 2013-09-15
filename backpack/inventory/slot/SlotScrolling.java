@@ -46,15 +46,15 @@ public class SlotScrolling extends Slot {
     public void setSlotIndex(int slotIndex) {
         this.slotIndex = slotIndex;
     }
-    
+
     public void setDisabled(boolean newValue) {
         isDisabled = newValue;
     }
-    
+
     public boolean isDisabled() {
         return isDisabled;
     }
-    
+
     @Override
     public boolean isItemValid(ItemStack itemStack) {
         return !isDisabled;

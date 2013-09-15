@@ -90,7 +90,7 @@ public class GuiPartBrewing extends GuiPart {
             }
         }
 
-        this.brewTime = brewingStand.getBrewTime();
+        brewTime = brewingStand.getBrewTime();
     }
 
     @Override

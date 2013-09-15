@@ -75,7 +75,7 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
 
     @Override
     public void onCraftGuiClosed(EntityPlayer entityplayer) {
-        if(!this.worldObj.isRemote) {
+        if(!worldObj.isRemote) {
             for(int i = 0; i < 9; ++i) {
                 ItemStack itemstack = craftMatrix.getStackInSlotOnClosing(i);
 
@@ -98,11 +98,9 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
             returnStack = itemStack.copy();
 
             if(slotPos == 0) { // from craftingSlot
-                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack
-                                                             // inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
                     if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
-                        if(!mergeItemStack(itemStack, 10, 37, false)) { // to
-                                                                        // inventory
+                        if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
                             return null;
                         }
                     }
@@ -110,36 +108,28 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
 
                 slot.onSlotChange(itemStack, returnStack);
             } else if(slotPos >= 1 && slotPos < 10) { // from crafting matrix
-                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack
-                                                             // inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
                     if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
-                        if(!mergeItemStack(itemStack, 10, 37, false)) { // to
-                                                                        // inventory
+                        if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
                             return null;
                         }
                     }
                 }
             } else if(slotPos >= 10 && slotPos < 37) { // from inventory
-                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack
-                                                             // inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
                     if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
                         return null;
                     }
                 }
             } else if(slotPos >= 37 && slotPos < 46) { // from hotbar
-                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack
-                                                             // inventory
-                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to
-                                                                    // inventory
+                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
+                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
                         return null;
                     }
                 }
-            } else if(upperInventoryRows > 0 && slotPos >= 46 && slotPos < 64) { // from
-                                                                                 // backpack
-                                                                                 // inventory
+            } else if(upperInventoryRows > 0 && slotPos >= 46 && slotPos < 64) { // from backpack inventory
                 if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
-                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to
-                                                                    // inventory
+                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
                         return null;
                     }
                 }
