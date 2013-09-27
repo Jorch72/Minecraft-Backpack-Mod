@@ -17,7 +17,7 @@ public class ConnectionHandlerBackpack implements IConnectionHandler {
     public void playerLoggedIn(Player player, NetHandler netHandler, INetworkManager manager) {
         if(!Version.seen && Version.isOutdated()) {
             Version.seen = true;
-            ChatMessageComponent message = new ChatMessageComponent().func_111080_a("text.backpack.update_available", Version.latestVersion);
+            ChatMessageComponent message = new ChatMessageComponent().addFormatted("text.backpack.update_available", Version.latestVersion);
             ((EntityPlayer) player).sendChatToPlayer(message);
         } else if(!Version.seen && !Version.isOutdated()) {
             Version.seen = true;

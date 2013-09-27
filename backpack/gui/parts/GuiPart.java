@@ -76,7 +76,7 @@ public abstract class GuiPart {
     }
 
     public void drawForegroundLayer(FontRenderer fontRenderer, int x, int y) {
-        String text = inventory.isInvNameLocalized() ? inventory.getInvName() : I18n.func_135053_a(inventory.getInvName());
+        String text = inventory.isInvNameLocalized() ? inventory.getInvName() : I18n.getString(inventory.getInvName());
         int xOffset;
         switch(textPosition) {
             case LEFT:
@@ -98,7 +98,7 @@ public abstract class GuiPart {
         GL11.glPushMatrix();
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getMinecraft().func_110434_K().func_110577_a(Constants.guiCombined);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Constants.guiCombined);
         drawTexturedModalRect(guiLeft, guiTop + offsetY, 0, 4, xSize, ySize);
 
         GL11.glPopMatrix();

@@ -166,7 +166,7 @@ public abstract class ItemBackpackBase extends Item {
         if(NBTUtil.hasTag(itemstack, "Name")) {
             name = NBTUtil.getString(itemstack, "Name");
         } else {
-            name = getLocalizedName(itemstack) + ".name";
+            name = getUnlocalizedNameInefficiently(itemstack) + ".name";
         }
         return StatCollector.translateToLocal(name);
     }

@@ -15,8 +15,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiBackpackAlt extends GuiScreen {
-    private String TITLE = I18n.func_135053_a("text.backpack.rename");
-    private String NEW_NAME = I18n.func_135053_a("text.backpack.new_name");
+    private String TITLE = I18n.getString("text.backpack.rename");
+    private String NEW_NAME = I18n.getString("text.backpack.new_name");
 
     private GuiTextField txt_backpackName;
     private GuiButton btn_ok, btn_cancel;
@@ -53,11 +53,11 @@ public class GuiBackpackAlt extends GuiScreen {
         buttonList.clear();
 
         // create button for ok and disable it at the beginning
-        btn_ok = new GuiButton(0, guiLeft + xSize - 100, guiTop + 70, 60, 20, I18n.func_135053_a("button.backpack.ok"));
+        btn_ok = new GuiButton(0, guiLeft + xSize - 100, guiTop + 70, 60, 20, I18n.getString("button.backpack.ok"));
         btn_ok.enabled = false;
 
         // create button for cancel
-        btn_cancel = new GuiButton(1, guiLeft + 40, guiTop + 70, 60, 20, I18n.func_135053_a("button.backpack.cancel"));
+        btn_cancel = new GuiButton(1, guiLeft + 40, guiTop + 70, 60, 20, I18n.getString("button.backpack.cancel"));
 
         // add buttons to control list
         buttonList.add(btn_ok);
@@ -156,7 +156,7 @@ public class GuiBackpackAlt extends GuiScreen {
      */
     protected void drawGuiBackground() {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.func_110434_K().func_110577_a(Constants.guiAlt);
+        mc.getTextureManager().bindTexture(Constants.guiAlt);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, 240, 100);
     }
 }

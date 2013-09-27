@@ -116,7 +116,7 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
     protected void drawTopBorder() {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        mc.func_110434_K().func_110577_a(Constants.guiCombined);
+        mc.getTextureManager().bindTexture(Constants.guiCombined);
 
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, TOPSPACING);
     }
@@ -124,7 +124,7 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
     protected void drawBottomBorder() {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        mc.func_110434_K().func_110577_a(Constants.guiCombined);
+        mc.getTextureManager().bindTexture(Constants.guiCombined);
 
         drawTexturedModalRect(guiLeft, guiTop + ySize - BOTTOMSPACING, 0, 160, xSize, BOTTOMSPACING);
     }

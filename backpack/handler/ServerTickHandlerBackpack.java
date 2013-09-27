@@ -32,9 +32,9 @@ public class ServerTickHandlerBackpack implements ITickHandler {
         }
         counter -= ConfigurationBackpack.MAX_BACKPACK_AMOUNT;
         if(counter > 0) {
-            String message = I18n.func_135052_a("text.backpack.allowed_backpacks", ConfigurationBackpack.MAX_BACKPACK_AMOUNT);
+            String message = I18n.getStringParams("text.backpack.allowed_backpacks", ConfigurationBackpack.MAX_BACKPACK_AMOUNT);
             player.addChatMessage("[Backpacks] " + message);
-            message = I18n.func_135052_a("text.backpack.dropped_backpacks", counter);
+            message = I18n.getStringParams("text.backpack.dropped_backpacks", counter);
             player.addChatMessage("[Backpacks] " + message);
         }
     }
