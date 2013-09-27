@@ -2,13 +2,10 @@ package backpack.proxy;
 
 import java.lang.reflect.Method;
 
-import net.minecraft.entity.player.EntityPlayer;
 import backpack.gui.GuiWorkbenchBackpack;
 import backpack.handler.KeyHandlerBackpack;
-import backpack.handler.RenderPlayerHandler;
 import backpack.nei.OverlayHandlerBackpack;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLLog;
 
 public class ClientProxy extends CommonProxy {
@@ -16,7 +13,6 @@ public class ClientProxy extends CommonProxy {
     public void registerHandler() {
         super.registerHandler();
         KeyBindingRegistry.registerKeyBinding(new KeyHandlerBackpack());
-        RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class, new RenderPlayerHandler());
     }
 
     @Override
