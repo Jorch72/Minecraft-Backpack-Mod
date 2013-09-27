@@ -76,4 +76,19 @@ public class BackpackUtil {
             return 9 * (is.getItemDamage() == 18 ? 0 : 2);
         }
     }
+    
+    /**
+     * Returns the amount of rows an inventory has based on the fact that it has 9 cols.
+     * 
+     * @param inventory
+     *            The inventory whose rows should be calculated.
+     * @return The amount of rows as an Integer.
+     */
+    public static int getInventoryRows(IInventory inventory) {
+        return BackpackUtil.getInventoryRows(inventory, (float)9.);
+    }
+    
+    public static int getInventoryRows(IInventory inventory, float cols) {
+        return (int) Math.ceil(inventory.getSizeInventory() / cols);
+    }
 }

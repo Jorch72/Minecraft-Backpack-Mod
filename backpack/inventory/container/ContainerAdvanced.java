@@ -16,6 +16,7 @@ import backpack.handler.PacketHandlerBackpack;
 import backpack.inventory.IInventoryBackpack;
 import backpack.inventory.slot.SlotScrolling;
 import backpack.misc.Constants;
+import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -35,8 +36,8 @@ public abstract class ContainerAdvanced extends Container {
         lowerInventory.openChest();
         upperInventory.openChest();
 
-        lowerInventoryRows = (int) Math.ceil(lowerInventory.getSizeInventory() / 9.);
-        upperInventoryRows = (int) Math.ceil(upperInventory.getSizeInventory() / 9.);
+        lowerInventoryRows = BackpackUtil.getInventoryRows(lowerInventory);
+        upperInventoryRows = BackpackUtil.getInventoryRows(upperInventory);
 
         if(lowerInventory instanceof IInventoryBackpack || lowerInventory instanceof InventoryEnderChest) {
             openedBackpack = backpack;
