@@ -12,8 +12,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import backpack.inventory.InventoryWorkbenchBackpack;
+import codechicken.nei.FastTransferManager;
 import codechicken.core.inventory.InventoryUtils;
-import codechicken.nei.FastTransferManger;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.DefaultOverlayHandler;
 import codechicken.nei.recipe.IRecipeHandler;
@@ -183,10 +183,10 @@ public class OverlayHandlerBackpack extends DefaultOverlayHandler {
                     continue;
                 }
 
-                FastTransferManger.clickSlot(gui, slot.slotNumber);
+                FastTransferManager.clickSlot(gui, slot.slotNumber);
                 int amount = Math.min(transferCap - transferred, stack.stackSize);
                 for(int c = 0; c < amount; c++) {
-                    FastTransferManger.clickSlot(gui, dest.slotNumber, 1);
+                    FastTransferManager.clickSlot(gui, dest.slotNumber, 1);
                     transferred++;
                     slotTransferred++;
                     if(slotTransferred >= slotTransferCap) {
@@ -199,7 +199,7 @@ public class OverlayHandlerBackpack extends DefaultOverlayHandler {
                         slotTransferred = 0;
                     }
                 }
-                FastTransferManger.clickSlot(gui, slot.slotNumber);
+                FastTransferManager.clickSlot(gui, slot.slotNumber);
                 if(transferred >= transferCap || dest == null) {
                     break;
                 }
