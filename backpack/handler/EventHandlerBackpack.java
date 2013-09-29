@@ -11,15 +11,19 @@ import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import org.lwjgl.opengl.GL11;
 
 import backpack.Backpack;
+import backpack.inventory.InventoryBackpackSlot;
 import backpack.misc.Constants;
 
 public class EventHandlerBackpack {
     @ForgeSubscribe
     public void playerDropOnDeath(PlayerDropsEvent event) {
         EntityPlayer player = event.entityPlayer;
-        ItemStack backpack = Backpack.playerTracker.getBackpack(player);
+        InventoryBackpackSlot backpackSlotInventory = Backpack.playerTracker.getInventoryBackpackSlot(player);
+        ItemStack backpack = backpackSlotInventory.getStackInSlot(0);
         if(backpack != null) {
             event.drops.add(new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, backpack));
+            backpackSlotInventory.setInventorySlotContents(0, null);
+            backpackSlotInventory.closeChest();
         }
     }
     

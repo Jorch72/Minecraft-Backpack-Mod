@@ -46,12 +46,6 @@ public class PlayerHandlerBackpack implements IPlayerTracker {
 
     @Override
     public void onPlayerRespawn(EntityPlayer player) {
-        boolean keepInv = player.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory");
-
-        if(!keepInv) {
-            playerInventories.remove(player.username);
-        }
-
         PacketHandlerBackpack.sendWearedBackpackDataToClient(player);
     }
 
