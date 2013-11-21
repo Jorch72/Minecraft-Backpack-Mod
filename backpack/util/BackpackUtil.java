@@ -1,9 +1,10 @@
 package backpack.util;
 
+import java.util.UUID;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import backpack.Backpack;
 import backpack.inventory.InventoryBackpack;
 import backpack.inventory.InventoryWorkbenchBackpack;
@@ -21,10 +22,10 @@ public class BackpackUtil {
      *            The player who holds the backpack.
      * @return An IInventory with the content of the backpack.
      */
-    public static IInventory getBackpackInv(EntityPlayer player, boolean weared) {
+    public static IInventory getBackpackInv(EntityPlayer player, boolean worn) {
         ItemStack backpack;
 
-        if(weared) {
+        if(worn) {
             backpack = Backpack.playerTracker.getBackpack(player);
         } else {
             backpack = player.getCurrentEquippedItem();
@@ -46,17 +47,6 @@ public class BackpackUtil {
             }
         }
         return null;
-    }
-
-    public static void writeBackpackToPlayer(EntityPlayer player, ItemStack backpack) {
-        NBTTagCompound playerData = player.getEntityData();
-        NBTTagCompound backpackTag = new NBTTagCompound();
-        if(backpack != null) {
-            backpack.writeToNBT(backpackTag);
-            playerData.setCompoundTag("backpack", backpackTag);
-        } else {
-            playerData.removeTag("backpack");
-        }
     }
 
     /**
@@ -90,5 +80,16 @@ public class BackpackUtil {
     
     public static int getInventoryRows(IInventory inventory, float cols) {
         return (int) Math.ceil(inventory.getSizeInventory() / cols);
+    }
+
+    public static boolean UUIDEquals(ItemStack suspicious, ItemStack original) {
+        if(suspicious != null && original != null) {
+            if(NBTUtil.hasTag(suspicious, "UID") && NBTUtil.hasTag(original, "UID")) {
+                UUID UIDsuspicious = UUID.fromString(NBTUtil.getString(suspicious, "UID"));
+                UUID UIDoriginal = UUID.fromString(NBTUtil.getString(original, "UID"));
+                return UIDsuspicious.equals(UIDoriginal);
+            }
+        }
+        return false;
     }
 }

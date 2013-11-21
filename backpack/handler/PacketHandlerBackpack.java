@@ -15,7 +15,6 @@ import backpack.inventory.container.ContainerAdvanced;
 import backpack.item.ItemBackpackBase;
 import backpack.item.Items;
 import backpack.misc.Constants;
-import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -89,18 +88,12 @@ public class PacketHandlerBackpack implements IPacketHandler {
                     }
                 }
                 break;
-            case Constants.PACKET_ID_WEARED_BACKPACK_DATA:
+            case Constants.PACKET_ID_WORN_BACKPACK_DATA:
                 if(entityPlayer.worldObj.isRemote) {
                     int itemId = reader.readInt();
                     if(itemId > 0) {
                         Backpack.proxy.clientBackpack = new ItemStack(itemId, 1, reader.readByte());
-                        InventoryBackpack inv = new InventoryBackpack(entityPlayer, Backpack.proxy.clientBackpack);
-                        // set new name
-                        inv.setInvName(reader.readUTF());
-                        // save the new data
-                        inv.saveInventory();
-
-                        BackpackUtil.writeBackpackToPlayer(entityPlayer, Backpack.proxy.clientBackpack);
+                        NBTUtil.setString(Backpack.proxy.clientBackpack, "UID", reader.readUTF());
                     } else {
                         Backpack.proxy.clientBackpack = null;
                     }
@@ -173,14 +166,14 @@ public class PacketHandlerBackpack implements IPacketHandler {
         DataOutputStream dataStream = new DataOutputStream(byteStream);
 
         try {
-            dataStream.writeByte(Constants.PACKET_ID_WEARED_BACKPACK_DATA);
+            dataStream.writeByte(Constants.PACKET_ID_WORN_BACKPACK_DATA);
             ItemStack backpack = Backpack.playerTracker.getBackpack(player);
             if(backpack == null) {
                 dataStream.writeInt(-1);
             } else {
                 dataStream.writeInt(backpack.itemID);
                 dataStream.writeByte(backpack.getItemDamage());
-                dataStream.writeUTF(backpack.getDisplayName());
+                dataStream.writeUTF(NBTUtil.getString(backpack, "UID"));
             }
 
             PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(Constants.CHANNEL, byteStream.toByteArray()), (Player) player);

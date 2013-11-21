@@ -14,7 +14,7 @@ public class Constants {
     public static final int PACKET_ID_OPEN_SLOT = 2;
     public static final int PACKET_ID_CLOSE_GUI = 3;
     public static final int PACKET_ID_UPDATE_SCROLLBAR = 4;
-    public static final int PACKET_ID_WEARED_BACKPACK_DATA = 5;
+    public static final int PACKET_ID_WORN_BACKPACK_DATA = 5;
 
     public static final int GUI_ID_BACKPACK = 1;
     public static final int GUI_ID_BACKPACK_WEARED = 2;

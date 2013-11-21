@@ -9,6 +9,7 @@ import backpack.item.ItemBackpackBase;
 import backpack.misc.Constants;
 import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
+import java.util.UUID;
 
 public class InventoryBackpack extends InventoryBasic implements IInventoryBackpack {
     // the title of the backpack
@@ -97,7 +98,8 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      * Creates the Inventory Tag in the NBT with an empty inventory.
      */
     protected void createInventory() {
-        setInvName(new String(originalIS.getDisplayName()));
+        setInvName(originalIS.getDisplayName());
+        NBTUtil.setString(originalIS, "UID", UUID.randomUUID().toString());
         writeToNBT();
     }
 
@@ -116,9 +118,14 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      */
     protected void setNBT() {
         if(!NBTUtil.getBoolean(originalIS, Constants.WEARED_BACKPACK_OPEN)) {
+            ItemStack current = playerEntity.getCurrentEquippedItem();
+            if(BackpackUtil.UUIDEquals(current, originalIS)) {
+                current.setTagCompound(originalIS.getTagCompound());
+                return;
+            }
             for(ItemStack itemStack : playerEntity.inventory.mainInventory) {
                 if(itemStack != null && itemStack.getItem() instanceof ItemBackpackBase) {
-                    if(itemStack.getDisplayName() == originalIS.getDisplayName()) {
+                    if(BackpackUtil.UUIDEquals(itemStack, originalIS)) {
                         itemStack.setTagCompound(originalIS.getTagCompound());
                         break;
                     }

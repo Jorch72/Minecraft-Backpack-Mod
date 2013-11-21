@@ -56,7 +56,7 @@ public abstract class ContainerAdvanced extends Container {
         } else if(player.getCurrentEquippedItem() != null) {
             itemStack = player.getCurrentEquippedItem();
         }
-        if(itemStack != null && openedBackpack != null && itemStack.getDisplayName().equals(openedBackpack.getDisplayName())) {
+        if(BackpackUtil.UUIDEquals(itemStack, openedBackpack)) {
             return true;
         }
         return false;
