@@ -2,7 +2,9 @@ package backpack.proxy;
 
 import java.lang.reflect.Method;
 
+import net.minecraftforge.common.MinecraftForge;
 import backpack.gui.GuiWorkbenchBackpack;
+import backpack.handler.EventHandlerRenderPlayer;
 import backpack.handler.KeyHandlerBackpack;
 import backpack.nei.OverlayHandlerBackpack;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
@@ -13,6 +15,8 @@ public class ClientProxy extends CommonProxy {
     public void registerHandler() {
         super.registerHandler();
         KeyBindingRegistry.registerKeyBinding(new KeyHandlerBackpack());
+        // register event handler
+        MinecraftForge.EVENT_BUS.register(new EventHandlerRenderPlayer());
     }
 
     @Override
