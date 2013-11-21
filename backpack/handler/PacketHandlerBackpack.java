@@ -168,7 +168,7 @@ public class PacketHandlerBackpack implements IPacketHandler {
         }
     }
 
-    public static void sendWearedBackpackDataToClient(EntityPlayer player) {
+    public static void sendWornBackpackDataToClient(EntityPlayer player) {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         DataOutputStream dataStream = new DataOutputStream(byteStream);
 

@@ -87,7 +87,8 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new ContainerBackpackCombined(player.inventory, inventory, inventoryBackpack, backpack);
             case Constants.GUI_ID_BACKPACK_SLOT:
-                InventoryBackpackSlot backpackSlot = Backpack.playerTracker.getInventoryBackpackSlot(player);
+                backpack = Backpack.playerTracker.getBackpack(player);
+                InventoryBackpackSlot backpackSlot = new InventoryBackpackSlot(backpack, player);
                 return new ContainerBackpackSlot(player.inventory, backpackSlot);
         }
         return null;
@@ -97,6 +98,7 @@ public class CommonProxy implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         IInventory inventoryBackpack;
+        ItemStack backpack;
         switch(ID) {
             case Constants.GUI_ID_BACKPACK:
                 inventoryBackpack = BackpackUtil.getBackpackInv(player, false);
@@ -137,7 +139,7 @@ public class CommonProxy implements IGuiHandler {
                 }
                 return new GuiBackpackCombined(player.inventory, inventory, inventoryBackpack);
             case Constants.GUI_ID_BACKPACK_SLOT:
-                InventoryBackpackSlot backpackSlot = new InventoryBackpackSlot(player);
+                InventoryBackpackSlot backpackSlot = new InventoryBackpackSlot();
                 return new GuiBackpackSlot(player.inventory, backpackSlot);
         }
         return null;

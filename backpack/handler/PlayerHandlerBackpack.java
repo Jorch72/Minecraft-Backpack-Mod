@@ -1,68 +1,77 @@
 package backpack.handler;
 
+import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import backpack.inventory.InventoryBackpackSlot;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.DimensionManager;
+import backpack.util.PlayerSave;
 import cpw.mods.fml.common.IPlayerTracker;
 
 public class PlayerHandlerBackpack implements IPlayerTracker {
-
-    public ConcurrentHashMap<String, InventoryBackpackSlot> playerInventories = new ConcurrentHashMap<String, InventoryBackpackSlot>();
+    protected ConcurrentHashMap<String, PlayerSave> playerSaves = new ConcurrentHashMap<String, PlayerSave>();
+    protected File worldSaveDir = null;
 
     @Override
     public void onPlayerLogin(EntityPlayer player) {
-        InventoryBackpackSlot backpackSlot = new InventoryBackpackSlot(player);
-        backpackSlot.openChest();
+        PlayerSave playerSave = getPlayerSave(player.username);
 
-        playerInventories.put(player.username, backpackSlot);
+        // backwards compatibility
+        NBTTagCompound playerData = player.getEntityData();
+        if(playerData.hasKey("backpack")) {
+            ItemStack backpack = ItemStack.loadItemStackFromNBT(playerData.getCompoundTag("backpack"));
+            playerSave.setWornBackpack(backpack);
+            playerData.removeTag("backpack");
+        }
 
-        PacketHandlerBackpack.sendWearedBackpackDataToClient(player);
+        PacketHandlerBackpack.sendWornBackpackDataToClient(player);
     }
 
     @Override
     public void onPlayerLogout(EntityPlayer player) {
-        if(player != null) {
-            InventoryBackpackSlot backpackSlot = getInventoryBackpackSlot(player);
-            if(backpackSlot != null) {
-                backpackSlot.closeChest();
-                playerInventories.remove(player.username);
-            }
-        }
+        getPlayerSave(player.username).save();
+        playerSaves.remove(player.username);
     }
 
     @Override
     public void onPlayerChangedDimension(EntityPlayer player) {
-        if(player != null) {
-            InventoryBackpackSlot backpackSlot = getInventoryBackpackSlot(player);
-            if(backpackSlot != null) {
-                backpackSlot.closeChest();
-            }
-
-            PacketHandlerBackpack.sendWearedBackpackDataToClient(player);
-        }
+        PacketHandlerBackpack.sendWornBackpackDataToClient(player);
     }
 
     @Override
     public void onPlayerRespawn(EntityPlayer player) {
-        PacketHandlerBackpack.sendWearedBackpackDataToClient(player);
-    }
-
-    public InventoryBackpackSlot getInventoryBackpackSlot(EntityPlayer player) {
-        InventoryBackpackSlot backpackSlot = playerInventories.get(player.username);
-        if(backpackSlot == null) {
-            backpackSlot = new InventoryBackpackSlot(player);
-            playerInventories.put(player.username, backpackSlot);
-        }
-        return backpackSlot;
+        PacketHandlerBackpack.sendWornBackpackDataToClient(player);
     }
 
     public ItemStack getBackpack(EntityPlayer player) {
-        InventoryBackpackSlot backpackSlot = playerInventories.get(player.username);
-        if(backpackSlot != null) {
-            return backpackSlot.getStackInSlot(0);
+        return getPlayerSave(player.username).getWornBackpack();
+    }
+    
+    public void setBackpack(EntityPlayer player, ItemStack wornBackpack) {
+        getPlayerSave(player.username).setWornBackpack(wornBackpack);
+    }
+    
+    protected PlayerSave getPlayerSave(String username) {
+        PlayerSave playerSave = playerSaves.get(username);
+        if(playerSave == null) {
+            playerSave = new PlayerSave(username, new File(getWorldSaveDir(), "backpacks/players"));
+            playerSaves.put(username, playerSave);
         }
-        return null;
+        return playerSave;
+    }
+    
+    protected File getWorldSaveDir() {
+        if(worldSaveDir == null) {
+            worldSaveDir = DimensionManager.getCurrentSaveRootDirectory();
+        }
+        return worldSaveDir;
+    }
+
+    public void savePlayerData() {
+        for(String username : playerSaves.keySet()) {
+            playerSaves.remove(username).save();
+        }
     }
 }

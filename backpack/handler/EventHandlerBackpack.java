@@ -5,20 +5,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
-
+import net.minecraftforge.event.world.WorldEvent;
 import backpack.Backpack;
-import backpack.inventory.InventoryBackpackSlot;
 
 public class EventHandlerBackpack {
     @ForgeSubscribe
     public void playerDropOnDeath(PlayerDropsEvent event) {
         EntityPlayer player = event.entityPlayer;
-        InventoryBackpackSlot backpackSlotInventory = Backpack.playerTracker.getInventoryBackpackSlot(player);
-        ItemStack backpack = backpackSlotInventory.getStackInSlot(0);
+        
+        ItemStack backpack = Backpack.playerTracker.getBackpack(player);
         if(backpack != null) {
             event.drops.add(new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, backpack));
-            backpackSlotInventory.setInventorySlotContents(0, null);
-            backpackSlotInventory.closeChest();
+            Backpack.playerTracker.setBackpack(player, backpack);
         }
+    }
+    
+    @ForgeSubscribe
+    public void onWorldUnload(WorldEvent.Unload event) {
+        Backpack.playerTracker.savePlayerData();
     }
 }
