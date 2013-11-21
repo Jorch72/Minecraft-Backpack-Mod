@@ -9,41 +9,54 @@ import backpack.item.ItemLeather;
 import backpack.item.Items;
 
 public class RecipeEnhanceBackpack implements IRecipe {
+    private ItemStack result;
 
     @Override
     public boolean matches(InventoryCrafting craftingGridInventory, World world) {
-        ItemStack slot;
-        for(int i = 0; i < 3; i++) {
-            for(int j = 0; j < 3; j++) {
-                slot = craftingGridInventory.getStackInRowAndColumn(i, j);
-                if(slot == null) {
-                    return false;
-                }
-                if(i == 1 && j == 1) {
-                    if(!(slot.getItem() instanceof ItemBackpackBase)) {
+        result = null;
+        ItemStack backpack = null;
+        
+        if(craftingGridInventory.getSizeInventory() < 9) {
+            return false;
+        }
+
+        ItemStack slotStack;        
+        for(int i = 0; i < craftingGridInventory.getSizeInventory(); i++) {
+            slotStack = craftingGridInventory.getStackInSlot(i);
+
+            if(slotStack != null) {
+                if(i == 4) {
+                    if(!(slotStack.getItem() instanceof ItemBackpackBase)) {
                         return false;
                     }
-                    if(slot.getItemDamage() >= 19) {
+                    if(slotStack.getItemDamage() >= 19) {
                         return false;
                     }
+                    backpack = slotStack;
                 } else {
-                    if(!(slot.getItem() instanceof ItemLeather)) {
+                    if(!(slotStack.getItem() instanceof ItemLeather)) {
                         return false;
                     }
-                    if(slot.itemID != Items.tannedLeather.itemID) {
+                    if(slotStack.itemID != Items.tannedLeather.itemID) {
                         return false;
                     }
                 }
+            } else {
+                return false;
             }
         }
-        return true;
+        
+        if(backpack != null) {
+            result = backpack.copy();
+            result.setItemDamage(result.getItemDamage() + 32);
+        }
+        
+        return result != null;
     }
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting craftingGridInventory) {
-        ItemStack backpack = craftingGridInventory.getStackInRowAndColumn(1, 1).copy();
-        backpack.setItemDamage(backpack.getItemDamage() + 32);
-        return backpack;
+        return result.copy();
     }
 
     @Override
@@ -53,6 +66,6 @@ public class RecipeEnhanceBackpack implements IRecipe {
 
     @Override
     public ItemStack getRecipeOutput() {
-        return null;
+        return result;
     }
 }
