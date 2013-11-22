@@ -32,23 +32,23 @@ public class ContainerBackpackCombined extends ContainerAdvanced {
 
         GuiPart top;
         // init parts
-        if(otherInventory instanceof TileEntityFurnace) {
-            top = new GuiPartFurnace(this, ((InventoryPlayer) playerInventory).player, otherInventory, upperInventoryRows);
+        if(upperInventory instanceof TileEntityFurnace) {
+            top = new GuiPartFurnace(this, ((InventoryPlayer) playerInventory).player, upperInventory, upperInventoryRows);
             top.setTextPosition(TEXTPOSITION.MIDDLE);
-        } else if(otherInventory instanceof TileEntityDispenser || otherInventory instanceof TileEntityDropper) {
-            top = new GuiPartFlexible(this, otherInventory, 3, 3);
+        } else if(upperInventory instanceof TileEntityDispenser || upperInventory instanceof TileEntityDropper) {
+            top = new GuiPartFlexible(this, upperInventory, 3, 3);
             top.setTextPosition(TEXTPOSITION.MIDDLE);
-        } else if(otherInventory instanceof TileEntityHopper) {
-            top = new GuiPartFlexible(this, otherInventory, upperInventoryRows);
-        } else if(otherInventory instanceof TileEntityBrewingStand) {
-            top = new GuiPartBrewing(this, otherInventory, upperInventoryRows);
+        } else if(upperInventory instanceof TileEntityHopper) {
+            top = new GuiPartFlexible(this, upperInventory, upperInventoryRows);
+        } else if(upperInventory instanceof TileEntityBrewingStand) {
+            top = new GuiPartBrewing(this, upperInventory, upperInventoryRows);
             top.setTextPosition(TEXTPOSITION.MIDDLE);
         } else {
-            top = new GuiPartFlexible(this, otherInventory, upperInventoryRows, 9, lowerInventoryRows <= 3);
+            top = new GuiPartFlexible(this, upperInventory, upperInventoryRows, 9, lowerInventoryRows <= 3);
             ((GuiPartScrolling) top).setScrollbarOffset(-6);
         }
 
-        GuiPart bottom = new GuiPartBackpack(this, backpackInventory, lowerInventoryRows, upperInventoryRows <= 3);
+        GuiPart bottom = new GuiPartBackpack(this, lowerInventory, lowerInventoryRows, upperInventoryRows <= 3);
         ((GuiPartScrolling) bottom).setScrollbarOffset(2);
 
         GuiPart hotbar = new GuiPartPlayerInventory(this, playerInventory, true);

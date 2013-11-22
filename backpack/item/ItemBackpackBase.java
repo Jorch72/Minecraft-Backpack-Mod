@@ -96,7 +96,7 @@ public abstract class ItemBackpackBase extends Item {
     /**
      * Handles what should be done on right clicking the item.
      * 
-     * @param is
+     * @param itemStack
      *            The ItemStack which is right clicked.
      * @param world
      *            The world in which the player is.
@@ -106,25 +106,25 @@ public abstract class ItemBackpackBase extends Item {
      *            the ItemStack after the process.
      */
     @Override
-    public ItemStack onItemRightClick(ItemStack is, World world, EntityPlayer player) {
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         // if world.isRemote than we are on the client side
         if(world.isRemote) {
             // display rename GUI if player is sneaking
-            if(player.isSneaking() && is.getItemDamage() != ItemInfo.ENDERBACKPACK) {
+            if(player.isSneaking() && itemStack.getItemDamage() != ItemInfo.ENDERBACKPACK) {
                 player.openGui(Backpack.instance, Constants.GUI_ID_RENAME_BACKPACK, world, 0, 0, 0);
             }
-            return is;
+            return itemStack;
         }
 
         // when the player is not sneaking
-        if(!player.isSneaking() && !ConfigurationBackpack.OPEN_ONLY_WEARED_BACKPACK) {
-            if(is.itemID == Items.backpack.itemID) {
+        if(!player.isSneaking() && !ConfigurationBackpack.OPEN_ONLY_WORN_BACKPACK) {
+            if(itemStack.itemID == Items.backpack.itemID) {
                 player.openGui(Backpack.instance, Constants.GUI_ID_BACKPACK, world, 0, 0, 0);
-            } else if(is.itemID == Items.workbenchBackpack.itemID) {
+            } else if(itemStack.itemID == Items.workbenchBackpack.itemID) {
                 player.openGui(Backpack.instance, Constants.GUI_ID_WORKBENCH_BACKPACK, world, 0, 0, 0);
             }
         }
-        return is;
+        return itemStack;
     }
 
     /**

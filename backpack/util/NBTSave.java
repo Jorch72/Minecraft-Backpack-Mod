@@ -30,8 +30,9 @@ public class NBTSave {
 
         DataInputStream inputStream = null;
         try {
-            if(!saveFile.exists())
+            if(!saveFile.exists()) {
                 saveFile.createNewFile();
+            }
             if(saveFile.length() > 0) {
                 inputStream = new DataInputStream(new FileInputStream(saveFile));
                 nbtData = (NBTTagCompound) NBTBase.readNamedTag(inputStream);
@@ -52,7 +53,7 @@ public class NBTSave {
         if(!isDirty()) {
             return;
         }
-        
+
         DataOutputStream outputStream = null;
         try {
             outputStream = new DataOutputStream(new FileOutputStream(saveFile));

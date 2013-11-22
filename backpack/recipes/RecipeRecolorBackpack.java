@@ -55,7 +55,7 @@ public class RecipeRecolorBackpack implements IRecipe {
             } else if(backpack.getItemDamage() < 17 && dye.itemID == Items.tannedLeather.itemID) {
                 return false;
             }
-            
+
             int damage = dye.getItem() instanceof ItemDye ? dye.getItemDamage() : 16;
             if(backpack.getItemDamage() > 17) {
                 damage += 32;

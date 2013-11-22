@@ -1,15 +1,17 @@
 package backpack.inventory;
 
+import java.util.UUID;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import backpack.Backpack;
 import backpack.item.ItemBackpackBase;
 import backpack.misc.Constants;
 import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
-import java.util.UUID;
 
 public class InventoryBackpack extends InventoryBasic implements IInventoryBackpack {
     // the title of the backpack
@@ -117,7 +119,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      * Searches the backpack in players inventory and saves NBT data in it.
      */
     protected void setNBT() {
-        if(!NBTUtil.getBoolean(originalIS, Constants.WEARED_BACKPACK_OPEN)) {
+        if(!NBTUtil.getBoolean(originalIS, Constants.WORN_BACKPACK_OPEN)) {
             ItemStack current = playerEntity.getCurrentEquippedItem();
             if(BackpackUtil.UUIDEquals(current, originalIS)) {
                 current.setTagCompound(originalIS.getTagCompound());
@@ -131,6 +133,8 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
                     }
                 }
             }
+        } else {
+            Backpack.playerHandler.setBackpack(playerEntity, originalIS);
         }
     }
 

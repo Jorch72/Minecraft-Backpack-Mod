@@ -15,12 +15,12 @@ public class RecipeEnhanceBackpack implements IRecipe {
     public boolean matches(InventoryCrafting craftingGridInventory, World world) {
         result = null;
         ItemStack backpack = null;
-        
+
         if(craftingGridInventory.getSizeInventory() < 9) {
             return false;
         }
 
-        ItemStack slotStack;        
+        ItemStack slotStack;
         for(int i = 0; i < craftingGridInventory.getSizeInventory(); i++) {
             slotStack = craftingGridInventory.getStackInSlot(i);
 
@@ -45,12 +45,12 @@ public class RecipeEnhanceBackpack implements IRecipe {
                 return false;
             }
         }
-        
+
         if(backpack != null) {
             result = backpack.copy();
             result.setItemDamage(result.getItemDamage() + 32);
         }
-        
+
         return result != null;
     }
 

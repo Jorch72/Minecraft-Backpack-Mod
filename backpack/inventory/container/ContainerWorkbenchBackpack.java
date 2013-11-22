@@ -33,14 +33,14 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
     public ContainerWorkbenchBackpack(InventoryPlayer playerInventory, IInventory backpackInventory, ItemStack backpackIS) {
         super(playerInventory, backpackInventory, backpackIS);
 
-        worldObj = playerInventory.player.worldObj;
-        craftMatrix = new InventoryCraftingAdvanced(this, backpackInventory);
+        worldObj = ((InventoryPlayer)lowerInventory).player.worldObj;
+        craftMatrix = new InventoryCraftingAdvanced(this, upperInventory);
 
         // init parts
-        GuiPart workbench = new GuiPartWorkbench(this, backpackInventory, playerInventory);
-        GuiPart backpack = new GuiPartBackpack(this, backpackInventory, upperInventoryRows, false);
-        GuiPart player = new GuiPartPlayerInventory(this, playerInventory, false);
-        GuiPart hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
+        GuiPart workbench = new GuiPartWorkbench(this, upperInventory, (InventoryPlayer)lowerInventory);
+        GuiPart backpack = new GuiPartBackpack(this, upperInventory, upperInventoryRows, false);
+        GuiPart player = new GuiPartPlayerInventory(this, lowerInventory, false);
+        GuiPart hotbar = new GuiPartPlayerInventory(this, lowerInventory, true);
 
         // set spacings
         backpack.setSpacings(6, 0);

@@ -26,7 +26,7 @@ public class BackpackUtil {
         ItemStack backpack;
 
         if(worn) {
-            backpack = Backpack.playerTracker.getBackpack(player);
+            backpack = Backpack.playerHandler.getBackpack(player);
         } else {
             backpack = player.getCurrentEquippedItem();
         }
@@ -66,9 +66,10 @@ public class BackpackUtil {
             return 9 * (is.getItemDamage() == 18 ? 0 : 2);
         }
     }
-    
+
     /**
-     * Returns the amount of rows an inventory has based on the fact that it has 9 cols.
+     * Returns the amount of rows an inventory has based on the fact that it has
+     * 9 cols.
      * 
      * @param inventory
      *            The inventory whose rows should be calculated.
@@ -77,7 +78,7 @@ public class BackpackUtil {
     public static int getInventoryRows(IInventory inventory) {
         return BackpackUtil.getInventoryRows(inventory, (float)9.);
     }
-    
+
     public static int getInventoryRows(IInventory inventory, float cols) {
         return (int) Math.ceil(inventory.getSizeInventory() / cols);
     }

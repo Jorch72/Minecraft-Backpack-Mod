@@ -11,11 +11,11 @@ import cpw.mods.fml.relauncher.Side;
 public class InventoryBackpackSlot extends InventoryBasic {
     protected boolean init = false;
     protected EntityPlayer player;
-    
+
     public InventoryBackpackSlot() {
         super("text.backpack.backpack_slot", false, 1);
     }
-    
+
     public InventoryBackpackSlot(ItemStack backpack, EntityPlayer player) {
         this();
         this.player = player;
@@ -32,7 +32,7 @@ public class InventoryBackpackSlot extends InventoryBasic {
     @Override
     public void onInventoryChanged() {
         if(!init && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-            Backpack.playerTracker.setBackpack(player, getStackInSlot(0));
+            Backpack.playerHandler.setBackpack(player, getStackInSlot(0));
             PacketHandlerBackpack.sendWornBackpackDataToClient(player);
         }
         super.onInventoryChanged();

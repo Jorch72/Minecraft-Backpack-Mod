@@ -8,11 +8,12 @@ import backpack.item.ItemBackpackBase;
 
 public class PlayerSave extends NBTSave {
     protected static final String WORN = "wornBackpack";
+    protected static final String LATEST = "latestSeenVersion";
 
     public PlayerSave(String playerName, File saveLocation) {
         super(playerName, saveLocation);
     }
-    
+
     @Override
     protected void load() {
         super.load();
@@ -24,24 +25,23 @@ public class PlayerSave extends NBTSave {
     /**
      * Transforms the ItemStack to an NBTTagCompound and saves it.
      * 
-     * @param wornBackpackStack The ItemStack that should be saved.
+     * @param wornBackpackStack
+     *            The ItemStack that should be saved.
      */
     public void setWornBackpack(ItemStack wornBackpackStack) {
         if(wornBackpackStack == null) {
-            if(!nbtData.getCompoundTag(WORN).hasNoTags()) {
+            if(getWornBackpack() != null) {
                 nbtData.setCompoundTag(WORN, new NBTTagCompound());
                 setDirty(true);
             }
         } else if(wornBackpackStack.getItem() instanceof ItemBackpackBase) {
-            NBTTagCompound wornBackpack = new NBTTagCompound();
-            wornBackpackStack.writeToNBT(wornBackpack);
-            if(!wornBackpack.equals(nbtData.getCompoundTag(WORN))) {
-                nbtData.setCompoundTag(WORN, wornBackpack);
+            if(!ItemStack.areItemStacksEqual(wornBackpackStack, getWornBackpack())) {
+                nbtData.setCompoundTag(WORN, wornBackpackStack.writeToNBT(new NBTTagCompound()));
                 setDirty(true);
             }
         }
     }
-    
+
     /**
      * Read the NBTTagCompound and transforms it to an ItemStack.
      * 
@@ -50,11 +50,22 @@ public class PlayerSave extends NBTSave {
     public ItemStack getWornBackpack() {
         NBTTagCompound wornBackpack = nbtData.getCompoundTag(WORN);
         ItemStack wornBackpackStack = null;
-        
+
         if(!wornBackpack.hasNoTags()) {
             wornBackpackStack = ItemStack.loadItemStackFromNBT(wornBackpack);
         }
-        
+
         return wornBackpackStack;
+    }
+
+    public void setLatestSeenVersion(String latestSeenVersion) {
+        if(!getLatestSeenVersion().equals(latestSeenVersion)) {
+            nbtData.setString(LATEST, latestSeenVersion);
+            setDirty(true);
+        }
+    }
+
+    public String getLatestSeenVersion() {
+        return nbtData.getString(LATEST);
     }
 }

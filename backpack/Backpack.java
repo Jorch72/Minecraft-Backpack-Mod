@@ -31,7 +31,7 @@ public class Backpack {
     @SidedProxy(clientSide = "backpack.proxy.ClientProxy", serverSide = "backpack.proxy.CommonProxy")
     public static CommonProxy proxy;
 
-    public static PlayerHandlerBackpack playerTracker;
+    public static PlayerHandlerBackpack playerHandler = new PlayerHandlerBackpack();
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {

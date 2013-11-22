@@ -7,6 +7,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 
 import org.lwjgl.opengl.GL11;
 
+import backpack.Backpack;
 import backpack.misc.Constants;
 
 public class EventHandlerRenderPlayer {
@@ -14,11 +15,11 @@ public class EventHandlerRenderPlayer {
     public void render(Pre event) {
         EntityPlayer player = event.entityPlayer;
 
-        if(player.getEntityData().hasKey("backpack")) {
+        if(Backpack.playerHandler.getClientBackpack() != null) {
             GL11.glPushMatrix();
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            
+
             Minecraft.getMinecraft().renderEngine.bindTexture(Constants.modelTexture);
 
             Constants.model.render(player, 0F, 0F, 0F, 0F, 0F, 0.0625F);
@@ -26,5 +27,4 @@ public class EventHandlerRenderPlayer {
             GL11.glPopMatrix();
         }
     }
-
 }

@@ -18,9 +18,9 @@ public class ContainerBackpack extends ContainerAdvanced {
         super(playerInventory, backpackInventory, backpack);
 
         // init gui parts
-        GuiPart top = new GuiPartBackpack(this, backpackInventory, upperInventoryRows, true);
-        GuiPart bottom = new GuiPartPlayerInventory(this, playerInventory, false);
-        GuiPart hotbar = new GuiPartPlayerInventory(this, playerInventory, true);
+        GuiPart top = new GuiPartBackpack(this, upperInventory, upperInventoryRows, true);
+        GuiPart bottom = new GuiPartPlayerInventory(this, lowerInventory, false);
+        GuiPart hotbar = new GuiPartPlayerInventory(this, lowerInventory, true);
 
         // init scrollbar
         ((GuiPartScrolling) top).setScrollbarOffset(-6);

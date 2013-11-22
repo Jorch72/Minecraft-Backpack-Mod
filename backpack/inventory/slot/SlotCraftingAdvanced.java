@@ -10,8 +10,8 @@ public class SlotCraftingAdvanced extends SlotCrafting {
     protected IInventory craftMatrix;
     protected IInventory backpackInventory;
 
-    public SlotCraftingAdvanced(EntityPlayer entityPlayer, IInventory craftMatrix, IInventory craftResult, IInventory backpackInventory, int par4, int par5, int par6) {
-        super(entityPlayer, craftMatrix, craftResult, par4, par5, par6);
+    public SlotCraftingAdvanced(EntityPlayer player, IInventory craftMatrix, IInventory craftResult, IInventory backpackInventory, int par4, int par5, int par6) {
+        super(player, craftMatrix, craftResult, par4, par5, par6);
         this.craftMatrix = craftMatrix;
         this.backpackInventory = backpackInventory;
     }
