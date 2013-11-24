@@ -15,6 +15,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
 @Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, version = Constants.MOD_VERSION)
@@ -59,5 +60,10 @@ public class Backpack {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.addNeiSupport();
+    }
+    
+    @Mod.EventHandler
+    public void serverStopping(FMLServerStoppingEvent event) {
+        playerHandler.saveAllPlayerData();
     }
 }

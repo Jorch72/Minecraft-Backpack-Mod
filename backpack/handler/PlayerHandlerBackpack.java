@@ -44,7 +44,7 @@ public class PlayerHandlerBackpack {
 
     public void saveAllPlayerData() {
         for(String username : playerSaves.keySet()) {
-            playerSaves.remove(username).save();
+            playerSaves.remove(username).save(true);
         }
     }
 

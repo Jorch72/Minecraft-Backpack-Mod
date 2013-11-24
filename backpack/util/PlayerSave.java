@@ -35,10 +35,8 @@ public class PlayerSave extends NBTSave {
                 setDirty(true);
             }
         } else if(wornBackpackStack.getItem() instanceof ItemBackpackBase) {
-            if(!ItemStack.areItemStacksEqual(wornBackpackStack, getWornBackpack())) {
-                nbtData.setCompoundTag(WORN, wornBackpackStack.writeToNBT(new NBTTagCompound()));
-                setDirty(true);
-            }
+            nbtData.setCompoundTag(WORN, wornBackpackStack.writeToNBT(new NBTTagCompound()));
+            setDirty(true);
         }
     }
 

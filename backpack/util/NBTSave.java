@@ -50,7 +50,11 @@ public class NBTSave {
     }
 
     public final void save() {
-        if(!isDirty()) {
+        save(false);
+    }
+
+    public final void save(boolean force) {
+        if(!isDirty() && !force) {
             return;
         }
 
