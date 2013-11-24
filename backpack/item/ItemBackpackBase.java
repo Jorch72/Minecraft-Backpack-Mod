@@ -8,7 +8,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityDispenser;
+import net.minecraft.tileentity.TileEntityDropper;
 import net.minecraft.tileentity.TileEntityEnderChest;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import backpack.Backpack;
@@ -84,11 +90,58 @@ public abstract class ItemBackpackBase extends Item {
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World worldObj, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         TileEntity te = worldObj.getBlockTileEntity(x, y, z);
         if(te != null && (te instanceof IInventory || te instanceof TileEntityEnderChest)) {
-            if(te instanceof TileEntityEnderChest && stack.getItemDamage() == ItemInfo.ENDERBACKPACK) {
-                return false;
+            boolean openGui = false;
+            if(te instanceof TileEntityChest) {
+                openGui = true;
             }
-            player.openGui(Backpack.instance, Constants.GUI_ID_COMBINED, worldObj, x, y, z);
-            return true;
+            if(te instanceof TileEntityEnderChest && stack.getItemDamage() != ItemInfo.ENDERBACKPACK) {
+                openGui = true;
+            }
+            if(te instanceof TileEntityFurnace) {
+                openGui = true;
+            }
+            if(te instanceof TileEntityHopper) {
+                openGui = true;
+            }
+            if(te instanceof TileEntityBrewingStand) {
+                openGui = true;
+            }
+            if(te instanceof TileEntityDispenser) {
+                openGui = true;
+            }
+            if(te instanceof TileEntityDropper) {
+                openGui = true;
+            }
+
+            if(te.getClass().getSimpleName().equals("TileEntityDirtChest")) {
+            	openGui = true;
+            }
+            if(te.getClass().getSimpleName().equals("TileEntityCopperChest")) {
+                openGui = true;
+            }
+            if(te.getClass().getSimpleName().equals("TileEntityIronChest")) {
+                openGui = true;
+            }
+            if(te.getClass().getSimpleName().equals("TileEntitySilverChest")) {
+                openGui = true;
+            }
+            if(te.getClass().getSimpleName().equals("TileEntityGoldChest")) {
+                openGui = true;
+            }
+            if(te.getClass().getSimpleName().equals("TileEntityDiamondChest")) {
+                openGui = true;
+            }
+            if(te.getClass().getSimpleName().equals("TileEntityCrystalChest")) {
+                openGui = true;
+            }
+            if(te.getClass().getSimpleName().equals("TileEntityObsidianChest")) {
+                openGui = true;
+            }
+
+            if(openGui) {
+                player.openGui(Backpack.instance, Constants.GUI_ID_COMBINED, worldObj, x, y, z);
+                return true;
+            }
         }
         return false;
     }
