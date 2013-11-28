@@ -64,6 +64,6 @@ public class Backpack {
     
     @Mod.EventHandler
     public void serverStopping(FMLServerStoppingEvent event) {
-        playerHandler.saveAllPlayerData();
+        playerHandler.unloadWorld();
     }
 }

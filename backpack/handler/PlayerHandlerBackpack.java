@@ -62,10 +62,10 @@ public class PlayerHandlerBackpack {
         getPlayerSave(player.username).save();
     }
 
-    public void saveAllPlayerData() {
     /**
      * Saves the data of all players and removes them all from the loaded saves.
      */
+    protected void saveAllPlayerData() {
         for(String username : playerSaves.keySet()) {
             playerSaves.remove(username).save(true);
         }
@@ -167,9 +167,19 @@ public class PlayerHandlerBackpack {
      * @return A File object pointing to the folder for the current world.
      */
     protected File getWorldSaveDir() {
-        if(worldSaveDir == null) {
-            worldSaveDir = DimensionManager.getCurrentSaveRootDirectory();
-        }
-        return worldSaveDir;
+        /*
+         * FML Bug reimplement properly in MC 1.7 if(worldSaveDir == null) {
+         * worldSaveDir = DimensionManager.getCurrentSaveRootDirectory(); }
+         * return worldSaveDir;
+         */
+        return DimensionManager.getCurrentSaveRootDirectory();
+    }
+
+    /**
+     * Saves all players and sets the saved world folder to null.
+     */
+    public void unloadWorld() {
+        saveAllPlayerData();
+        worldSaveDir = null;
     }
 }
