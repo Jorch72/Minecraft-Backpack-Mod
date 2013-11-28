@@ -13,6 +13,7 @@ import backpack.Backpack;
 import backpack.inventory.InventoryBackpack;
 import backpack.inventory.container.ContainerAdvanced;
 import backpack.item.ItemBackpackBase;
+import backpack.item.ItemInfo;
 import backpack.item.Items;
 import backpack.misc.Constants;
 import backpack.util.NBTUtil;
@@ -95,7 +96,7 @@ public class PacketHandlerBackpack implements IPacketHandler {
                     ItemStack backpack = null;
                     if(itemId > 0) {
                         backpack = new ItemStack(itemId, 1, reader.readByte());
-                        NBTUtil.setString(backpack, "UID", reader.readUTF());
+                        NBTUtil.setString(backpack, ItemInfo.UID, reader.readUTF());
                     }
                     Backpack.playerHandler.setClientBackpack(backpack);
                 }
@@ -174,7 +175,7 @@ public class PacketHandlerBackpack implements IPacketHandler {
             } else {
                 dataStream.writeInt(backpack.itemID);
                 dataStream.writeByte(backpack.getItemDamage());
-                dataStream.writeUTF(NBTUtil.getString(backpack, "UID"));
+                dataStream.writeUTF(NBTUtil.getString(backpack, ItemInfo.UID));
             }
 
             PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(Constants.CHANNEL, byteStream.toByteArray()), (Player) player);

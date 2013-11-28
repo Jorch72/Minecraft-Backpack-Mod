@@ -34,6 +34,15 @@ public class BackpackUtil {
         return getBackpackInv(backpack, player);
     }
 
+    /**
+     * Returns the IInventory based on the given ItemStack.
+     * 
+     * @param backpack
+     *            The ItemStack that holds a backpack.
+     * @param player
+     *            The player who has the backpack.
+     * @return An IInventory with the content of the given ItemStack.
+     */
     public static IInventory getBackpackInv(ItemStack backpack, EntityPlayer player) {
         if(backpack != null) {
             if(backpack.getItem() instanceof ItemWorkbenchBackpack) {
@@ -69,26 +78,52 @@ public class BackpackUtil {
 
     /**
      * Returns the amount of rows an inventory has based on the fact that it has
-     * 9 cols.
+     * 9 columns.
      * 
      * @param inventory
      *            The inventory whose rows should be calculated.
      * @return The amount of rows as an Integer.
      */
     public static int getInventoryRows(IInventory inventory) {
-        return BackpackUtil.getInventoryRows(inventory, (float)9.);
+        return BackpackUtil.getInventoryRows(inventory, (float) 9.);
     }
 
+    /**
+     * Returns the amount of rows an inventory has based on the given number of
+     * columns.
+     * 
+     * @param inventory
+     *            The inventory whose rows should be calculated.
+     * @param cols
+     *            The number of columns the inventory has.
+     * @return The amount of rows as an Integer.
+     */
     public static int getInventoryRows(IInventory inventory, float cols) {
         return (int) Math.ceil(inventory.getSizeInventory() / cols);
     }
 
+    /**
+     * Compares the UUID's of two ItemStacks.
+     * 
+     * @param suspicious
+     *            The ItemStack to check.
+     * @param original
+     *            The original ItemStack to compare to
+     * @return Returns true if both have the same UUID, false if one or both
+     *         ItemStacks are null, one or both ItemStacks doesn't have the tag
+     *         "backpack-UID" or if the UUID's are not equal.
+     */
     public static boolean UUIDEquals(ItemStack suspicious, ItemStack original) {
         if(suspicious != null && original != null) {
-            if(NBTUtil.hasTag(suspicious, "UID") && NBTUtil.hasTag(original, "UID")) {
-                UUID UIDsuspicious = UUID.fromString(NBTUtil.getString(suspicious, "UID"));
-                UUID UIDoriginal = UUID.fromString(NBTUtil.getString(original, "UID"));
-                return UIDsuspicious.equals(UIDoriginal);
+            if(NBTUtil.hasTag(suspicious, ItemInfo.UID) && NBTUtil.hasTag(original, ItemInfo.UID)) {
+                try {
+                    UUID UIDsuspicious = UUID.fromString(NBTUtil.getString(suspicious, ItemInfo.UID));
+                    UUID UIDoriginal = UUID.fromString(NBTUtil.getString(original, ItemInfo.UID));
+                    return UIDsuspicious.equals(UIDoriginal);
+                }
+                catch (IllegalArgumentException e) {
+                    return false;
+                }
             }
         }
         return false;

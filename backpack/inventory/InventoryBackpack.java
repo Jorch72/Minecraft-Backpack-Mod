@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import backpack.Backpack;
 import backpack.item.ItemBackpackBase;
+import backpack.item.ItemInfo;
 import backpack.misc.Constants;
 import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
@@ -44,9 +45,15 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
             createInventory();
         }
         
+        // fix problem with forestry
+        if(NBTUtil.hasTag(originalIS, "UID")) {
+            NBTUtil.setString(originalIS, ItemInfo.UID, NBTUtil.getString(originalIS, "UID"));
+            NBTUtil.removeTag(originalIS, "UID");
+        }
+        
         // backwards compatibility
-        if(!NBTUtil.hasTag(originalIS, "UID")) {
-            NBTUtil.setString(originalIS, "UID", UUID.randomUUID().toString());
+        if(!NBTUtil.hasTag(originalIS, ItemInfo.UID)) {
+            NBTUtil.setString(originalIS, ItemInfo.UID, UUID.randomUUID().toString());
         }
 
         loadInventory();
@@ -106,7 +113,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      */
     protected void createInventory() {
         setInvName(originalIS.getDisplayName());
-        NBTUtil.setString(originalIS, "UID", UUID.randomUUID().toString());
+        NBTUtil.setString(originalIS, ItemInfo.UID, UUID.randomUUID().toString());
         writeToNBT();
     }
 
