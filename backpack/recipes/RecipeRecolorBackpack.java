@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import backpack.item.ItemBackpack;
-import backpack.item.ItemInfo;
 import backpack.item.Items;
+import backpack.util.BackpackUtil;
 
 public class RecipeRecolorBackpack implements IRecipe {
     private ArrayList<Integer> allowedDyes = new ArrayList<Integer>();
@@ -34,7 +34,7 @@ public class RecipeRecolorBackpack implements IRecipe {
 
             if(slotStack != null) {
                 if(slotStack.getItem() instanceof ItemBackpack) {
-                    if(slotStack.getItemDamage() == ItemInfo.ENDERBACKPACK || backpack != null) {
+                    if(BackpackUtil.isEnderBackpack(slotStack) || backpack != null) {
                         return false;
                     }
                     backpack = slotStack;

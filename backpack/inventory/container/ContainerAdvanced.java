@@ -16,8 +16,6 @@ import backpack.gui.parts.GuiPart;
 import backpack.handler.PacketHandlerBackpack;
 import backpack.inventory.IInventoryBackpack;
 import backpack.inventory.slot.SlotScrolling;
-import backpack.item.ItemBackpackBase;
-import backpack.item.ItemInfo;
 import backpack.misc.Constants;
 import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
@@ -67,7 +65,7 @@ public abstract class ContainerAdvanced extends Container {
         } else if(player.getCurrentEquippedItem() != null) {
             itemStack = player.getCurrentEquippedItem();
         }
-        if(BackpackUtil.UUIDEquals(itemStack, openedBackpack) || itemStack.getItem() instanceof ItemBackpackBase && itemStack.getItemDamage() == ItemInfo.ENDERBACKPACK) {
+        if(BackpackUtil.UUIDEquals(itemStack, openedBackpack) || BackpackUtil.isEnderBackpack(itemStack)) {
             return true;
         }
         return false;

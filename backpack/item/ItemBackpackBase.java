@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import backpack.Backpack;
 import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
+import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -94,7 +95,7 @@ public abstract class ItemBackpackBase extends Item {
             if(te instanceof TileEntityChest) {
                 openGui = true;
             }
-            if(te instanceof TileEntityEnderChest && stack.getItemDamage() != ItemInfo.ENDERBACKPACK) {
+            if(te instanceof TileEntityEnderChest && !BackpackUtil.isEnderBackpack(stack)) {
                 openGui = true;
             }
             if(te instanceof TileEntityFurnace) {
@@ -163,7 +164,7 @@ public abstract class ItemBackpackBase extends Item {
         // if world.isRemote than we are on the client side
         if(world.isRemote) {
             // display rename GUI if player is sneaking
-            if(player.isSneaking() && itemStack.getItemDamage() != ItemInfo.ENDERBACKPACK) {
+            if(player.isSneaking() && !BackpackUtil.isEnderBackpack(itemStack)) {
                 player.openGui(Backpack.instance, Constants.GUI_ID_RENAME_BACKPACK, world, 0, 0, 0);
             }
             return itemStack;

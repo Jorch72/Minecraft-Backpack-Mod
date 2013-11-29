@@ -9,6 +9,7 @@ import backpack.Backpack;
 import backpack.inventory.InventoryBackpack;
 import backpack.inventory.InventoryWorkbenchBackpack;
 import backpack.item.ItemBackpack;
+import backpack.item.ItemBackpackBase;
 import backpack.item.ItemInfo;
 import backpack.item.ItemWorkbenchBackpack;
 import backpack.misc.ConfigurationBackpack;
@@ -48,7 +49,7 @@ public class BackpackUtil {
             if(backpack.getItem() instanceof ItemWorkbenchBackpack) {
                 return new InventoryWorkbenchBackpack(player, backpack);
             } else if(backpack.getItem() instanceof ItemBackpack) {
-                if(backpack.getItemDamage() == ItemInfo.ENDERBACKPACK) {
+                if(isEnderBackpack(backpack)) {
                     return player.getInventoryEnderChest();
                 } else {
                     return new InventoryBackpack(player, backpack);
@@ -124,6 +125,23 @@ public class BackpackUtil {
                 catch (IllegalArgumentException e) {
                     return false;
                 }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if an ItemStack is an ender backpack.
+     * 
+     * @param backpack
+     *            The ItemStack to check.
+     * @return True if the ItemStack is an ender backpack, false otherwise or if
+     *         the stack is null.
+     */
+    public static boolean isEnderBackpack(ItemStack backpack) {
+        if(backpack != null) {
+            if(backpack.getItem() instanceof ItemBackpackBase && backpack.getItemDamage() == ItemInfo.ENDERBACKPACK) {
+                return true;
             }
         }
         return false;
