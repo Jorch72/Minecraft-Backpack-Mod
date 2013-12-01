@@ -2,6 +2,7 @@ package backpack.gui.parts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.ICrafting;
@@ -9,17 +10,19 @@ import net.minecraft.inventory.IInventory;
 
 import org.lwjgl.opengl.GL11;
 
+import backpack.gui.GuiAdvanced;
 import backpack.inventory.container.ContainerAdvanced;
 import backpack.misc.Constants;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class GuiPart {
+public abstract class GuiPart <C extends ContainerAdvanced> {
     protected int LEFTSPACING = 8;
     protected int SLOT = 18;
 
-    protected ContainerAdvanced container;
+    protected C container;
     protected IInventory inventory;
+    protected GuiAdvanced gui;
     protected int guiLeft;
     protected int guiTop;
     protected int offsetY;
@@ -39,7 +42,7 @@ public abstract class GuiPart {
     }
 
     public GuiPart(ContainerAdvanced container, IInventory inventory, int inventoryRows, int inventoryCols, boolean big) {
-        this.container = container;
+        this.container = (C)container;
         this.inventory = inventory;
         if(big) {
             this.inventoryRows = inventoryRows > 6 ? 6 : inventoryRows;
@@ -48,6 +51,10 @@ public abstract class GuiPart {
         }
         this.inventoryCols = inventoryCols;
         ySize = this.inventoryRows * SLOT;
+    }
+    
+    public void setGui(GuiAdvanced gui) {
+        this.gui = gui;
     }
 
     public void initGui(int guiLeft, int guiTop) {
@@ -102,6 +109,9 @@ public abstract class GuiPart {
         drawTexturedModalRect(guiLeft, guiTop + offsetY, 0, 4, xSize, ySize);
 
         GL11.glPopMatrix();
+    }
+    
+    public void actionPerformed(GuiButton guiButton) {
     }
 
     public void addCraftingToCrafters(ICrafting player) {

@@ -31,10 +31,12 @@ public class ClientProxy extends CommonProxy {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         IInventory inventory;
+        ItemStack backpack;
         if(ID % 2 == 0) {
-            ItemStack backpack = Backpack.playerHandler.getClientBackpack();
+            backpack = Backpack.playerHandler.getClientBackpack();
             inventory = BackpackUtil.getBackpackInv(backpack, player);
         } else {
+            backpack = player.getCurrentEquippedItem();
             inventory = BackpackUtil.getBackpackInv(player, false);
         }
         switch(ID) {
@@ -45,9 +47,9 @@ public class ClientProxy extends CommonProxy {
             case Constants.GUI_ID_BACKPACK_WORN:
                 return new GuiBackpack(player.inventory, inventory);
             case Constants.GUI_ID_WORKBENCH_BACKPACK:
-                return new GuiWorkbenchBackpack(player.inventory, inventory);
+                return new GuiWorkbenchBackpack(player.inventory, inventory, backpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK_WORN:
-                return new GuiWorkbenchBackpack(player.inventory, inventory);
+                return new GuiWorkbenchBackpack(player.inventory, inventory, backpack);
             case Constants.GUI_ID_COMBINED:
                 TileEntity te = world.getBlockTileEntity(x, y, z);
                 IInventory teInventory;

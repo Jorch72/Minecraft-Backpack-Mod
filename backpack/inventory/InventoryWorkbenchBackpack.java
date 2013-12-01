@@ -1,16 +1,63 @@
 package backpack.inventory;
 
+import java.util.Arrays;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
 
 public class InventoryWorkbenchBackpack extends InventoryBackpack implements IInventoryBackpack {
-    protected ItemStack[] craftMatrix;
+    protected ItemStack[] craftMatrix = new ItemStack[9];
+    protected boolean craftingHandlerMode = false;
+    protected int[] mapping;
 
     public InventoryWorkbenchBackpack(EntityPlayer player, ItemStack is) {
         super(player, is);
+        mapping = new int[craftMatrix.length];
+        Arrays.fill(mapping, -1);
+    }
+    
+    @Override
+    public int getSizeInventory() {
+        if(craftingHandlerMode) {
+            return craftMatrix.length;
+        }
+        return super.getSizeInventory();
+    }
+    
+    @Override
+    public ItemStack getStackInSlot(int slotPosition) {
+        if(craftingHandlerMode) {
+            int correspondingSlot = findCorrespondingSlot(slotPosition);
+            if(correspondingSlot == -1) {
+                return null;
+            } else {
+                return super.getStackInSlot(correspondingSlot);
+            }
+        }
+        return super.getStackInSlot(slotPosition);
+    }
+    
+    @Override
+    public void setInventorySlotContents(int slotPosition, ItemStack newItemStack) {
+        if(craftingHandlerMode) {
+            int correspondingSlot = findCorrespondingSlot(slotPosition);
+            if(correspondingSlot != -1) {
+                super.setInventorySlotContents(correspondingSlot, newItemStack);
+                return;
+            }
+            if(getStackInCraftingSlot(slotPosition) == null) {
+                for(int i = 0; i < super.getSizeInventory(); i++) {
+                    if(super.getStackInSlot(i) == null) {
+                        super.setInventorySlotContents(i, newItemStack);
+                    }
+                }
+            }
+        }
+        super.setInventorySlotContents(slotPosition, newItemStack);
     }
 
     // ***** custom methods which are not in IInventory *****
@@ -77,5 +124,34 @@ public class InventoryWorkbenchBackpack extends InventoryBackpack implements IIn
                 craftMatrix[j] = ItemStack.loadItemStackFromNBT(slotEntry);
             }
         }
+    }
+    
+    public void setCraftingHandlerMode(boolean value) {
+        craftingHandlerMode = value;
+        if(value == false) {
+            Arrays.fill(mapping, -1);
+        }
+    }
+    
+    protected int findCorrespondingSlot(int recipeSlotPosition) {
+        if(mapping[recipeSlotPosition] != -1) {
+            return mapping[recipeSlotPosition];
+        }
+        ItemStack craftingGridStack = getStackInCraftingSlot(recipeSlotPosition);
+        for(int i = 0; i < super.getSizeInventory(); i++) {
+            ItemStack inventoryStack = super.getStackInSlot(i);
+            if(BackpackUtil.areStacksEqual(craftingGridStack, inventoryStack)) {
+                mapping[recipeSlotPosition] = i;
+                return i;
+            }
+        }
+        for(int i = 0; i < super.getSizeInventory(); i++) {
+            ItemStack inventoryStack = super.getStackInSlot(i);
+            if(BackpackUtil.areStacksEqualWithOD(craftingGridStack, inventoryStack)) {
+                mapping[recipeSlotPosition] = i;
+                return i;
+            }
+        }
+        return -1;
     }
 }

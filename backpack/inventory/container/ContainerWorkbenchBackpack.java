@@ -22,10 +22,12 @@ import backpack.gui.parts.GuiPartBackpack;
 import backpack.gui.parts.GuiPartPlayerInventory;
 import backpack.gui.parts.GuiPartWorkbench;
 import backpack.inventory.InventoryCraftingAdvanced;
+import backpack.inventory.InventoryRecipes;
 import backpack.item.ItemBackpackBase;
 
 @ChestContainer
 public class ContainerWorkbenchBackpack extends ContainerAdvanced {
+    public InventoryRecipes recipes = null;
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
     private World worldObj;
@@ -35,7 +37,7 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
 
         worldObj = ((InventoryPlayer)lowerInventory).player.worldObj;
         craftMatrix = new InventoryCraftingAdvanced(this, upperInventory);
-
+        
         // init parts
         GuiPart workbench = new GuiPartWorkbench(this, upperInventory, (InventoryPlayer)lowerInventory);
         GuiPart backpack = new GuiPartBackpack(this, upperInventory, upperInventoryRows, false);
@@ -110,28 +112,22 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
 
                 slot.onSlotChange(itemStack, returnStack);
             } else if(slotPos >= 1 && slotPos < 10) { // from crafting matrix
+                return null;
+            } else if(slotPos >= parts.get(2).firstSlot && slotPos < parts.get(2).lastSlot) { // from inventory
                 if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
-                    if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
-                        if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
-                            return null;
-                        }
-                    }
-                }
-            } else if(slotPos >= 10 && slotPos < 37) { // from inventory
-                if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
-                    if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
+                    if(!mergeItemStack(itemStack, parts.get(3).firstSlot, parts.get(3).lastSlot, true)) { // to hotbar
                         return null;
                     }
                 }
-            } else if(slotPos >= 37 && slotPos < 46) { // from hotbar
+            } else if(slotPos >= parts.get(3).firstSlot && slotPos < parts.get(3).lastSlot) { // from hotbar
                 if(!mergeItemStackWithBackpack(itemStack)) { // to backpack inventory
-                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
+                    if(!mergeItemStack(itemStack, parts.get(2).firstSlot, parts.get(2).lastSlot, false)) { // to inventory
                         return null;
                     }
                 }
-            } else if(upperInventoryRows > 0 && slotPos >= 46 && slotPos < 64) { // from backpack inventory
-                if(!mergeItemStack(itemStack, 37, 46, true)) { // to hotbar
-                    if(!mergeItemStack(itemStack, 10, 37, false)) { // to inventory
+            } else if(upperInventoryRows > 0 && slotPos >= parts.get(1).firstSlot && slotPos < parts.get(1).lastSlot) { // from backpack inventory
+                if(!mergeItemStack(itemStack, parts.get(3).firstSlot, parts.get(3).lastSlot, true)) { // to hotbar
+                    if(!mergeItemStack(itemStack, parts.get(2).firstSlot, parts.get(2).lastSlot, false)) { // to inventory
                         return null;
                     }
                 }
@@ -158,7 +154,7 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
 
     protected boolean mergeItemStackWithBackpack(ItemStack itemStack) {
         if(upperInventoryRows > 0 && !(itemStack.getItem() instanceof ItemBackpackBase)) {
-            return mergeItemStack(itemStack, 46, 64, false);
+            return mergeItemStack(itemStack, parts.get(1).firstSlot, parts.get(1).lastSlot, false);
         }
         return false;
     }
@@ -169,11 +165,11 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
 
         slotRefs.put(ContainerSection.CRAFTING_OUT, inventorySlots.subList(0, 1));
         slotRefs.put(ContainerSection.CRAFTING_IN_PERSISTENT, inventorySlots.subList(1, 10));
-        slotRefs.put(ContainerSection.INVENTORY, inventorySlots.subList(10, 46));
-        slotRefs.put(ContainerSection.INVENTORY_NOT_HOTBAR, inventorySlots.subList(10, 37));
-        slotRefs.put(ContainerSection.INVENTORY_HOTBAR, inventorySlots.subList(37, 46));
+        slotRefs.put(ContainerSection.INVENTORY, inventorySlots.subList(parts.get(2).firstSlot, parts.get(3).lastSlot));
+        slotRefs.put(ContainerSection.INVENTORY_NOT_HOTBAR, inventorySlots.subList(parts.get(2).firstSlot, parts.get(2).lastSlot));
+        slotRefs.put(ContainerSection.INVENTORY_HOTBAR, inventorySlots.subList(parts.get(3).firstSlot, parts.get(3).lastSlot));
         if(upperInventoryRows > 0) {
-            slotRefs.put(ContainerSection.CHEST, inventorySlots.subList(46, 64));
+            slotRefs.put(ContainerSection.CHEST, inventorySlots.subList(parts.get(1).firstSlot, parts.get(1).lastSlot));
         }
         return slotRefs;
     }
@@ -181,5 +177,14 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
     @Override
     public boolean func_94530_a(ItemStack par1ItemStack, Slot par2Slot) {
         return par2Slot.inventory != craftResult && super.func_94530_a(par1ItemStack, par2Slot);
+    }
+    
+    /**
+     * Clears the craft matrix.
+     */
+    public void clearCraftMatrix() {
+        for(int i = 1; i < 10; i++) {
+            putStackInSlot(i, null);
+        }
     }
 }

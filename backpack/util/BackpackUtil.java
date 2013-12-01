@@ -5,6 +5,7 @@ import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import backpack.Backpack;
 import backpack.inventory.InventoryBackpack;
 import backpack.inventory.InventoryWorkbenchBackpack;
@@ -73,7 +74,7 @@ public class BackpackUtil {
         if(is.getItem() instanceof ItemBackpack) {
             return is.getItemDamage() > 17 ? ConfigurationBackpack.BACKPACK_SLOTS_L : ConfigurationBackpack.BACKPACK_SLOTS_S;
         } else {
-            return 9 * (is.getItemDamage() == 18 ? 0 : 2);
+            return 9 * (is.getItemDamage() == 18 ? 1 : 2);
         }
     }
 
@@ -145,5 +146,71 @@ public class BackpackUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * Checks if two items are equal based on item id and damage or if they have
+     * no subtypes if they have the same item id.
+     * 
+     * @param firstStack
+     *            The first ItemStack to check.
+     * @param secondStack
+     *            The second ItemStack to compare to.
+     * @return True if both have the same item id and damage or true if both
+     *         have no subtypes and have the same item id. Otherwise false.
+     */
+    public static boolean areStacksEqual(ItemStack firstStack, ItemStack secondStack) {
+        return areStacksEqual(firstStack, secondStack, false);
+    }
+
+    /**
+     * Checks if two items are equal based on item id and damage or if they have
+     * no subtypes if they have the same item id.
+     * 
+     * @param firstStack
+     *            The first ItemStack to check.
+     * @param secondStack
+     *            The second ItemStack to compare to.
+     * @param useOreDictionary
+     *            If true the method also checks if the ItemStacks have the same
+     *            OreDictionary ID.
+     * @return True if both have the same item id and damage or true if both
+     *         have no subtypes and have the same item id. Otherwise false.
+     */
+    public static boolean areStacksEqual(ItemStack firstStack, ItemStack secondStack, boolean useOreDictionary) {
+        if(firstStack == null || secondStack == null) {
+            return false;
+        }
+        if(firstStack.isItemEqual(secondStack)) {
+            return true;
+        }
+        if(!firstStack.getHasSubtypes() && !secondStack.getHasSubtypes()) {
+            if(firstStack.itemID == secondStack.itemID) {
+                return true;
+            }
+        }
+        if(useOreDictionary && areStacksEqualWithOD(firstStack, secondStack)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if two ItemStacks are equal based on the OreDictionary ID.
+     * 
+     * @param firstStack
+     *            The first ItemStack.
+     * @param secondStack
+     *            The second ItemStack.
+     * @return True if both ItemStacks have the same OreId, false otherwise or
+     *         if one or both ItemStacks are null.
+     */
+    public static boolean areStacksEqualWithOD(ItemStack firstStack, ItemStack secondStack) {
+        if(firstStack == null || secondStack == null) {
+            return false;
+        }
+        int oreIdFirst = OreDictionary.getOreID(firstStack);
+        int oreIdSecond = OreDictionary.getOreID(secondStack);
+        return oreIdFirst == oreIdSecond && oreIdFirst != -1;
     }
 }

@@ -1,15 +1,22 @@
 package backpack.gui.parts;
 
+import java.util.List;
+
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.StatCollector;
+import backpack.gui.helper.GuiIconButton;
+import backpack.handler.PacketHandlerBackpack;
+import backpack.inventory.InventoryWorkbenchBackpack;
 import backpack.inventory.container.ContainerAdvanced;
 import backpack.inventory.container.ContainerWorkbenchBackpack;
 import backpack.inventory.slot.SlotCraftingAdvanced;
+import backpack.inventory.slot.SlotPhantom;
 
-public class GuiPartWorkbench extends GuiPart {
+public class GuiPartWorkbench extends GuiPart<ContainerWorkbenchBackpack> {
     protected InventoryPlayer playerInventory;
 
     public GuiPartWorkbench(ContainerAdvanced container, IInventory inventory, InventoryPlayer playerInventory) {
@@ -20,33 +27,55 @@ public class GuiPartWorkbench extends GuiPart {
 
     @Override
     public void addSlots() {
-        ContainerWorkbenchBackpack con = (ContainerWorkbenchBackpack) container;
         int offset = offsetY + topSpacing + 1;
 
         firstSlot = container.inventorySlots.size();
+        
+        int x = LEFTSPACING;
+        x += 95;
 
         // result slot
-        container.addSlot(new SlotCraftingAdvanced(playerInventory.player, con.craftMatrix, con.craftResult, inventory, 0, 125, offset + 18));
+        container.addSlot(new SlotCraftingAdvanced(playerInventory.player, container, (InventoryWorkbenchBackpack)inventory, 0, x, offset + 18));
 
-        int x = LEFTSPACING;
+        x = LEFTSPACING;
         int y = offset;
 
         // crafting grid
         for(int row = 0; row < inventoryRows; row++) {
             for(int col = 0; col < 3; col++) {
-                container.addSlot(new Slot(con.craftMatrix, col + row * 3, x, y));
+                container.addSlot(new SlotPhantom(container.craftMatrix, col + row * 3, x, y));
                 x += SLOT;
             }
             y += SLOT;
             x = LEFTSPACING;
         }
-
+        
         lastSlot = container.inventorySlots.size();
+    }
+    
+    @Override
+    public void initGui(int guiLeft, int guiTop) {
+        super.initGui(guiLeft, guiTop);
+        
+        List<GuiButton> guiButtons = gui.getButtonList();
+        guiButtons.clear();
+        
+        int offsetX = 88;
+        
+        GuiIconButton clearButton = new GuiIconButton(0, guiLeft + offsetX, guiTop + 16, 11, 11, "c");
+        guiButtons.add(clearButton);
+    }
+    
+    @Override
+    public void actionPerformed(GuiButton guiButton) {
+        PacketHandlerBackpack.sendGuiCommandToServer("clear");
     }
 
     @Override
     public void drawForegroundLayer(FontRenderer fontRenderer, int x, int y) {
-        fontRenderer.drawString(StatCollector.translateToLocal("container.crafting"), 28, textOffset, 0x404040);
+        String text = StatCollector.translateToLocal("container.crafting");
+        int xOffset = 28;
+        fontRenderer.drawString(text, xOffset, textOffset, 0x404040);
     }
 
     @Override

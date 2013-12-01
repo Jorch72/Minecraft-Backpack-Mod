@@ -12,6 +12,7 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import backpack.Backpack;
 import backpack.inventory.InventoryBackpack;
 import backpack.inventory.container.ContainerAdvanced;
+import backpack.inventory.container.ContainerWorkbenchBackpack;
 import backpack.item.ItemBackpackBase;
 import backpack.item.ItemInfo;
 import backpack.item.Items;
@@ -100,6 +101,14 @@ public class PacketHandlerBackpack implements IPacketHandler {
                     }
                     Backpack.playerHandler.setClientBackpack(backpack);
                 }
+                break;
+            case Constants.PACKET_ID_GUI_COMMAND:
+                if(!player.worldObj.isRemote) {
+                    Container openContainer = player.openContainer;
+                    if(openContainer instanceof ContainerWorkbenchBackpack) {
+                        ((ContainerWorkbenchBackpack) openContainer).clearCraftMatrix();
+                    }
+                }
         }
     }
 
@@ -182,6 +191,22 @@ public class PacketHandlerBackpack implements IPacketHandler {
         }
         catch (IOException e) {
             FMLLog.warning("[" + Constants.MOD_ID + "] Failed to send backpack data to client.");
+        }
+    }
+    
+    public static void sendGuiCommandToServer(String command) {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+        try {
+            dataStream.writeByte(Constants.PACKET_ID_GUI_COMMAND);
+            
+            dataStream.writeUTF(command);
+
+            PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Constants.CHANNEL, byteStream.toByteArray()));
+        }
+        catch (IOException e) {
+            FMLLog.warning("[" + Constants.MOD_ID + "] Failed to send gui command to server.");
         }
     }
 }

@@ -1,17 +1,21 @@
 package backpack.gui;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import backpack.handler.PacketHandlerBackpack;
 import backpack.inventory.container.ContainerWorkbenchBackpack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiWorkbenchBackpack extends GuiAdvanced<ContainerWorkbenchBackpack> {
-    public GuiWorkbenchBackpack(InventoryPlayer inventoryPlayer, IInventory inventoryBackpack) {
-        super(new ContainerWorkbenchBackpack(inventoryPlayer, inventoryBackpack, null));
+    public GuiWorkbenchBackpack(InventoryPlayer inventoryPlayer, IInventory inventoryBackpack, ItemStack backpack) {
+        super(new ContainerWorkbenchBackpack(inventoryPlayer, inventoryBackpack, backpack));
 
         container = (ContainerWorkbenchBackpack) inventorySlots;
+        container.parts.get(0).setGui(this);
 
         ySize = TOPSPACING + container.calculatePartHeight() + BOTTOMSPACING;
     }
@@ -27,5 +31,27 @@ public class GuiWorkbenchBackpack extends GuiAdvanced<ContainerWorkbenchBackpack
 
         container.parts.get(0).drawForegroundLayer(fontRenderer, x, y);
         container.parts.get(2).drawForegroundLayer(fontRenderer, x, y);
+
+        for(Object buttonObj : buttonList) {
+            GuiButton button = (GuiButton) buttonObj;
+            if(button.func_82252_a()) {
+                String text = "";
+                if(button.id == 0) {
+                    text = "Clear Craft Matrix";
+                }
+                if(text != "") {
+                    drawCreativeTabHoveringText(text, x - guiLeft, y - guiTop);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void keyTyped(char charTyped, int keyCode) {
+        super.keyTyped(charTyped, keyCode);
+
+        if(charTyped == 'c') {
+            PacketHandlerBackpack.sendGuiCommandToServer("clear");
+        }
     }
 }
