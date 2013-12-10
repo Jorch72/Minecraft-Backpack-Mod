@@ -78,21 +78,6 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer entityplayer) {
-        if(!worldObj.isRemote) {
-            for(int i = 0; i < 9; ++i) {
-                ItemStack itemstack = craftMatrix.getStackInSlotOnClosing(i);
-
-                if(itemstack != null && itemstack.getItem() instanceof ItemBackpackBase) {
-                    entityplayer.dropPlayerItem(itemstack);
-                }
-            }
-        }
-
-        super.onContainerClosed(entityplayer);
-    }
-
-    @Override
     public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotPos) {
         ItemStack returnStack = null;
         Slot slot = (Slot) inventorySlots.get(slotPos);
