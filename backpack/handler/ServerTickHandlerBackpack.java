@@ -2,9 +2,9 @@ package backpack.handler;
 
 import java.util.EnumSet;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatMessageComponent;
 import backpack.item.ItemBackpackBase;
 import backpack.misc.ConfigurationBackpack;
 import cpw.mods.fml.common.ITickHandler;
@@ -32,10 +32,10 @@ public class ServerTickHandlerBackpack implements ITickHandler {
         }
         counter -= ConfigurationBackpack.MAX_BACKPACK_AMOUNT;
         if(counter > 0) {
-            String message = I18n.getStringParams("text.backpack.allowed_backpacks", ConfigurationBackpack.MAX_BACKPACK_AMOUNT);
-            player.addChatMessage("[Backpacks] " + message);
-            message = I18n.getStringParams("text.backpack.dropped_backpacks", counter);
-            player.addChatMessage("[Backpacks] " + message);
+            ChatMessageComponent message = new ChatMessageComponent().addText("[Backpacks] ").addFormatted("text.backpack.allowed_backpacks", ConfigurationBackpack.MAX_BACKPACK_AMOUNT);
+            player.sendChatToPlayer(message);
+            message = new ChatMessageComponent().addText("[Backpacks] ").addFormatted("text.backpack.dropped_backpacks", counter);
+            player.sendChatToPlayer(message);
         }
     }
 
