@@ -40,16 +40,15 @@ public class SlotCraftingAdvanced extends SlotCrafting {
         for(int i = 0; i < currentRecipe.size(); i++) {
             ItemStack ingredient = currentRecipe.get(i);
 
-            // search for same item in backpack inventory and reduce ingredient
-            // amount
+            // search for same item in backpack inventory and reduce ingredient amount
             for(int j = 0; j < backpackInventory.getSizeInventory(); j++) {
                 ItemStack itemstack = backpackInventory.getStackInSlot(j);
 
                 if(itemstack != null) {
                     if(BackpackUtil.areStacksEqual(ingredient, itemstack)) {
                         ingredient.stackSize -= backpackInventory.decrStackSize(j, ingredient.stackSize).stackSize;
-                        if(ingredient.getItem().hasContainerItem()) {
-                            ItemStack containerItem = ingredient.getItem().getContainerItemStack(ingredient);
+                        if(itemstack.getItem().hasContainerItem()) {
+                            ItemStack containerItem = itemstack.getItem().getContainerItemStack(itemstack);
 
                             if(containerItem.isItemStackDamageable() && containerItem.getItemDamage() > containerItem.getMaxDamage()) {
                                 MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, containerItem));
