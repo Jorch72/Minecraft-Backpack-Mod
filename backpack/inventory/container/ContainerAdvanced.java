@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,7 @@ import backpack.handler.PacketHandlerBackpack;
 import backpack.inventory.IInventoryBackpack;
 import backpack.inventory.slot.SlotScrolling;
 import backpack.misc.Constants;
+import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,15 +30,23 @@ public abstract class ContainerAdvanced extends Container {
     public final int lowerInventoryRows;
     public ArrayList<GuiPart> parts = new ArrayList<GuiPart>();
 
-    public ContainerAdvanced(IInventory lowerInventory, IInventory upperInventory, ItemStack backpack) {
-        this.lowerInventory = lowerInventory;
-        this.upperInventory = upperInventory;
-
-        lowerInventory.openChest();
-        upperInventory.openChest();
-
-        lowerInventoryRows = (int) Math.ceil(lowerInventory.getSizeInventory() / 9.);
-        upperInventoryRows = (int) Math.ceil(upperInventory.getSizeInventory() / 9.);
+    public ContainerAdvanced(IInventory inventoryLower, IInventory inventoryUpper, ItemStack backpack) {
+        if(inventoryLower != null) {
+            lowerInventory = inventoryLower;
+            lowerInventory.openChest();
+            lowerInventoryRows = BackpackUtil.getInventoryRows(lowerInventory);
+        } else {
+            lowerInventory = new InventoryBasic("placebo", false, 128);
+            lowerInventoryRows = 0;
+        }
+        if(inventoryUpper != null) {
+            upperInventory = inventoryUpper;
+            upperInventory.openChest();
+            upperInventoryRows = BackpackUtil.getInventoryRows(upperInventory);
+        } else {
+            upperInventory = new InventoryBasic("placebo", false, 128);
+            upperInventoryRows = 0;
+        }
 
         if(lowerInventory instanceof IInventoryBackpack || lowerInventory instanceof InventoryEnderChest) {
             openedBackpack = backpack;
@@ -50,12 +60,12 @@ public abstract class ContainerAdvanced extends Container {
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         ItemStack itemStack = null;
-        if(openedBackpack != null && NBTUtil.getBoolean(openedBackpack, Constants.WEARED_BACKPACK_OPEN)) {
-            itemStack = Backpack.playerTracker.getBackpack(player);
+        if(openedBackpack != null && NBTUtil.getBoolean(openedBackpack, Constants.WORN_BACKPACK_OPEN)) {
+            itemStack = Backpack.playerHandler.getBackpack(player);
         } else if(player.getCurrentEquippedItem() != null) {
             itemStack = player.getCurrentEquippedItem();
         }
-        if(itemStack != null && openedBackpack != null && itemStack.getDisplayName().equals(openedBackpack.getDisplayName())) {
+        if(BackpackUtil.UUIDEquals(itemStack, openedBackpack) || BackpackUtil.isEnderBackpack(itemStack)) {
             return true;
         }
         return false;
@@ -69,15 +79,20 @@ public abstract class ContainerAdvanced extends Container {
         upperInventory.closeChest();
 
         if(!player.worldObj.isRemote) {
-            ItemStack itemStack = Backpack.playerTracker.getBackpack(player);
+            ItemStack itemStack = Backpack.playerHandler.getBackpack(player);
             if(itemStack != null) {
-                if(NBTUtil.hasTag(itemStack, Constants.WEARED_BACKPACK_OPEN)) {
-                    NBTUtil.removeTag(itemStack, Constants.WEARED_BACKPACK_OPEN);
+                if(NBTUtil.hasTag(itemStack, Constants.WORN_BACKPACK_OPEN)) {
+                    NBTUtil.removeTag(itemStack, Constants.WORN_BACKPACK_OPEN);
+                    Backpack.playerHandler.setBackpack(player, itemStack);
                 }
             }
         }
     }
 
+    /**
+     * Copy of mergeItemStack from class Container, which will ignore disabled
+     * slots.
+     */
     @Override
     protected boolean mergeItemStack(ItemStack sourceStack, int firstSlot, int lastSlot, boolean backwards) {
         boolean result = false;
@@ -93,7 +108,7 @@ public abstract class ContainerAdvanced extends Container {
         if(sourceStack.isStackable()) {
             while(sourceStack.stackSize > 0 && (!backwards && currentSlotIndex < lastSlot || backwards && currentSlotIndex >= firstSlot)) {
                 slot = (Slot) inventorySlots.get(currentSlotIndex);
-                if(!(slot instanceof SlotScrolling && ((SlotScrolling) slot).isDisabled())) {
+                if(!(slot instanceof SlotScrolling && ((SlotScrolling) slot).isDisabled()) && slot.isItemValid(sourceStack)) {
                     slotStack = slot.getStack();
 
                     if(slotStack != null && slotStack.itemID == sourceStack.itemID && (!sourceStack.getHasSubtypes() || sourceStack.getItemDamage() == slotStack.getItemDamage())
@@ -131,7 +146,7 @@ public abstract class ContainerAdvanced extends Container {
 
             while(!backwards && currentSlotIndex < lastSlot || backwards && currentSlotIndex >= firstSlot) {
                 slot = (Slot) inventorySlots.get(currentSlotIndex);
-                if(!(slot instanceof SlotScrolling && ((SlotScrolling) slot).isDisabled())) {
+                if(!(slot instanceof SlotScrolling && ((SlotScrolling) slot).isDisabled()) && slot.isItemValid(sourceStack)) {
                     slotStack = slot.getStack();
 
                     if(slotStack == null) {
@@ -154,14 +169,34 @@ public abstract class ContainerAdvanced extends Container {
         return result;
     }
 
+    /**
+     * Adds a slot to the container.
+     * 
+     * @param slot
+     *            The slot that should be added.
+     */
     public void addSlot(Slot slot) {
         addSlotToContainer(slot);
     }
 
+    /**
+     * Returns a list with the players accessing the container.
+     * 
+     * @return A list of players accessing the container.
+     */
     public List<ICrafting> getCrafters() {
         return crafters;
     }
 
+    /**
+     * This will send the position of the scrollbar to the server so that the
+     * content of the inventory can be changed.
+     * 
+     * @param guiPart
+     *            The gui part which has the scrollbar.
+     * @param offset
+     *            The offset of the scrollbar.
+     */
     @SideOnly(Side.CLIENT)
     public void sendScrollbarToServer(GuiPart guiPart, int offset) {
         for(int i = 0; i < parts.size(); i++) {
@@ -173,6 +208,19 @@ public abstract class ContainerAdvanced extends Container {
         }
     }
 
+    /**
+     * Updates the slots of the container. To disable or enable them when the
+     * container has a scrollbar but the last slot of the container isn't in the
+     * 9th column.
+     * 
+     * @param guiPartIndex
+     *            The index of the gui part.
+     * @param offset
+     *            The offset of the scrollbar.
+     * @param isServer
+     *            True when the function is called on server side, false
+     *            otherwise.
+     */
     public void updateSlots(int guiPartIndex, int offset, boolean isServer) {
         int slotNumber = parts.get(guiPartIndex).firstSlot;
         int inventoryRows = parts.get(guiPartIndex).inventoryRows;
@@ -201,6 +249,11 @@ public abstract class ContainerAdvanced extends Container {
         }
     }
 
+    /**
+     * Calculates the height of all parts together.
+     * 
+     * @return The height of all gui parts.
+     */
     public int calculatePartHeight() {
         int height = 0;
         for(GuiPart guiPart : parts) {

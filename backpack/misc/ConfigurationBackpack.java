@@ -10,12 +10,16 @@ public class ConfigurationBackpack {
     public static int BACKPACK_SLOTS_S;
     public static int BACKPACK_SLOTS_L;
     public static int MAX_BACKPACK_AMOUNT;
-    public static boolean OPEN_ONLY_WEARED_BACKPACK;
+    public static boolean OPEN_ONLY_WORN_BACKPACK;
     public static boolean AIRSHIP_MOD_COMPATIBILITY;
     public static boolean DISABLE_BACKPACKS;
     public static boolean DISABLE_BIG_BACKPACKS;
     public static boolean DISABLE_ENDER_BACKPACKS;
     public static boolean DISABLE_WORKBENCH_BACKPACKS;
+    public static boolean BIG_BY_UPGRADE_ONLY;
+    public static String DISALLOW_ITEMS;
+    
+    public static boolean NEISupport = false;
 
     public static void init(File configFile) {
         Configuration config = new Configuration(configFile);
@@ -44,12 +48,15 @@ public class ConfigurationBackpack {
         if(MAX_BACKPACK_AMOUNT < 0 || MAX_BACKPACK_AMOUNT > 36) {
             MAX_BACKPACK_AMOUNT = 0;
         }
-        OPEN_ONLY_WEARED_BACKPACK = config.get(Configuration.CATEGORY_GENERAL, "openOnlyWearedBackpacks", false, getOpenOnlyWearedBackpacksComment()).getBoolean(false);
+        OPEN_ONLY_WORN_BACKPACK = config.get(Configuration.CATEGORY_GENERAL, "openOnlyWornBackpacks", false, getOpenOnlyWornBackpacksComment()).getBoolean(false);
         AIRSHIP_MOD_COMPATIBILITY = config.get(Configuration.CATEGORY_GENERAL, "airshipModCompatibility", false, getAirshipModCompatibilityComment()).getBoolean(false);
         DISABLE_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableBackpacks", false, getDisableBackpacksComment()).getBoolean(false);
         DISABLE_BIG_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableBigBackpacks", false, getDisableBigBackpacksComment()).getBoolean(false);
         DISABLE_ENDER_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableEnderBackpack", false, getDisableEnderBackpacksComment()).getBoolean(false);
         DISABLE_WORKBENCH_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableWorkbenchBackpack", false, getDisableWorkbenchBackpacksComment()).getBoolean(false);
+        BIG_BY_UPGRADE_ONLY = config.get(Configuration.CATEGORY_GENERAL, "bigByUpgradeOnly", false, getBigByUpgradeOnlyComment()).getBoolean(false);
+        
+        DISALLOW_ITEMS = config.get(Configuration.CATEGORY_GENERAL, "disallowItems", "", getDisallowItemsComment()).getString();
 
         // save the file so it will be generated if it doesn't exists
         config.save();
@@ -67,7 +74,7 @@ public class ConfigurationBackpack {
         return "##############\n" + "Number of backpacks a player can have in his inventory\n" + "valid: integers 0-36\n" + "0 = unlimited\n" + "##############";
     }
 
-    private static String getOpenOnlyWearedBackpacksComment() {
+    private static String getOpenOnlyWornBackpacksComment() {
         return "##############\n" + "If true you can only open a backpack that you wear in your chest slot\n" + "##############";
     }
 
@@ -89,5 +96,13 @@ public class ConfigurationBackpack {
 
     private static String getDisableWorkbenchBackpacksComment() {
         return "##############\n" + "If true workbench backpacks are not craftable\n" + "##############";
+    }
+
+    private static String getBigByUpgradeOnlyComment() {
+        return "##############\n" + "If true big backpacks can only crafted by upgrading a small one\n" + "##############";
+    }
+
+    private static String getDisallowItemsComment() {
+        return "##############\n" + "Example:\n" + "disallowItems:1,5:2,ingotSilver\n\n" + "This will disallow stone, birch wood planks and any type of silver ingots in backpacks.\n" + "##############";
     }
 }

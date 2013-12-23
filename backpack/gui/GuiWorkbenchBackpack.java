@@ -1,26 +1,24 @@
 package backpack.gui;
 
-import invtweaks.api.ContainerGUI;
-import invtweaks.api.ContainerGUI.ContainerSectionCallback;
-import invtweaks.api.ContainerSection;
+import java.util.ArrayList;
 
-import java.util.List;
-import java.util.Map;
-
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
+import backpack.handler.PacketHandlerBackpack;
 import backpack.inventory.container.ContainerWorkbenchBackpack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@ContainerGUI
 @SideOnly(Side.CLIENT)
 public class GuiWorkbenchBackpack extends GuiAdvanced<ContainerWorkbenchBackpack> {
-    public GuiWorkbenchBackpack(InventoryPlayer inventoryPlayer, IInventory inventoryBackpack) {
-        super(new ContainerWorkbenchBackpack(inventoryPlayer, inventoryBackpack, null));
+    public GuiWorkbenchBackpack(InventoryPlayer inventoryPlayer, IInventory inventoryBackpack, ItemStack backpack) {
+        super(new ContainerWorkbenchBackpack(inventoryPlayer, inventoryBackpack, backpack));
 
         container = (ContainerWorkbenchBackpack) inventorySlots;
+        container.parts.get(0).setGui(this);
 
         ySize = TOPSPACING + container.calculatePartHeight() + BOTTOMSPACING;
     }
@@ -36,10 +34,35 @@ public class GuiWorkbenchBackpack extends GuiAdvanced<ContainerWorkbenchBackpack
 
         container.parts.get(0).drawForegroundLayer(fontRenderer, x, y);
         container.parts.get(2).drawForegroundLayer(fontRenderer, x, y);
+
+        for(Object buttonObj : buttonList) {
+            GuiButton button = (GuiButton) buttonObj;
+            if(button.func_82252_a()) {
+                ArrayList<String> text = new ArrayList<String>();
+                if(button.id == 0) {
+                    text.add(StatCollector.translateToLocal("tooltip.clearCraftMatrix"));
+                } else if(button.id == 1) {
+                    text.add(StatCollector.translateToLocal("tooltip.saveRecipe"));
+                    text.add(StatCollector.translateToLocal("tooltip.clickASlot"));
+                }
+                if(!text.isEmpty()) {
+                    func_102021_a(text, x - guiLeft, y - guiTop);
+                }
+            }
+        }
     }
-    
-    @ContainerSectionCallback
-    public Map<ContainerSection, List<Slot>> getContainerSections() {
-        return ((ContainerWorkbenchBackpack) inventorySlots).getContainerSections();
+
+    @Override
+    protected void keyTyped(char charTyped, int keyCode) {
+        super.keyTyped(charTyped, keyCode);
+
+        switch(charTyped) {
+            case 'c':
+                PacketHandlerBackpack.sendGuiCommandToServer("clear");
+                break;
+            case 's':
+                PacketHandlerBackpack.sendGuiCommandToServer("save");
+                break;
+        }
     }
 }

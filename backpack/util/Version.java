@@ -12,7 +12,7 @@ import cpw.mods.fml.common.Loader;
 
 public class Version implements Runnable {
     protected static Version instance = null;
-    public static String latestVersion = "";
+    public static String newestVersion = "";
     public static boolean seen = false;
 
     public static void checkForUpdate() {
@@ -24,14 +24,14 @@ public class Version implements Runnable {
 
     @Override
     public void run() {
-        latestVersion = "";
+        newestVersion = "";
         int count = 0;
 
         try {
             while(count < 3) {
                 getVersionFromServer();
 
-                if(!latestVersion.isEmpty()) {
+                if(!newestVersion.isEmpty()) {
                     count = 3;
                 } else {
                     count++;
@@ -59,7 +59,7 @@ public class Version implements Runnable {
                 }
             }
             if(!version.isEmpty()) {
-                latestVersion = version;
+                newestVersion = version;
             }
             in.close();
         }
@@ -75,6 +75,6 @@ public class Version implements Runnable {
     }
 
     public static boolean isOutdated() {
-        return latestVersion == "" ? false : !latestVersion.equals(Constants.MOD_VERSION);
+        return newestVersion == "" ? false : !newestVersion.equals(Constants.MOD_VERSION);
     }
 }

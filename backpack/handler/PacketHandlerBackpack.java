@@ -12,10 +12,12 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import backpack.Backpack;
 import backpack.inventory.InventoryBackpack;
 import backpack.inventory.container.ContainerAdvanced;
+import backpack.inventory.container.ContainerWorkbenchBackpack;
 import backpack.item.ItemBackpackBase;
+import backpack.item.ItemInfo;
+import backpack.item.ItemWorkbenchBackpack;
 import backpack.item.Items;
 import backpack.misc.Constants;
-import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -34,14 +36,14 @@ public class PacketHandlerBackpack implements IPacketHandler {
      *            The network manager.
      * @param packet
      *            The incoming packet.
-     * @param player
+     * @param playerObj
      *            The player who sends the packet.
      */
     @Override
-    public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player) {
+    public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player playerObj) {
         ByteArrayDataInput reader = ByteStreams.newDataInput(packet.data);
 
-        EntityPlayer entityPlayer = (EntityPlayer) player;
+        EntityPlayer player = (EntityPlayer) playerObj;
 
         int packetId = reader.readByte();
 
@@ -50,11 +52,11 @@ public class PacketHandlerBackpack implements IPacketHandler {
                 // converts the byte array to a string and trims it
                 String name = reader.readUTF().trim();
 
-                if(entityPlayer.getCurrentEquippedItem() != null) {
-                    ItemStack is = entityPlayer.getCurrentEquippedItem();
+                if(player.getCurrentEquippedItem() != null) {
+                    ItemStack is = player.getCurrentEquippedItem();
 
                     if(is.getItem() instanceof ItemBackpackBase) {
-                        InventoryBackpack inv = new InventoryBackpack(entityPlayer, is);
+                        InventoryBackpack inv = new InventoryBackpack(player, is);
                         // set new name
                         inv.setInvName(name);
                         // save the new data
@@ -63,46 +65,60 @@ public class PacketHandlerBackpack implements IPacketHandler {
                 }
                 break;
             case Constants.PACKET_ID_OPEN_BACKPACK:
-                if(!entityPlayer.worldObj.isRemote) {
-                    ItemStack backpack = Backpack.playerTracker.getBackpack(entityPlayer);
+                if(!player.worldObj.isRemote) {
+                    ItemStack backpack = Backpack.playerHandler.getBackpack(player);
                     if(backpack != null) {
-                        NBTUtil.setBoolean(backpack, Constants.WEARED_BACKPACK_OPEN, true);
+                        NBTUtil.setBoolean(backpack, Constants.WORN_BACKPACK_OPEN, true);
+                        Backpack.playerHandler.setBackpack(player, backpack);
                         if(backpack.itemID == Items.backpack.itemID) {
-                            entityPlayer.openGui(Backpack.instance, Constants.GUI_ID_BACKPACK_WEARED, null, 0, 0, 0);
+                            player.openGui(Backpack.instance, Constants.GUI_ID_BACKPACK_WORN, null, 0, 0, 0);
                         } else if(backpack.itemID == Items.workbenchBackpack.itemID) {
-                            entityPlayer.openGui(Backpack.instance, Constants.GUI_ID_WORKBENCH_BACKPACK_WEARED, null, 0, 0, 0);
+                            player.openGui(Backpack.instance, Constants.GUI_ID_WORKBENCH_BACKPACK_WORN, null, 0, 0, 0);
                         }
                     }
                 }
                 break;
             case Constants.PACKET_ID_OPEN_SLOT:
-                entityPlayer.openGui(Backpack.instance, Constants.GUI_ID_BACKPACK_SLOT, null, 0, 0, 0);
+                player.openGui(Backpack.instance, Constants.GUI_ID_BACKPACK_SLOT, null, 0, 0, 0);
                 break;
             case Constants.PACKET_ID_CLOSE_GUI:
-                entityPlayer.openContainer.onCraftGuiClosed(entityPlayer);
+                player.openContainer.onCraftGuiClosed(player);
                 break;
             case Constants.PACKET_ID_UPDATE_SCROLLBAR:
-                if(!entityPlayer.worldObj.isRemote) {
-                    Container container = entityPlayer.openContainer;
+                if(!player.worldObj.isRemote) {
+                    Container container = player.openContainer;
                     if(container != null && container instanceof ContainerAdvanced) {
                         ((ContainerAdvanced) container).updateSlots(reader.readByte(), reader.readByte(), true);
                     }
                 }
                 break;
-            case Constants.PACKET_ID_WEARED_BACKPACK_DATA:
-                if(entityPlayer.worldObj.isRemote) {
+            case Constants.PACKET_ID_WORN_BACKPACK_DATA:
+                if(player.worldObj.isRemote) {
                     int itemId = reader.readInt();
+                    ItemStack backpack = null;
                     if(itemId > 0) {
-                        Backpack.proxy.clientBackpack = new ItemStack(itemId, 1, reader.readByte());
-                        InventoryBackpack inv = new InventoryBackpack(entityPlayer, Backpack.proxy.clientBackpack);
-                        // set new name
-                        inv.setInvName(reader.readUTF());
-                        // save the new data
-                        inv.saveInventory();
-
-                        BackpackUtil.writeBackpackToPlayer(entityPlayer, Backpack.proxy.clientBackpack);
-                    } else {
-                        Backpack.proxy.clientBackpack = null;
+                        backpack = new ItemStack(itemId, 1, reader.readByte());
+                        NBTUtil.setString(backpack, ItemInfo.UID, reader.readUTF());
+                        if(backpack.getItem() instanceof ItemWorkbenchBackpack) {
+                            NBTUtil.setBoolean(backpack, "intelligent", reader.readBoolean());
+                        }
+                    }
+                    Backpack.playerHandler.setClientBackpack(backpack);
+                }
+                break;
+            case Constants.PACKET_ID_GUI_COMMAND:
+                if(!player.worldObj.isRemote) {
+                    String command = reader.readUTF();
+                    if(command.equals("clear")) {
+                        Container openContainer = player.openContainer;
+                        if(openContainer instanceof ContainerWorkbenchBackpack) {
+                            ((ContainerWorkbenchBackpack) openContainer).clearCraftMatrix();
+                        }
+                    } else if(command.equals("save")) {
+                        Container openContainer = player.openContainer;
+                        if(openContainer instanceof ContainerWorkbenchBackpack) {
+                            ((ContainerWorkbenchBackpack) openContainer).setSaveMode();
+                        }
                     }
                 }
         }
@@ -168,25 +184,44 @@ public class PacketHandlerBackpack implements IPacketHandler {
         }
     }
 
-    public static void sendWearedBackpackDataToClient(EntityPlayer player) {
+    public static void sendWornBackpackDataToClient(EntityPlayer player) {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         DataOutputStream dataStream = new DataOutputStream(byteStream);
 
         try {
-            dataStream.writeByte(Constants.PACKET_ID_WEARED_BACKPACK_DATA);
-            ItemStack backpack = Backpack.playerTracker.getBackpack(player);
+            dataStream.writeByte(Constants.PACKET_ID_WORN_BACKPACK_DATA);
+            ItemStack backpack = Backpack.playerHandler.getBackpack(player);
             if(backpack == null) {
                 dataStream.writeInt(-1);
             } else {
                 dataStream.writeInt(backpack.itemID);
                 dataStream.writeByte(backpack.getItemDamage());
-                dataStream.writeUTF(backpack.getDisplayName());
+                dataStream.writeUTF(NBTUtil.getString(backpack, ItemInfo.UID));
+                if(backpack.getItem() instanceof ItemWorkbenchBackpack) {
+                    dataStream.writeBoolean(NBTUtil.getBoolean(backpack, "intelligent"));
+                }
             }
 
             PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(Constants.CHANNEL, byteStream.toByteArray()), (Player) player);
         }
         catch (IOException e) {
             FMLLog.warning("[" + Constants.MOD_ID + "] Failed to send backpack data to client.");
+        }
+    }
+
+    public static void sendGuiCommandToServer(String command) {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+        try {
+            dataStream.writeByte(Constants.PACKET_ID_GUI_COMMAND);
+
+            dataStream.writeUTF(command);
+
+            PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Constants.CHANNEL, byteStream.toByteArray()));
+        }
+        catch (IOException e) {
+            FMLLog.warning("[" + Constants.MOD_ID + "] Failed to send gui command to server.");
         }
     }
 }

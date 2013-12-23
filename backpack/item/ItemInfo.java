@@ -21,6 +21,8 @@ public class ItemInfo {
     public static final int DEFAULT_ID_TANNED_LEATHER = 18332;
     public static int ID_TANNED_LEATHER;
 
+    public static final String UID = "backpack-UID";
+
     public static final String[] BACKPACK_COLORS = { "black", "red", "green", "brown", "blue", "purple", "cyan", "lightGray", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange",
             "white", "ender" };
     public static final int ENDERBACKPACK = 31999;

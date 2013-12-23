@@ -9,11 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import backpack.item.ItemBackpack;
-import backpack.item.ItemInfo;
 import backpack.item.Items;
+import backpack.util.BackpackUtil;
 
 public class RecipeRecolorBackpack implements IRecipe {
-    ArrayList<Integer> allowedDyes = new ArrayList<Integer>();
+    private ArrayList<Integer> allowedDyes = new ArrayList<Integer>();
+    private ItemStack result;
 
     public RecipeRecolorBackpack() {
         allowedDyes.add(Item.dyePowder.itemID);
@@ -23,23 +24,27 @@ public class RecipeRecolorBackpack implements IRecipe {
 
     @Override
     public boolean matches(InventoryCrafting craftingGridInventory, World world) {
+        result = null;
         ItemStack backpack = null;
         ItemStack dye = null;
 
+        ItemStack slotStack;
         for(int i = 0; i < craftingGridInventory.getSizeInventory(); i++) {
-            ItemStack slot = craftingGridInventory.getStackInSlot(i);
+            slotStack = craftingGridInventory.getStackInSlot(i);
 
-            if(slot != null) {
-                if(slot.getItem() instanceof ItemBackpack) {
-                    if(slot.getItemDamage() == ItemInfo.ENDERBACKPACK || backpack != null) {
+            if(slotStack != null) {
+                if(slotStack.getItem() instanceof ItemBackpack) {
+                    if(BackpackUtil.isEnderBackpack(slotStack) || backpack != null) {
                         return false;
                     }
-                    backpack = slot;
-                } else if(allowedDyes.contains(slot.itemID)) {
+                    backpack = slotStack;
+                } else if(allowedDyes.contains(slotStack.itemID)) {
                     if(dye != null) {
                         return false;
                     }
-                    dye = slot;
+                    dye = slotStack;
+                } else {
+                    return false;
                 }
             }
         }
@@ -50,37 +55,22 @@ public class RecipeRecolorBackpack implements IRecipe {
             } else if(backpack.getItemDamage() < 17 && dye.itemID == Items.tannedLeather.itemID) {
                 return false;
             }
+
+            int damage = dye.getItem() instanceof ItemDye ? dye.getItemDamage() : 16;
+            if(backpack.getItemDamage() > 17) {
+                damage += 32;
+            }
+
+            result = backpack.copy();
+            result.setItemDamage(damage);
         }
 
-        return backpack != null && dye != null;
+        return result != null;
     }
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting craftingGridInventory) {
-        ItemStack backpack = null;
-        ItemStack dye = null;
-
-        for(int i = 0; i < craftingGridInventory.getSizeInventory(); i++) {
-            ItemStack slot = craftingGridInventory.getStackInSlot(i);
-
-            if(slot != null) {
-                if(slot.getItem() instanceof ItemBackpack) {
-                    backpack = slot;
-                } else if(allowedDyes.contains(slot.itemID)) {
-                    dye = slot;
-                }
-            }
-        }
-
-        int damage = dye.getItem() instanceof ItemDye ? dye.getItemDamage() : 16;
-        if(backpack.getItemDamage() > 17) {
-            damage += 32;
-        }
-
-        ItemStack result = backpack.copy();
-        result.setItemDamage(damage);
-
-        return result;
+        return result.copy();
     }
 
     @Override
@@ -90,6 +80,6 @@ public class RecipeRecolorBackpack implements IRecipe {
 
     @Override
     public ItemStack getRecipeOutput() {
-        return null;
+        return result;
     }
 }

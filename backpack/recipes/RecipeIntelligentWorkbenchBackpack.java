@@ -1,54 +1,46 @@
 package backpack.recipes;
 
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-import backpack.item.ItemBackpackBase;
-import backpack.item.ItemLeather;
-import backpack.item.Items;
+import backpack.item.ItemWorkbenchBackpack;
+import backpack.util.NBTUtil;
 
-public class RecipeEnhanceBackpack implements IRecipe {
+public class RecipeIntelligentWorkbenchBackpack implements IRecipe {
     private ItemStack result;
 
     @Override
     public boolean matches(InventoryCrafting craftingGridInventory, World world) {
         result = null;
         ItemStack backpack = null;
-
-        if(craftingGridInventory.getSizeInventory() < 9) {
-            return false;
-        }
+        boolean book = false;
 
         ItemStack slotStack;
         for(int i = 0; i < craftingGridInventory.getSizeInventory(); i++) {
             slotStack = craftingGridInventory.getStackInSlot(i);
 
             if(slotStack != null) {
-                if(i == 4) {
-                    if(!(slotStack.getItem() instanceof ItemBackpackBase)) {
-                        return false;
-                    }
-                    if(slotStack.getItemDamage() >= 19) {
+                if(slotStack.getItem() instanceof ItemWorkbenchBackpack) {
+                    if(backpack != null) {
                         return false;
                     }
                     backpack = slotStack;
+                } else if(slotStack.getItem() == Item.writableBook) {
+                    if(book) {
+                        return false;
+                    }
+                    book = true;
                 } else {
-                    if(!(slotStack.getItem() instanceof ItemLeather)) {
-                        return false;
-                    }
-                    if(slotStack.itemID != Items.tannedLeather.itemID) {
-                        return false;
-                    }
+                    return false;
                 }
-            } else {
-                return false;
             }
         }
 
-        if(backpack != null) {
+        if(backpack != null && book) {
             result = backpack.copy();
-            result.setItemDamage(result.getItemDamage() + 32);
+            NBTUtil.setBoolean(result, "intelligent", true);
         }
 
         return result != null;
@@ -61,7 +53,7 @@ public class RecipeEnhanceBackpack implements IRecipe {
 
     @Override
     public int getRecipeSize() {
-        return 9;
+        return 2;
     }
 
     @Override

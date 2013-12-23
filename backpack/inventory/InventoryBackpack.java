@@ -1,11 +1,15 @@
 package backpack.inventory;
 
+import java.util.UUID;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import backpack.Backpack;
 import backpack.item.ItemBackpackBase;
+import backpack.item.ItemInfo;
 import backpack.misc.Constants;
 import backpack.util.BackpackUtil;
 import backpack.util.NBTUtil;
@@ -39,6 +43,17 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
         // check if inventory exists if not create one
         if(!hasInventory()) {
             createInventory();
+        }
+
+        // fix problem with forestry
+        if(NBTUtil.hasTag(originalIS, "UID")) {
+            NBTUtil.setString(originalIS, ItemInfo.UID, NBTUtil.getString(originalIS, "UID"));
+            NBTUtil.removeTag(originalIS, "UID");
+        }
+
+        // backwards compatibility
+        if(!NBTUtil.hasTag(originalIS, ItemInfo.UID)) {
+            NBTUtil.setString(originalIS, ItemInfo.UID, UUID.randomUUID().toString());
         }
 
         loadInventory();
@@ -97,7 +112,8 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      * Creates the Inventory Tag in the NBT with an empty inventory.
      */
     protected void createInventory() {
-        setInvName(new String(originalIS.getDisplayName()));
+        setInvName(originalIS.getDisplayName());
+        NBTUtil.setString(originalIS, ItemInfo.UID, UUID.randomUUID().toString());
         writeToNBT();
     }
 
@@ -115,15 +131,22 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      * Searches the backpack in players inventory and saves NBT data in it.
      */
     protected void setNBT() {
-        if(!NBTUtil.getBoolean(originalIS, Constants.WEARED_BACKPACK_OPEN)) {
+        if(!NBTUtil.getBoolean(originalIS, Constants.WORN_BACKPACK_OPEN)) {
+            ItemStack current = playerEntity.getCurrentEquippedItem();
+            if(BackpackUtil.UUIDEquals(current, originalIS)) {
+                current.setTagCompound(originalIS.getTagCompound());
+                return;
+            }
             for(ItemStack itemStack : playerEntity.inventory.mainInventory) {
                 if(itemStack != null && itemStack.getItem() instanceof ItemBackpackBase) {
-                    if(itemStack.getDisplayName() == originalIS.getDisplayName()) {
+                    if(BackpackUtil.UUIDEquals(itemStack, originalIS)) {
                         itemStack.setTagCompound(originalIS.getTagCompound());
                         break;
                     }
                 }
             }
+        } else {
+            Backpack.playerHandler.setBackpack(playerEntity, originalIS);
         }
     }
 
@@ -132,7 +155,9 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      * the inventory from the NBT
      */
     public void loadInventory() {
+        reading = true;
         readFromNBT();
+        reading = false;
     }
 
     /**
@@ -175,7 +200,6 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      *            The NBT Node to read from.
      */
     protected void readFromNBT() {
-        reading = true;
         // for backwards compatibility
         if(NBTUtil.hasTag(originalIS, "display")) {
             setInvName(NBTUtil.getCompoundTag(originalIS, "display").getString("Name"));
@@ -185,6 +209,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
             setInvName(NBTUtil.getString(originalIS, "Name"));
         }
 
+        //InventoryUtil.readInventory(inventoryContents, "Inventory", originalIS);
         NBTTagList itemList = NBTUtil.getCompoundTag(originalIS, "Inventory").getTagList("Items");
         for(int i = 0; i < itemList.tagCount(); i++) {
             NBTTagCompound slotEntry = (NBTTagCompound) itemList.tagAt(i);
@@ -194,6 +219,5 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
                 setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(slotEntry));
             }
         }
-        reading = false;
     }
 }

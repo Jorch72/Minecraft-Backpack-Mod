@@ -23,7 +23,7 @@ public class RecipeHelper {
             }
         }
 
-        if(!ConfigurationBackpack.DISABLE_BIG_BACKPACKS) {
+        if(!ConfigurationBackpack.DISABLE_BIG_BACKPACKS && !ConfigurationBackpack.BIG_BY_UPGRADE_ONLY) {
             // normal big backpack without dye
             backpackStack = new ItemStack(Items.backpack, 1, 48);
             GameRegistry.addRecipe(backpackStack, "LLL", "L L", "LLL", 'L', Items.tannedLeather);
@@ -40,7 +40,7 @@ public class RecipeHelper {
                 GameRegistry.addRecipe(new ShapedOreRecipe(backpackStack, "LLL", "LDL", "LLL", 'L', Item.leather, 'D', dyes[i]));
             }
 
-            if(!ConfigurationBackpack.DISABLE_BIG_BACKPACKS) {
+            if(!ConfigurationBackpack.DISABLE_BIG_BACKPACKS && !ConfigurationBackpack.BIG_BY_UPGRADE_ONLY) {
                 // big backpacks
                 backpackStack = new ItemStack(Items.backpack, 1, i + 32);
                 GameRegistry.addRecipe(new ShapedOreRecipe(backpackStack, "LLL", "LDL", "LLL", 'L', Items.tannedLeather, 'D', dyes[i]));
@@ -74,10 +74,15 @@ public class RecipeHelper {
         ItemStack tannedLeatherStack = new ItemStack(Items.tannedLeather);
         GameRegistry.addSmelting(Items.boundLeather.itemID, tannedLeatherStack, 0.1f);
 
-        // enhance backpack to big backpack
-        GameRegistry.addRecipe(new RecipeEnhanceBackpack());
+        if(!ConfigurationBackpack.DISABLE_BIG_BACKPACKS) {
+            // enhance backpack to big backpack
+            GameRegistry.addRecipe(new RecipeEnhanceBackpack());
+        }
 
         // recolor backpack
         GameRegistry.addRecipe(new RecipeRecolorBackpack());
+
+        // intelligent workbench backpack
+        GameRegistry.addRecipe(new RecipeIntelligentWorkbenchBackpack());
     }
 }
