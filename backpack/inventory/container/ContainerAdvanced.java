@@ -15,7 +15,6 @@ import backpack.Backpack;
 import backpack.gui.parts.GuiPart;
 import backpack.handler.PacketHandlerBackpack;
 import backpack.inventory.IInventoryBackpack;
-import backpack.inventory.slot.SlotPhantom;
 import backpack.inventory.slot.SlotScrolling;
 import backpack.misc.Constants;
 import backpack.util.BackpackUtil;
@@ -56,16 +55,6 @@ public abstract class ContainerAdvanced extends Container {
         } else {
             openedBackpack = null;
         }
-    }
-    
-    @Override
-    public ItemStack slotClick(int slotIndex, int mouseButton, int modifier, EntityPlayer player) {
-        Slot slot = slotIndex < 0 ? null : (Slot) inventorySlots.get(slotIndex);
-        if(slot instanceof SlotPhantom) {
-            slotPhantomClick(slot, mouseButton, modifier, player.inventory.getItemStack());
-            return null;
-        }
-        return super.slotClick(slotIndex, mouseButton, modifier, player);
     }
 
     @Override
@@ -181,42 +170,6 @@ public abstract class ContainerAdvanced extends Container {
     }
 
     /**
-     * Handles clicking on a phantom slot.
-     * 
-     * @param slot
-     *            The slot that has been clicked.
-     * @param mouseButton
-     *            The mouse button identifier:
-     *                0: left click
-     *                1: right click & left click during drag and drop
-     *                2: middle click (scrollwheel)
-     * @param modifier
-     *            The mouse modifier:
-     *                0: normal click
-     *                3: drag and drop middle click
-     *                5: drag and drop left or right click
-     * @param stackHeld
-     *            The stack that the player holds on his mouse.
-     */
-    protected void slotPhantomClick(Slot slot, int mouseButton, int modifier, ItemStack stackHeld) {
-        if (((SlotPhantom) slot).canChangeStack()) {
-            if (mouseButton == 2) {
-                slot.putStack(null);
-            } else {
-                ItemStack phantomStack = null;
-
-                if(stackHeld != null) {
-                    phantomStack = stackHeld.copy();
-                    phantomStack.stackSize = 1;
-                }
-
-                slot.putStack(phantomStack);
-            }
-            slot.onSlotChanged();
-        }
-    }
-
-    /**
      * Adds a slot to the container.
      * 
      * @param slot
@@ -229,14 +182,14 @@ public abstract class ContainerAdvanced extends Container {
     /**
      * Returns a list with the players accessing the container.
      * 
-     * @return A list of players accessing the container. 
+     * @return A list of players accessing the container.
      */
     public List<ICrafting> getCrafters() {
         return crafters;
     }
 
     /**
-     * This will send the position of the scrollbar to the server so that the 
+     * This will send the position of the scrollbar to the server so that the
      * content of the inventory can be changed.
      * 
      * @param guiPart
@@ -257,15 +210,16 @@ public abstract class ContainerAdvanced extends Container {
 
     /**
      * Updates the slots of the container. To disable or enable them when the
-     * container has a scrollbar but the last slot of the container isn't in
-     * the 9th column.
+     * container has a scrollbar but the last slot of the container isn't in the
+     * 9th column.
      * 
      * @param guiPartIndex
      *            The index of the gui part.
      * @param offset
      *            The offset of the scrollbar.
      * @param isServer
-     *            True when the function is called on server side, false otherwise.
+     *            True when the function is called on server side, false
+     *            otherwise.
      */
     public void updateSlots(int guiPartIndex, int offset, boolean isServer) {
         int slotNumber = parts.get(guiPartIndex).firstSlot;

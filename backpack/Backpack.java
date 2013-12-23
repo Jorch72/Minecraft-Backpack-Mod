@@ -61,7 +61,7 @@ public class Backpack {
     public void postInit(FMLPostInitializationEvent event) {
         proxy.addNeiSupport();
     }
-    
+
     @Mod.EventHandler
     public void serverStopping(FMLServerStoppingEvent event) {
         playerHandler.unloadWorld();

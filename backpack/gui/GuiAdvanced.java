@@ -52,7 +52,7 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
             guiPart.drawBackgroundLayer(f, x, y);
         }
     }
-    
+
     @Override
     protected void actionPerformed(GuiButton guiButton) {
         for(GuiPart guiPart : container.parts) {
@@ -123,7 +123,7 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
             close = true;
         }
     }
-    
+
     @Override
     protected void drawHoveringText(List lines, int mouseX, int mouseY, FontRenderer fontRenderer) {
         if(!lines.isEmpty()) {
@@ -203,7 +203,7 @@ public abstract class GuiAdvanced<T extends ContainerAdvanced> extends GuiContai
 
         drawTexturedModalRect(guiLeft, guiTop + ySize - BOTTOMSPACING, 0, 160, xSize, BOTTOMSPACING);
     }
-    
+
     public List<GuiButton> getButtonList() {
         return buttonList;
     }

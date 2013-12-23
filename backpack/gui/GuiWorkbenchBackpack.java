@@ -1,6 +1,9 @@
 package backpack.gui;
 
+import java.util.ArrayList;
+
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -35,12 +38,15 @@ public class GuiWorkbenchBackpack extends GuiAdvanced<ContainerWorkbenchBackpack
         for(Object buttonObj : buttonList) {
             GuiButton button = (GuiButton) buttonObj;
             if(button.func_82252_a()) {
-                String text = "";
+                ArrayList<String> text = new ArrayList<String>();
                 if(button.id == 0) {
-                    text = "Clear Craft Matrix";
+                    text.add(I18n.getString("tooltip.clearCraftMatrix"));
+                } else if(button.id == 1) {
+                    text.add(I18n.getString("tooltip.saveRecipe"));
+                    text.add(I18n.getString("tooltip.clickASlot"));
                 }
-                if(text != "") {
-                    drawCreativeTabHoveringText(text, x - guiLeft, y - guiTop);
+                if(!text.isEmpty()) {
+                    func_102021_a(text, x - guiLeft, y - guiTop);
                 }
             }
         }
@@ -50,8 +56,13 @@ public class GuiWorkbenchBackpack extends GuiAdvanced<ContainerWorkbenchBackpack
     protected void keyTyped(char charTyped, int keyCode) {
         super.keyTyped(charTyped, keyCode);
 
-        if(charTyped == 'c') {
-            PacketHandlerBackpack.sendGuiCommandToServer("clear");
+        switch(charTyped) {
+            case 'c':
+                PacketHandlerBackpack.sendGuiCommandToServer("clear");
+                break;
+            case 's':
+                PacketHandlerBackpack.sendGuiCommandToServer("save");
+                break;
         }
     }
 }

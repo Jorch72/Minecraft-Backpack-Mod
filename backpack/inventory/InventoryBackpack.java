@@ -44,13 +44,13 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
         if(!hasInventory()) {
             createInventory();
         }
-        
+
         // fix problem with forestry
         if(NBTUtil.hasTag(originalIS, "UID")) {
             NBTUtil.setString(originalIS, ItemInfo.UID, NBTUtil.getString(originalIS, "UID"));
             NBTUtil.removeTag(originalIS, "UID");
         }
-        
+
         // backwards compatibility
         if(!NBTUtil.hasTag(originalIS, ItemInfo.UID)) {
             NBTUtil.setString(originalIS, ItemInfo.UID, UUID.randomUUID().toString());
@@ -155,7 +155,9 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      * the inventory from the NBT
      */
     public void loadInventory() {
+        reading = true;
         readFromNBT();
+        reading = false;
     }
 
     /**
@@ -198,7 +200,6 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
      *            The NBT Node to read from.
      */
     protected void readFromNBT() {
-        reading = true;
         // for backwards compatibility
         if(NBTUtil.hasTag(originalIS, "display")) {
             setInvName(NBTUtil.getCompoundTag(originalIS, "display").getString("Name"));
@@ -208,6 +209,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
             setInvName(NBTUtil.getString(originalIS, "Name"));
         }
 
+        //InventoryUtil.readInventory(inventoryContents, "Inventory", originalIS);
         NBTTagList itemList = NBTUtil.getCompoundTag(originalIS, "Inventory").getTagList("Items");
         for(int i = 0; i < itemList.tagCount(); i++) {
             NBTTagCompound slotEntry = (NBTTagCompound) itemList.tagAt(i);
@@ -217,6 +219,5 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
                 setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(slotEntry));
             }
         }
-        reading = false;
     }
 }

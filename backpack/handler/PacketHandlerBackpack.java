@@ -15,6 +15,7 @@ import backpack.inventory.container.ContainerAdvanced;
 import backpack.inventory.container.ContainerWorkbenchBackpack;
 import backpack.item.ItemBackpackBase;
 import backpack.item.ItemInfo;
+import backpack.item.ItemWorkbenchBackpack;
 import backpack.item.Items;
 import backpack.misc.Constants;
 import backpack.util.NBTUtil;
@@ -98,15 +99,26 @@ public class PacketHandlerBackpack implements IPacketHandler {
                     if(itemId > 0) {
                         backpack = new ItemStack(itemId, 1, reader.readByte());
                         NBTUtil.setString(backpack, ItemInfo.UID, reader.readUTF());
+                        if(backpack.getItem() instanceof ItemWorkbenchBackpack) {
+                            NBTUtil.setBoolean(backpack, "intelligent", reader.readBoolean());
+                        }
                     }
                     Backpack.playerHandler.setClientBackpack(backpack);
                 }
                 break;
             case Constants.PACKET_ID_GUI_COMMAND:
                 if(!player.worldObj.isRemote) {
-                    Container openContainer = player.openContainer;
-                    if(openContainer instanceof ContainerWorkbenchBackpack) {
-                        ((ContainerWorkbenchBackpack) openContainer).clearCraftMatrix();
+                    String command = reader.readUTF();
+                    if(command.equals("clear")) {
+                        Container openContainer = player.openContainer;
+                        if(openContainer instanceof ContainerWorkbenchBackpack) {
+                            ((ContainerWorkbenchBackpack) openContainer).clearCraftMatrix();
+                        }
+                    } else if(command.equals("save")) {
+                        Container openContainer = player.openContainer;
+                        if(openContainer instanceof ContainerWorkbenchBackpack) {
+                            ((ContainerWorkbenchBackpack) openContainer).setSaveMode();
+                        }
                     }
                 }
         }
@@ -185,6 +197,9 @@ public class PacketHandlerBackpack implements IPacketHandler {
                 dataStream.writeInt(backpack.itemID);
                 dataStream.writeByte(backpack.getItemDamage());
                 dataStream.writeUTF(NBTUtil.getString(backpack, ItemInfo.UID));
+                if(backpack.getItem() instanceof ItemWorkbenchBackpack) {
+                    dataStream.writeBoolean(NBTUtil.getBoolean(backpack, "intelligent"));
+                }
             }
 
             PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(Constants.CHANNEL, byteStream.toByteArray()), (Player) player);
@@ -193,14 +208,14 @@ public class PacketHandlerBackpack implements IPacketHandler {
             FMLLog.warning("[" + Constants.MOD_ID + "] Failed to send backpack data to client.");
         }
     }
-    
+
     public static void sendGuiCommandToServer(String command) {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         DataOutputStream dataStream = new DataOutputStream(byteStream);
 
         try {
             dataStream.writeByte(Constants.PACKET_ID_GUI_COMMAND);
-            
+
             dataStream.writeUTF(command);
 
             PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Constants.CHANNEL, byteStream.toByteArray()));

@@ -115,7 +115,7 @@ public abstract class ItemBackpackBase extends Item {
             }
 
             if(te.getClass().getSimpleName().equals("TileEntityDirtChest")) {
-            	openGui = true;
+                openGui = true;
             }
             if(te.getClass().getSimpleName().equals("TileEntityCopperChest")) {
                 openGui = true;

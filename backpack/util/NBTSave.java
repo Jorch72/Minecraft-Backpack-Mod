@@ -70,7 +70,7 @@ public class NBTSave {
                 try {
                     outputStream.close();
                 }
-                catch(IOException e) {}
+                catch (IOException e) {}
             }
         }
     }

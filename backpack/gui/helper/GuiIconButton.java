@@ -37,17 +37,20 @@ public class GuiIconButton extends GuiButton {
      * Sets an icon for the button with no offset.
      * 
      * @param icon
-     *            The ResourceLocation of the icon which should be printed on the button.
+     *            The ResourceLocation of the icon which should be printed on
+     *            the button.
      */
     public void setIcon(ResourceLocation icon) {
         setIcon(icon, 0, 0);
     }
 
     /**
-     * Sets an icon for the button. The offsets are relative to the upper left corner of the button.
+     * Sets an icon for the button. The offsets are relative to the upper left
+     * corner of the button.
      * 
-     * @param icon 
-     *            The ResourceLocation of the icon which should be printed on the button.
+     * @param icon
+     *            The ResourceLocation of the icon which should be printed on
+     *            the button.
      * @param offsetX
      *            The x offset relative to the button.
      * @param offsetY
@@ -99,7 +102,7 @@ public class GuiIconButton extends GuiButton {
             field_82253_i = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
             int backgroundOffset = getHoverState(field_82253_i);
 
-            int widthLeft = (int)Math.floor(width / 2);
+            int widthLeft = (int) Math.floor(width / 2);
             int widthRight = width - widthLeft;
             drawTexturedModalRect(xPosition, yPosition, 0, 46 + backgroundOffset * 20, widthLeft, height);
             drawTexturedModalRect(xPosition + widthLeft, yPosition, 200 - widthRight, 46 + backgroundOffset * 20, widthRight, height);
@@ -124,7 +127,7 @@ public class GuiIconButton extends GuiButton {
                 textColor = 16777120;
             }
 
-            drawCenteredString(fontrenderer, displayString, xPosition + (int)Math.ceil(width / 2) + 1, yPosition + (height - 8) / 2, textColor);
+            drawCenteredString(fontrenderer, displayString, xPosition + (int) Math.ceil(width / 2) + 1, yPosition + (height - 8) / 2, textColor);
         }
     }
 }

@@ -1,7 +1,12 @@
 package backpack.item;
 
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import backpack.util.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -41,5 +46,13 @@ public class ItemWorkbenchBackpack extends ItemBackpackBase {
             return icons[1];
         }
         return icons[0];
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List information, boolean par4) {
+        if(NBTUtil.hasTag(itemStack, "intelligent")) {
+            information.add("Intelligent");
+        }
     }
 }

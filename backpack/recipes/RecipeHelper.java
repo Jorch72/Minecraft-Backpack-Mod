@@ -79,5 +79,8 @@ public class RecipeHelper {
 
         // recolor backpack
         GameRegistry.addRecipe(new RecipeRecolorBackpack());
+
+        // intelligent workbench backpack
+        GameRegistry.addRecipe(new RecipeIntelligentWorkbenchBackpack());
     }
 }

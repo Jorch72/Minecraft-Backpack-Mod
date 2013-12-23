@@ -4,13 +4,13 @@ import java.util.Arrays;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import backpack.util.BackpackUtil;
-import backpack.util.NBTUtil;
+import backpack.util.InventoryUtil;
 
 public class InventoryWorkbenchBackpack extends InventoryBackpack implements IInventoryBackpack {
     protected ItemStack[] craftMatrix = new ItemStack[9];
+    protected ItemStack[] recipes = new ItemStack[9];
+    protected ItemStack[][] recipesIngredients = new ItemStack[9][9];
     protected boolean craftingHandlerMode = false;
     protected int[] mapping;
 
@@ -19,7 +19,7 @@ public class InventoryWorkbenchBackpack extends InventoryBackpack implements IIn
         mapping = new int[craftMatrix.length];
         Arrays.fill(mapping, -1);
     }
-    
+
     @Override
     public int getSizeInventory() {
         if(craftingHandlerMode) {
@@ -27,7 +27,7 @@ public class InventoryWorkbenchBackpack extends InventoryBackpack implements IIn
         }
         return super.getSizeInventory();
     }
-    
+
     @Override
     public ItemStack getStackInSlot(int slotPosition) {
         if(craftingHandlerMode) {
@@ -40,7 +40,7 @@ public class InventoryWorkbenchBackpack extends InventoryBackpack implements IIn
         }
         return super.getStackInSlot(slotPosition);
     }
-    
+
     @Override
     public void setInventorySlotContents(int slotPosition, ItemStack newItemStack) {
         if(craftingHandlerMode) {
@@ -78,10 +78,49 @@ public class InventoryWorkbenchBackpack extends InventoryBackpack implements IIn
      * @param pos
      *            The position of the ItemStack in the array.
      * @param ist
-     *            The itemstack to set.
+     *            The ItemStack to set.
      */
     public void setCraftingSlotContent(int pos, ItemStack ist) {
         craftMatrix[pos] = ist;
+        onInventoryChanged();
+    }
+
+    /**
+     * Returns the ItemStack in the recipe matrix.
+     * 
+     * @param pos
+     *            The position of the item in the array.
+     * @return The ItemStack at the given position.
+     */
+    public ItemStack getStackInRecipeSlot(int pos) {
+        return recipes[pos];
+    }
+
+    /**
+     * Sets the content of the recipe matrix so it can be saved in the NBT.
+     * 
+     * @param pos
+     *            The position of the ItemStack in the array.
+     * @param ist
+     *            The ItemStack to set.
+     */
+    public void setRecipeSlotContent(int pos, ItemStack ist) {
+        recipes[pos] = ist;
+        for(int i = 0; i < craftMatrix.length; i++) {
+            if(craftMatrix[i] != null) {
+                recipesIngredients[pos][i] = craftMatrix[i].copy();
+            }
+        }
+        onInventoryChanged();
+    }
+
+    public boolean hasRecipe(int recipe) {
+        return recipes[recipe] != null;
+    }
+
+    public void loadRecipe(int recipe) {
+        InventoryUtil.readInventory(craftMatrix, "Recipe-" + recipe, originalIS);
+        onInventoryChanged();
     }
 
     @Override
@@ -91,20 +130,18 @@ public class InventoryWorkbenchBackpack extends InventoryBackpack implements IIn
         if(craftMatrix == null) {
             craftMatrix = new ItemStack[9];
         }
-
-        NBTTagList itemList = new NBTTagList();
-        for(int i = 0; i < craftMatrix.length; i++) {
-            if(craftMatrix[i] != null) {
-                NBTTagCompound slotEntry = new NBTTagCompound();
-                slotEntry.setByte("Slot", (byte) i);
-                craftMatrix[i].writeToNBT(slotEntry);
-                itemList.appendTag(slotEntry);
-            }
+        if(recipes == null) {
+            recipes = new ItemStack[9];
         }
-        // save content of craftMatrix in Crafting->Items
-        NBTTagCompound craftingInventory = new NBTTagCompound();
-        craftingInventory.setTag("Items", itemList);
-        NBTUtil.setCompoundTag(originalIS, "Crafting", craftingInventory);
+        if(recipesIngredients == null) {
+            recipesIngredients = new ItemStack[9][9];
+        }
+
+        InventoryUtil.writeInventory(craftMatrix, "Crafting", originalIS);
+        InventoryUtil.writeInventory(recipes, "Recipes", originalIS);
+        for(int i = 0; i < recipesIngredients.length; i++) {
+            InventoryUtil.writeInventory(recipesIngredients[i], "Recipe-" + i, originalIS);
+        }
     }
 
     @Override
@@ -114,25 +151,42 @@ public class InventoryWorkbenchBackpack extends InventoryBackpack implements IIn
         if(craftMatrix == null) {
             craftMatrix = new ItemStack[9];
         }
+        if(recipes == null) {
+            recipes = new ItemStack[9];
+        }
+        if(recipesIngredients == null) {
+            recipesIngredients = new ItemStack[9][9];
+        }
 
-        NBTTagList itemList = NBTUtil.getCompoundTag(originalIS, "Crafting").getTagList("Items");
-        for(int i = 0; i < itemList.tagCount(); i++) {
-            NBTTagCompound slotEntry = (NBTTagCompound) itemList.tagAt(i);
-            int j = slotEntry.getByte("Slot") & 0xff;
-
-            if(j >= 0 && j < craftMatrix.length) {
-                craftMatrix[j] = ItemStack.loadItemStackFromNBT(slotEntry);
-            }
+        InventoryUtil.readInventory(craftMatrix, "Crafting", originalIS);
+        InventoryUtil.readInventory(recipes, "Recipes", originalIS);
+        for(int i = 0; i < recipesIngredients.length; i++) {
+            InventoryUtil.readInventory(recipesIngredients[i], "Recipe-" + i, originalIS);
         }
     }
-    
+
+    /**
+     * Sets if the inventory is in crafting handler mode so it will react
+     * different.
+     * 
+     * @param value
+     *            The new value for the mode.
+     */
     public void setCraftingHandlerMode(boolean value) {
         craftingHandlerMode = value;
         if(value == false) {
             Arrays.fill(mapping, -1);
         }
     }
-    
+
+    /**
+     * Will try to find a slot with the same ItemStack as the given slot from
+     * the craft matrix.
+     * 
+     * @param recipeSlotPosition
+     *            The index of the slot in the craft matrix.
+     * @return The slot number with the same content or -1 if nothing was found.
+     */
     protected int findCorrespondingSlot(int recipeSlotPosition) {
         if(mapping[recipeSlotPosition] != -1) {
             return mapping[recipeSlotPosition];

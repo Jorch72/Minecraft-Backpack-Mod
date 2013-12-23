@@ -16,7 +16,7 @@ import backpack.misc.Constants;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class GuiPart <C extends ContainerAdvanced> {
+public abstract class GuiPart<C extends ContainerAdvanced> {
     protected int LEFTSPACING = 8;
     protected int SLOT = 18;
 
@@ -42,7 +42,7 @@ public abstract class GuiPart <C extends ContainerAdvanced> {
     }
 
     public GuiPart(ContainerAdvanced container, IInventory inventory, int inventoryRows, int inventoryCols, boolean big) {
-        this.container = (C)container;
+        this.container = (C) container;
         this.inventory = inventory;
         if(big) {
             this.inventoryRows = inventoryRows > 6 ? 6 : inventoryRows;
@@ -52,7 +52,7 @@ public abstract class GuiPart <C extends ContainerAdvanced> {
         this.inventoryCols = inventoryCols;
         ySize = this.inventoryRows * SLOT;
     }
-    
+
     public void setGui(GuiAdvanced gui) {
         this.gui = gui;
     }
@@ -110,7 +110,7 @@ public abstract class GuiPart <C extends ContainerAdvanced> {
 
         GL11.glPopMatrix();
     }
-    
+
     public void actionPerformed(GuiButton guiButton) {
     }
 

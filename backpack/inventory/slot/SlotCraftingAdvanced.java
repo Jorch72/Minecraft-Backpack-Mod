@@ -23,7 +23,7 @@ public class SlotCraftingAdvanced extends SlotCrafting {
 
     public SlotCraftingAdvanced(EntityPlayer player, ContainerWorkbenchBackpack container, InventoryWorkbenchBackpack backpackInventory, int slotIndex, int xPosition, int yPosition) {
         super(player, container.craftMatrix, container.craftResult, slotIndex, xPosition, yPosition);
-        this.craftMatrix = container.craftMatrix;
+        craftMatrix = container.craftMatrix;
         this.backpackInventory = backpackInventory;
         this.container = container;
     }
@@ -74,8 +74,7 @@ public class SlotCraftingAdvanced extends SlotCrafting {
                 }
             }
 
-            // if ingredient amount is not zero search for alternative item (ore
-            // dictionary)
+            // if ingredient amount is not zero search for alternative item (ore dictionary)
             int slot = 0;
             while(ingredient.stackSize != 0) {
                 slot = findAlternative(ingredient, slot);
