@@ -12,6 +12,7 @@ import backpack.item.ItemBackpackBase;
 import backpack.item.ItemInfo;
 import backpack.misc.Constants;
 import backpack.util.BackpackUtil;
+import backpack.util.InventoryUtil;
 import backpack.util.NBTUtil;
 
 public class InventoryBackpack extends InventoryBasic implements IInventoryBackpack {
@@ -209,15 +210,6 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
             setInvName(NBTUtil.getString(originalIS, "Name"));
         }
 
-        //InventoryUtil.readInventory(inventoryContents, "Inventory", originalIS);
-        NBTTagList itemList = NBTUtil.getCompoundTag(originalIS, "Inventory").getTagList("Items");
-        for(int i = 0; i < itemList.tagCount(); i++) {
-            NBTTagCompound slotEntry = (NBTTagCompound) itemList.tagAt(i);
-            int j = slotEntry.getByte("Slot") & 0xff;
-
-            if(j >= 0 && j < getSizeInventory()) {
-                setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(slotEntry));
-            }
-        }
+        InventoryUtil.readInventory(inventoryContents, "Inventory", originalIS);
     }
 }

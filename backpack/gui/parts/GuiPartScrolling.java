@@ -111,4 +111,8 @@ public abstract class GuiPartScrolling extends GuiPart {
             currentScroll = 1F;
         }
     }
+    
+    public GuiRectangle getScrollbar() {
+        return scrollbar;
+    }
 }

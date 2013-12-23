@@ -1,6 +1,6 @@
 package backpack.gui;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -34,22 +34,22 @@ public class GuiWorkbenchBackpack extends GuiAdvanced<ContainerWorkbenchBackpack
 
         container.parts.get(0).drawForegroundLayer(fontRenderer, x, y);
         container.parts.get(2).drawForegroundLayer(fontRenderer, x, y);
-
+    }
+    
+    @Override
+    public List<String> handleTooltip(int mousex, int mousey, List<String> currenttip) {
         for(Object buttonObj : buttonList) {
             GuiButton button = (GuiButton) buttonObj;
             if(button.func_82252_a()) {
-                ArrayList<String> text = new ArrayList<String>();
                 if(button.id == 0) {
-                    text.add(I18n.getString("tooltip.clearCraftMatrix"));
+                    currenttip.add(I18n.getString("tooltip.clearCraftMatrix"));
                 } else if(button.id == 1) {
-                    text.add(I18n.getString("tooltip.saveRecipe"));
-                    text.add(I18n.getString("tooltip.clickASlot"));
-                }
-                if(!text.isEmpty()) {
-                    func_102021_a(text, x - guiLeft, y - guiTop);
+                    currenttip.add(I18n.getString("tooltip.saveRecipe"));
+                    currenttip.add(I18n.getString("tooltip.clickASlot"));
                 }
             }
         }
+        return super.handleTooltip(mousex, mousey, currenttip);
     }
 
     @Override

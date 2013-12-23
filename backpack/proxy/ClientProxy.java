@@ -21,6 +21,7 @@ import backpack.gui.GuiWorkbenchBackpack;
 import backpack.handler.EventHandlerRenderPlayer;
 import backpack.handler.KeyHandlerBackpack;
 import backpack.inventory.InventoryBackpackSlot;
+import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import backpack.nei.OverlayHandlerBackpack;
 import backpack.util.BackpackUtil;
@@ -90,6 +91,8 @@ public class ClientProxy extends CommonProxy {
 
             registerGuiOverlay.invoke(API, new Object[] { GuiWorkbenchBackpack.class, "crafting" });
             registerGuiOverlayHandler.invoke(API, new Object[] { GuiWorkbenchBackpack.class, new OverlayHandlerBackpack(), "crafting" });
+
+            ConfigurationBackpack.NEISupport = true;
 
             FMLLog.info("[Backpacks] NEI Support enabled");
         }

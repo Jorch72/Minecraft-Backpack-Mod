@@ -18,6 +18,8 @@ public class ConfigurationBackpack {
     public static boolean DISABLE_WORKBENCH_BACKPACKS;
     public static boolean BIG_BY_UPGRADE_ONLY;
     public static String DISALLOW_ITEMS;
+    
+    public static boolean NEISupport = false;
 
     public static void init(File configFile) {
         Configuration config = new Configuration(configFile);

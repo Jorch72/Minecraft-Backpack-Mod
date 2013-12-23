@@ -7,7 +7,7 @@ import backpack.model.ModelBackpack;
 public class Constants {
     public static final String MOD_ID = "Backpack";
     public static final String MOD_NAME = "Backpack";
-    public static final String MOD_VERSION = "1.22.25";
+    public static final String MOD_VERSION = "1.26.28";
 
     public static final int PACKET_ID_RENAME = 0;
     public static final int PACKET_ID_OPEN_BACKPACK = 1;

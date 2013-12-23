@@ -87,8 +87,10 @@ public class GuiPartWorkbench extends GuiPart<ContainerWorkbenchBackpack> {
         GuiIconButton clearButton = new GuiIconButton(0, guiLeft + offsetX, guiTop + 16, 11, 11, "c");
         guiButtons.add(clearButton);
 
-        GuiIconButton saveButton = new GuiIconButton(1, guiLeft + offsetX + 15, guiTop + 16, 11, 11, "s");
-        guiButtons.add(saveButton);
+        if(container.intelligent) {
+            GuiIconButton saveButton = new GuiIconButton(1, guiLeft + offsetX + 15, guiTop + 16, 11, 11, "s");
+            guiButtons.add(saveButton);
+        }
     }
 
     @Override

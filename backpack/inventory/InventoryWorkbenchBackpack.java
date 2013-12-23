@@ -107,9 +107,7 @@ public class InventoryWorkbenchBackpack extends InventoryBackpack implements IIn
     public void setRecipeSlotContent(int pos, ItemStack ist) {
         recipes[pos] = ist;
         for(int i = 0; i < craftMatrix.length; i++) {
-            if(craftMatrix[i] != null) {
-                recipesIngredients[pos][i] = craftMatrix[i].copy();
-            }
+            recipesIngredients[pos][i] = craftMatrix[i] == null ? null : craftMatrix[i].copy();
         }
         onInventoryChanged();
     }
