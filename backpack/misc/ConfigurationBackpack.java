@@ -17,6 +17,7 @@ public class ConfigurationBackpack {
     public static boolean DISABLE_ENDER_BACKPACKS;
     public static boolean DISABLE_WORKBENCH_BACKPACKS;
     public static boolean BIG_BY_UPGRADE_ONLY;
+    public static String DISALLOW_ITEMS;
 
     public static void init(File configFile) {
         Configuration config = new Configuration(configFile);
@@ -52,6 +53,8 @@ public class ConfigurationBackpack {
         DISABLE_ENDER_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableEnderBackpack", false, getDisableEnderBackpacksComment()).getBoolean(false);
         DISABLE_WORKBENCH_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableWorkbenchBackpack", false, getDisableWorkbenchBackpacksComment()).getBoolean(false);
         BIG_BY_UPGRADE_ONLY = config.get(Configuration.CATEGORY_GENERAL, "bigByUpgradeOnly", false, getBigByUpgradeOnlyComment()).getBoolean(false);
+        
+        DISALLOW_ITEMS = config.get(Configuration.CATEGORY_GENERAL, "disallowItems", "", getDisallowItemsComment()).getString();
 
         // save the file so it will be generated if it doesn't exists
         config.save();
@@ -95,5 +98,9 @@ public class ConfigurationBackpack {
 
     private static String getBigByUpgradeOnlyComment() {
         return "##############\n" + "If true big backpacks can only crafted by upgrading a small one\n" + "##############";
+    }
+
+    private static String getDisallowItemsComment() {
+        return "##############\n" + "Example:\n" + "disallowItems:1,5:2,ingotSilver\n\n" + "This will disallow stone, birch wood planks and any type of silver ingots in backpacks.\n" + "##############";
     }
 }

@@ -108,7 +108,7 @@ public abstract class ContainerAdvanced extends Container {
         if(sourceStack.isStackable()) {
             while(sourceStack.stackSize > 0 && (!backwards && currentSlotIndex < lastSlot || backwards && currentSlotIndex >= firstSlot)) {
                 slot = (Slot) inventorySlots.get(currentSlotIndex);
-                if(!(slot instanceof SlotScrolling && ((SlotScrolling) slot).isDisabled())) {
+                if(!(slot instanceof SlotScrolling && ((SlotScrolling) slot).isDisabled()) && slot.isItemValid(sourceStack)) {
                     slotStack = slot.getStack();
 
                     if(slotStack != null && slotStack.itemID == sourceStack.itemID && (!sourceStack.getHasSubtypes() || sourceStack.getItemDamage() == slotStack.getItemDamage())
@@ -146,7 +146,7 @@ public abstract class ContainerAdvanced extends Container {
 
             while(!backwards && currentSlotIndex < lastSlot || backwards && currentSlotIndex >= firstSlot) {
                 slot = (Slot) inventorySlots.get(currentSlotIndex);
-                if(!(slot instanceof SlotScrolling && ((SlotScrolling) slot).isDisabled())) {
+                if(!(slot instanceof SlotScrolling && ((SlotScrolling) slot).isDisabled()) && slot.isItemValid(sourceStack)) {
                     slotStack = slot.getStack();
 
                     if(slotStack == null) {
