@@ -87,9 +87,7 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
     public ItemStack slotClick(int slotIndex, int mouseButton, int modifier, EntityPlayer player) {
         Slot slot = slotIndex < 0 ? null : (Slot) inventorySlots.get(slotIndex);
         if(slot instanceof SlotPhantom) {
-            if(slotIndex < parts.get(0).lastSlot - 9) {
-                slotPhantomClick(slot, mouseButton, modifier, player.inventory.getItemStack());
-            } else {
+            if(slot.inventory == recipes) {
                 if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
                     if(saveMode) {
                         saveMode = false;
@@ -99,6 +97,8 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
                         craftMatrix.loadRecipe(slotIndex - 10);
                     }
                 }
+            } else {
+                slotPhantomClick(slot, mouseButton, modifier, player.inventory.getItemStack());
             }
             return null;
         }
