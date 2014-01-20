@@ -10,6 +10,7 @@ public class ConfigurationBackpack {
     public static int BACKPACK_SLOTS_S;
     public static int BACKPACK_SLOTS_L;
     public static int MAX_BACKPACK_AMOUNT;
+    public static boolean RENDER_BACKPACK_MODEL;
     public static boolean OPEN_ONLY_WORN_BACKPACK;
     public static boolean AIRSHIP_MOD_COMPATIBILITY;
     public static boolean DISABLE_BACKPACKS;
@@ -48,6 +49,7 @@ public class ConfigurationBackpack {
         if(MAX_BACKPACK_AMOUNT < 0 || MAX_BACKPACK_AMOUNT > 36) {
             MAX_BACKPACK_AMOUNT = 0;
         }
+        RENDER_BACKPACK_MODEL = config.get(Configuration.CATEGORY_GENERAL, "renderBackpackModel", true, getRenderBackpackModelComment()).getBoolean(true);
         OPEN_ONLY_WORN_BACKPACK = config.get(Configuration.CATEGORY_GENERAL, "openOnlyWornBackpacks", false, getOpenOnlyWornBackpacksComment()).getBoolean(false);
         AIRSHIP_MOD_COMPATIBILITY = config.get(Configuration.CATEGORY_GENERAL, "airshipModCompatibility", false, getAirshipModCompatibilityComment()).getBoolean(false);
         DISABLE_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableBackpacks", false, getDisableBackpacksComment()).getBoolean(false);
@@ -72,6 +74,10 @@ public class ConfigurationBackpack {
 
     private static String getMaxBackpackAmountComment() {
         return "##############\n" + "Number of backpacks a player can have in his inventory\n" + "valid: integers 0-36\n" + "0 = unlimited\n" + "##############";
+    }
+
+    private static String getRenderBackpackModelComment() {
+        return "##############\n" + "If true the backpack 3D model will be rendered.\n" + "##############";
     }
 
     private static String getOpenOnlyWornBackpacksComment() {

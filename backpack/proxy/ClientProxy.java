@@ -78,7 +78,9 @@ public class ClientProxy extends CommonProxy {
     public void registerHandler() {
         super.registerHandler();
         KeyBindingRegistry.registerKeyBinding(new KeyHandlerBackpack());
-        MinecraftForge.EVENT_BUS.register(new EventHandlerRenderPlayer());
+        if(ConfigurationBackpack.RENDER_BACKPACK_MODEL) {
+            MinecraftForge.EVENT_BUS.register(new EventHandlerRenderPlayer());
+        }
     }
 
     @Override
