@@ -53,7 +53,7 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
         }
 
         // backwards compatibility
-        if(!NBTUtil.hasTag(originalIS, ItemInfo.UID)) {
+        if(!NBTUtil.hasTag(originalIS, ItemInfo.UID) || NBTUtil.getString(originalIS, ItemInfo.UID).isEmpty()) {
             NBTUtil.setString(originalIS, ItemInfo.UID, UUID.randomUUID().toString());
         }
 
