@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatMessageComponent;
+import backpack.Backpack;
 import backpack.item.ItemBackpackBase;
 import backpack.misc.ConfigurationBackpack;
 import cpw.mods.fml.common.ITickHandler;
@@ -21,6 +22,9 @@ public class ServerTickHandlerBackpack implements ITickHandler {
         EntityPlayerMP player = (EntityPlayerMP) tickData[0];
         ItemStack[] inventory = player.inventory.mainInventory;
         int counter = 0;
+        if(Backpack.playerHandler.getBackpack(player) != null) {
+            counter++;
+        }
         for(int i = 0; i < inventory.length; i++) {
             if(inventory[i] != null && inventory[i].getItem() instanceof ItemBackpackBase) {
                 counter++;
