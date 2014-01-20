@@ -7,6 +7,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import backpack.Backpack;
 import backpack.misc.Constants;
 
@@ -14,8 +15,9 @@ public class EventHandlerRenderPlayer {
     @ForgeSubscribe
     public void render(Pre event) {
         EntityPlayer player = event.entityPlayer;
+        EntityPlayer thisPlayer = FMLClientHandler.instance().getClient().thePlayer;
 
-        if(Backpack.playerHandler.getClientBackpack() != null) {
+        if(Backpack.playerHandler.getClientBackpack() != null && player.equals(thisPlayer)) {
             GL11.glPushMatrix();
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
