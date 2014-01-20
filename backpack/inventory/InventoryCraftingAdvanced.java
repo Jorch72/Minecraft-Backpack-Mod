@@ -39,8 +39,10 @@ public class InventoryCraftingAdvanced extends InventoryCrafting implements IInv
      * Loads the content of the backpackInventory into the current inventory.
      */
     public void loadContent() {
-        for(int i = 0; i < getSizeInventory(); i++) {
-            super.setInventorySlotContents(i, backpackInventory.getStackInCraftingSlot(i));
+        if(backpackInventory != null) {
+            for(int i = 0; i < getSizeInventory(); i++) {
+                super.setInventorySlotContents(i, backpackInventory.getStackInCraftingSlot(i));
+            }
         }
     }
 
