@@ -99,6 +99,7 @@ public class PacketHandlerBackpack implements IPacketHandler {
                     if(itemId > 0) {
                         backpack = new ItemStack(itemId, 1, reader.readByte());
                         NBTUtil.setString(backpack, ItemInfo.UID, reader.readUTF());
+                        NBTUtil.setString(backpack, "Name", reader.readUTF());
                         if(backpack.getItem() instanceof ItemWorkbenchBackpack) {
                             NBTUtil.setBoolean(backpack, "intelligent", reader.readBoolean());
                         }
@@ -197,6 +198,7 @@ public class PacketHandlerBackpack implements IPacketHandler {
                 dataStream.writeInt(backpack.itemID);
                 dataStream.writeByte(backpack.getItemDamage());
                 dataStream.writeUTF(NBTUtil.getString(backpack, ItemInfo.UID));
+                dataStream.writeUTF(NBTUtil.getString(backpack, "Name"));
                 if(backpack.getItem() instanceof ItemWorkbenchBackpack) {
                     dataStream.writeBoolean(NBTUtil.getBoolean(backpack, "intelligent"));
                 }
