@@ -189,7 +189,7 @@ public class BackpackUtil {
                 return true;
             }
         }
-        if(useOreDictionary && areStacksEqualWithOD(firstStack, secondStack)) {
+        if(useOreDictionary && areStacksEqualByOD(firstStack, secondStack)) {
             return true;
         }
         return false;
@@ -205,7 +205,7 @@ public class BackpackUtil {
      * @return True if both ItemStacks have the same OreId, false otherwise or
      *         if one or both ItemStacks are null.
      */
-    public static boolean areStacksEqualWithOD(ItemStack firstStack, ItemStack secondStack) {
+    public static boolean areStacksEqualByOD(ItemStack firstStack, ItemStack secondStack) {
         if(firstStack == null || secondStack == null) {
             return false;
         }

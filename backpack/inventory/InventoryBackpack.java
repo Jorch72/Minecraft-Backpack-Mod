@@ -39,11 +39,12 @@ public class InventoryBackpack extends InventoryBasic implements IInventoryBackp
         super("", false, BackpackUtil.getInventorySize(is));
 
         playerEntity = player;
-        originalIS = is;
+        originalIS = is.copy();
 
         // check if inventory exists if not create one
         if(!hasInventory()) {
             createInventory();
+            is.setTagCompound(originalIS.getTagCompound());
         }
 
         // fix problem with forestry

@@ -12,6 +12,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import backpack.inventory.InventoryWorkbenchBackpack;
+import backpack.util.InventoryUtil;
 import codechicken.nei.FastTransferManager;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.DefaultOverlayHandler;
@@ -61,7 +62,7 @@ public class OverlayHandlerBackpack extends DefaultOverlayHandler {
             for(ItemStack pstack : posstack.items) {
                 for(int j = 0; j < ingredStacks.size(); j++) {
                     DistributedIngred istack = ingredStacks.get(j);
-                    if(!canStack(pstack, istack.stack) || istack.invAmount - istack.distributed < pstack.stackSize) {
+                    if(!InventoryUtil.canStack(pstack, istack.stack) || istack.invAmount - istack.distributed < pstack.stackSize) {
                         continue;
                     }
 
@@ -178,7 +179,7 @@ public class OverlayHandlerBackpack extends DefaultOverlayHandler {
                 }
 
                 ItemStack stack = slot.getStack();
-                if(!canStack(stack, pstack)) {
+                if(!InventoryUtil.canStack(stack, pstack)) {
                     continue;
                 }
 
@@ -219,12 +220,4 @@ public class OverlayHandlerBackpack extends DefaultOverlayHandler {
             }
         }
     }
-    
-    private boolean canStack(ItemStack stack1, ItemStack stack2) {
-        return (stack1 == null) || (stack2 == null) || (
-          (stack1.itemID == stack2.itemID) && 
-          ((!stack2.getHasSubtypes()) || (stack2.getItemDamage() == stack1.getItemDamage())) && 
-          (ItemStack.areItemStackTagsEqual(stack2, stack1)) && 
-          (stack1.isStackable()));
-      }
 }

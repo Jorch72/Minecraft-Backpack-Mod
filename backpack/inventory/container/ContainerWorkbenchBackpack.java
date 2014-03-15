@@ -171,38 +171,6 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
         return returnStack;
     }
 
-    /**
-     * Handles clicking on a phantom slot.
-     * 
-     * @param slot
-     *            The slot that has been clicked.
-     * @param mouseButton
-     *            The mouse button identifier: 0: left click 1: right click &
-     *            left click during drag and drop 2: middle click (scrollwheel)
-     * @param modifier
-     *            The mouse modifier: 0: normal click 3: drag and drop middle
-     *            click 5: drag and drop left or right click
-     * @param stackHeld
-     *            The stack that the player holds on his mouse.
-     */
-    protected void slotPhantomClick(Slot slot, int mouseButton, int modifier, ItemStack stackHeld) {
-        if(((SlotPhantom) slot).canChangeStack()) {
-            if(mouseButton == 2) {
-                slot.putStack(null);
-            } else {
-                ItemStack phantomStack = null;
-
-                if(stackHeld != null) {
-                    phantomStack = stackHeld.copy();
-                    phantomStack.stackSize = 1;
-                }
-
-                slot.putStack(phantomStack);
-            }
-            slot.onSlotChanged();
-        }
-    }
-
     protected boolean mergeItemStackWithBackpack(ItemStack itemStack) {
         if(upperInventoryRows > 0 && !(itemStack.getItem() instanceof ItemBackpackBase)) {
             return mergeItemStack(itemStack, parts.get(1).firstSlot, parts.get(1).lastSlot, false);

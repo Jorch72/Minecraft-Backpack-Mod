@@ -8,7 +8,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.DimensionManager;
+import backpack.inventory.container.ContainerPickup;
 import backpack.item.ItemInfo;
+import backpack.misc.Constants;
+import backpack.util.BackpackUtil;
+import backpack.util.InventoryUtil;
 import backpack.util.NBTUtil;
 import backpack.util.PlayerSave;
 import cpw.mods.fml.relauncher.Side;
@@ -142,6 +146,23 @@ public class PlayerHandlerBackpack {
     public void setLatestSeenVersion(EntityPlayer player, String latestVersion) {
         getPlayerSave(player.username).setLatestSeenVersion(latestVersion);
         savePlayer(player);
+    }
+    
+    public void pickupItem(EntityPlayer player, ItemStack itemStack) {
+        ItemStack backpack = getBackpack(player);
+        if(backpack != null) {
+            ItemStack[] inventory = new ItemStack[10];
+            InventoryUtil.readInventory(inventory, "Pickups", backpack);
+            for(int i = 1; i < inventory.length; i++) {
+                ItemStack pickupItemStack = inventory[i];
+                if(BackpackUtil.areStacksEqual(itemStack, pickupItemStack, true)) {
+                    NBTUtil.setBoolean(backpack, Constants.WORN_BACKPACK_OPEN, true);
+                    ContainerPickup container = new ContainerPickup(BackpackUtil.getBackpackInv(backpack, player));
+                    container.pickupItem(itemStack);
+                    container.onContainerClosed(player);
+                }
+            }
+        }
     }
 
     /**

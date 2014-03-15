@@ -8,34 +8,46 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.oredict.OreDictionary;
+import backpack.inventory.InventoryCraftingAdvanced;
 import backpack.inventory.InventoryWorkbenchBackpack;
 import backpack.inventory.container.ContainerWorkbenchBackpack;
 import backpack.util.BackpackUtil;
+import backpack.util.InventoryUtil;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class SlotCraftingAdvanced extends SlotCrafting {
-    protected IInventory craftMatrix;
+    protected InventoryCraftingAdvanced craftMatrix;
     protected InventoryWorkbenchBackpack backpackInventory;
     protected Container container;
+    protected World worldObj;
+    protected boolean realResult = false;
 
     public SlotCraftingAdvanced(EntityPlayer player, ContainerWorkbenchBackpack container, InventoryWorkbenchBackpack backpackInventory, int slotIndex, int xPosition, int yPosition) {
         super(player, container.craftMatrix, container.craftResult, slotIndex, xPosition, yPosition);
         craftMatrix = container.craftMatrix;
         this.backpackInventory = backpackInventory;
         this.container = container;
+        worldObj = player.worldObj;
     }
 
     @Override
     public void onPickupFromSlot(EntityPlayer player, ItemStack ist) {
         ArrayList<ItemStack> currentRecipe = getRecipeIngredients();
 
-        backpackInventory.setCraftingHandlerMode(true);
-        GameRegistry.onItemCrafted(player, ist, backpackInventory);
-        backpackInventory.setCraftingHandlerMode(false);
-        onCrafting(ist);
+        craftMatrix.setUseInventoryMode(true);
+        ItemStack result = CraftingManager.getInstance().findMatchingRecipe(craftMatrix, worldObj);
+        ItemStack inHand = player.inventory.getItemStack();
+        if(!InventoryUtil.canStack(result, inHand)) {
+            player.inventory.setItemStack(result);
+        }
+        GameRegistry.onItemCrafted(player, result, craftMatrix);
+        craftMatrix.setUseInventoryMode(false);
+        onCrafting(result);
 
         for(int i = 0; i < currentRecipe.size(); i++) {
             ItemStack ingredient = currentRecipe.get(i);

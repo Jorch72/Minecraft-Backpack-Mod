@@ -7,9 +7,9 @@ import net.minecraftforge.event.ForgeSubscribe;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import backpack.Backpack;
 import backpack.misc.Constants;
+import cpw.mods.fml.client.FMLClientHandler;
 
 public class EventHandlerRenderPlayer {
     @ForgeSubscribe

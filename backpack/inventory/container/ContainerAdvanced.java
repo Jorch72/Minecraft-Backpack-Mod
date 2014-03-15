@@ -15,6 +15,7 @@ import backpack.Backpack;
 import backpack.gui.parts.GuiPart;
 import backpack.handler.PacketHandlerBackpack;
 import backpack.inventory.IInventoryBackpack;
+import backpack.inventory.slot.SlotPhantom;
 import backpack.inventory.slot.SlotScrolling;
 import backpack.misc.Constants;
 import backpack.util.BackpackUtil;
@@ -167,6 +168,48 @@ public abstract class ContainerAdvanced extends Container {
         }
 
         return result;
+    }
+
+    @Override
+    public ItemStack slotClick(int slotIndex, int mouseButton, int modifier, EntityPlayer player) {
+        Slot slot = slotIndex < 0 ? null : (Slot) inventorySlots.get(slotIndex);
+        if(slot instanceof SlotPhantom) {
+            slotPhantomClick(slot, mouseButton, modifier, player.inventory.getItemStack());
+            return null;
+        }
+        return super.slotClick(slotIndex, mouseButton, modifier, player);
+    }
+
+    /**
+     * Handles clicking on a phantom slot.
+     * 
+     * @param slot
+     *            The slot that has been clicked.
+     * @param mouseButton
+     *            The mouse button identifier: 0: left click 1: right click &
+     *            left click during drag and drop 2: middle click (scrollwheel)
+     * @param modifier
+     *            The mouse modifier: 0: normal click 3: drag and drop middle
+     *            click 5: drag and drop left or right click
+     * @param stackHeld
+     *            The stack that the player holds on his mouse.
+     */
+    protected void slotPhantomClick(Slot slot, int mouseButton, int modifier, ItemStack stackHeld) {
+        if(((SlotPhantom) slot).canChangeStack()) {
+            if(mouseButton == 2) {
+                slot.putStack(null);
+            } else {
+                ItemStack phantomStack = null;
+
+                if(stackHeld != null) {
+                    phantomStack = stackHeld.copy();
+                    phantomStack.stackSize = 1;
+                }
+
+                slot.putStack(phantomStack);
+            }
+            slot.onSlotChanged();
+        }
     }
 
     /**
