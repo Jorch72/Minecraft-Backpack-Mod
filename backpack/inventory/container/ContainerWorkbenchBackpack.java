@@ -91,8 +91,10 @@ public class ContainerWorkbenchBackpack extends ContainerAdvanced {
                 if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
                     if(saveMode) {
                         saveMode = false;
-                        recipes.setInventorySlotContents(slotIndex - 10, getSlot(0).getStack().copy());
-                        detectAndSendChanges();
+                        if(getSlot(0).getStack() != null) {
+                            recipes.setInventorySlotContents(slotIndex - 10, getSlot(0).getStack().copy());
+                            detectAndSendChanges();
+                        }
                     } else {
                         craftMatrix.loadRecipe(slotIndex - 10);
                     }
