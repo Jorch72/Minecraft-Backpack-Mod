@@ -8,18 +8,36 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 import backpack.item.ItemBackpack;
 import backpack.item.Items;
 import backpack.util.BackpackUtil;
 
 public class RecipeRecolorBackpack implements IRecipe {
     private ArrayList<Integer> allowedDyes = new ArrayList<Integer>();
+    private ArrayList<String> allowedOreDyes = new ArrayList<String>();
     private ItemStack result;
 
     public RecipeRecolorBackpack() {
-        allowedDyes.add(Item.dyePowder.itemID);
         allowedDyes.add(Item.leather.itemID);
         allowedDyes.add(Items.tannedLeather.itemID);
+        
+        allowedOreDyes.add("dyeBlack");
+        allowedOreDyes.add("dyeRed");
+        allowedOreDyes.add("dyeGreen");
+        allowedOreDyes.add("dyeBrown");
+        allowedOreDyes.add("dyeBlue");
+        allowedOreDyes.add("dyePurple");
+        allowedOreDyes.add("dyeCyan");
+        allowedOreDyes.add("dyeLightGray");
+        allowedOreDyes.add("dyeGray");
+        allowedOreDyes.add("dyePink");
+        allowedOreDyes.add("dyeLime");
+        allowedOreDyes.add("dyeYellow");
+        allowedOreDyes.add("dyeLightBlue");
+        allowedOreDyes.add("dyeMagenta");
+        allowedOreDyes.add("dyeOrange");
+        allowedOreDyes.add("dyeWhite");
     }
 
     @Override
@@ -27,6 +45,7 @@ public class RecipeRecolorBackpack implements IRecipe {
         result = null;
         ItemStack backpack = null;
         ItemStack dye = null;
+        String oreName = null;
 
         ItemStack slotStack;
         for(int i = 0; i < craftingGridInventory.getSizeInventory(); i++) {
@@ -43,6 +62,12 @@ public class RecipeRecolorBackpack implements IRecipe {
                         return false;
                     }
                     dye = slotStack;
+                } else if(allowedOreDyes.contains(OreDictionary.getOreName(OreDictionary.getOreID(slotStack)))) {
+                    if(dye != null) {
+                        return false;
+                    }
+                    oreName = OreDictionary.getOreName(OreDictionary.getOreID(slotStack));
+                    dye = slotStack;
                 } else {
                     return false;
                 }
@@ -57,6 +82,9 @@ public class RecipeRecolorBackpack implements IRecipe {
             }
 
             int damage = dye.getItem() instanceof ItemDye ? dye.getItemDamage() : 16;
+            if(oreName != null) {
+                damage = allowedOreDyes.indexOf(oreName);
+            }
             if(backpack.getItemDamage() > 17) {
                 damage += 32;
             }
