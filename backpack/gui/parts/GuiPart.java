@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import backpack.gui.GuiAdvanced;
 import backpack.inventory.container.ContainerAdvanced;
+import backpack.misc.ConfigurationBackpack;
 import backpack.misc.Constants;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -45,9 +46,9 @@ public abstract class GuiPart<C extends ContainerAdvanced> {
         this.container = (C) container;
         this.inventory = inventory;
         if(big) {
-            this.inventoryRows = inventoryRows > 6 ? 6 : inventoryRows;
+            this.inventoryRows = inventoryRows > ConfigurationBackpack.DISPLAY_ROWS_L ? ConfigurationBackpack.DISPLAY_ROWS_L : inventoryRows;
         } else {
-            this.inventoryRows = inventoryRows > 3 ? 3 : inventoryRows;
+            this.inventoryRows = inventoryRows > ConfigurationBackpack.DISPLAY_ROWS_S ? ConfigurationBackpack.DISPLAY_ROWS_S : inventoryRows;
         }
         this.inventoryCols = inventoryCols;
         ySize = this.inventoryRows * SLOT;
@@ -106,7 +107,17 @@ public abstract class GuiPart<C extends ContainerAdvanced> {
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(Constants.guiCombined);
-        drawTexturedModalRect(guiLeft, guiTop + offsetY, 0, 4, xSize, ySize);
+        if(ySize <= 138) {
+            drawTexturedModalRect(guiLeft, guiTop + offsetY, 0, 4, xSize, ySize);
+        } else {
+            int drawn = 0;
+            int toDraw;
+            for(int i = 0; i < Math.ceil(ySize / 138.); i++) {
+                toDraw = ySize - drawn > 138 ? 138 : ySize - drawn;
+                drawTexturedModalRect(guiLeft, guiTop + offsetY + drawn, 0, 4, xSize, toDraw);
+                drawn += toDraw;
+            }
+        }
 
         GL11.glPopMatrix();
     }

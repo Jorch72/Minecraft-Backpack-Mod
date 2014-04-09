@@ -9,6 +9,8 @@ public class ConfigurationBackpack {
     public static int ENDER_RECIPE;
     public static int BACKPACK_SLOTS_S;
     public static int BACKPACK_SLOTS_L;
+    public static int DISPLAY_ROWS_S;
+    public static int DISPLAY_ROWS_L;
     public static int MAX_BACKPACK_AMOUNT;
     public static boolean RENDER_BACKPACK_MODEL;
     public static boolean OPEN_ONLY_WORN_BACKPACK;
@@ -45,6 +47,14 @@ public class ConfigurationBackpack {
         if(BACKPACK_SLOTS_L < 1 || BACKPACK_SLOTS_L > 128) {
             BACKPACK_SLOTS_L = 54;
         }
+        DISPLAY_ROWS_S = config.get(Configuration.CATEGORY_GENERAL, "displayRowsS", 3, getBackpackRowsComment()).getInt();
+        if(DISPLAY_ROWS_S < 1 || DISPLAY_ROWS_S > 15) {
+            DISPLAY_ROWS_S = 3;
+        }
+        DISPLAY_ROWS_L = config.get(Configuration.CATEGORY_GENERAL, "displayRowsL", 6, getBackpackRowsComment()).getInt();
+        if(DISPLAY_ROWS_L < 1 || DISPLAY_ROWS_L > 15) {
+            DISPLAY_ROWS_L = 6;
+        }
         MAX_BACKPACK_AMOUNT = config.get(Configuration.CATEGORY_GENERAL, "maxBackpackAmount", 0, getMaxBackpackAmountComment()).getInt();
         if(MAX_BACKPACK_AMOUNT < 0 || MAX_BACKPACK_AMOUNT > 36) {
             MAX_BACKPACK_AMOUNT = 0;
@@ -70,6 +80,10 @@ public class ConfigurationBackpack {
 
     private static String getBackpackSlotComment() {
         return "##############\n" + "Number of slots a backpack has\n" + "valid: integers 1-128\n" + "##############";
+    }
+
+    private static String getBackpackRowsComment() {
+        return "##############\n" + "Number of rows to display in a backpack\n" + "If set to high for your resolution/gui scale some rows will be out of screen\n" + "valid: integers 1-15\n" + "##############";
     }
 
     private static String getMaxBackpackAmountComment() {

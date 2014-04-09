@@ -5,6 +5,7 @@ import net.minecraft.inventory.Slot;
 import backpack.gui.helper.GuiRectangle;
 import backpack.inventory.container.ContainerAdvanced;
 import backpack.inventory.slot.SlotScrolling;
+import backpack.misc.ConfigurationBackpack;
 
 public abstract class GuiPartScrolling extends GuiPart {
     protected boolean hasScrollbar;
@@ -17,9 +18,9 @@ public abstract class GuiPartScrolling extends GuiPart {
     public GuiPartScrolling(ContainerAdvanced container, IInventory inventory, int inventoryRows, int inventoryCols, boolean big) {
         super(container, inventory, inventoryRows, inventoryCols, big);
         if(big) {
-            hasScrollbar = inventoryRows > 6;
+            hasScrollbar = inventoryRows > ConfigurationBackpack.DISPLAY_ROWS_L;
         } else {
-            hasScrollbar = inventoryRows > 3;
+            hasScrollbar = inventoryRows > ConfigurationBackpack.DISPLAY_ROWS_S;
         }
     }
 
@@ -44,10 +45,24 @@ public abstract class GuiPartScrolling extends GuiPart {
         }
 
         if(hasScrollbar) {
+            // scrollbar head
             drawTexturedModalRect(scrollbar.x - 5, scrollbar.y - 7, xSize, 0, 25, 7);
-            drawTexturedModalRect(scrollbar.x - 5, scrollbar.y, xSize, 7, 25, scrollbar.height);
+            // actual scrollbar
+            if(scrollbar.height <= 106) {
+                drawTexturedModalRect(scrollbar.x - 5, scrollbar.y, xSize, 7, 25, scrollbar.height);
+            } else {
+                int drawn = 0;
+                int toDraw;
+                for(int i = 0; i < Math.ceil(scrollbar.height / 106.); i++) {
+                    toDraw = scrollbar.height - drawn > 106 ? 106 : scrollbar.height - drawn;
+                    drawTexturedModalRect(scrollbar.x - 5, scrollbar.y + drawn, xSize, 7, 25, toDraw);
+                    drawn += toDraw;
+                }
+            }
+            // scrollbar foot
             drawTexturedModalRect(scrollbar.x - 5, scrollbar.y + scrollbar.height, xSize, 113, 25, 7);
 
+            // slider
             drawTexturedModalRect(slider.x, slider.y, 244, 0, slider.width, slider.height);
         }
     }
