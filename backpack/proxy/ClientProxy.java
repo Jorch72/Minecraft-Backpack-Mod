@@ -35,20 +35,17 @@ public class ClientProxy extends CommonProxy {
         ItemStack backpack;
         if(ID % 2 == 0) {
             backpack = Backpack.playerHandler.getClientBackpack();
-            inventory = BackpackUtil.getBackpackInv(backpack, player);
         } else {
             backpack = player.getCurrentEquippedItem();
-            inventory = BackpackUtil.getBackpackInv(player, false);
         }
+        inventory = BackpackUtil.getBackpackInv(backpack, player);
         switch(ID) {
             case Constants.GUI_ID_RENAME_BACKPACK:
                 return new GuiBackpackAlt();
             case Constants.GUI_ID_BACKPACK:
-                return new GuiBackpack(player.inventory, inventory);
             case Constants.GUI_ID_BACKPACK_WORN:
                 return new GuiBackpack(player.inventory, inventory);
             case Constants.GUI_ID_WORKBENCH_BACKPACK:
-                return new GuiWorkbenchBackpack(player.inventory, inventory, backpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK_WORN:
                 return new GuiWorkbenchBackpack(player.inventory, inventory, backpack);
             case Constants.GUI_ID_COMBINED:

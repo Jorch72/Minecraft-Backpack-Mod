@@ -42,11 +42,9 @@ public class CommonProxy implements IGuiHandler {
         inventory = BackpackUtil.getBackpackInv(backpack, player);
         switch(ID) {
             case Constants.GUI_ID_BACKPACK:
-                return new ContainerBackpack(player.inventory, inventory, backpack);
             case Constants.GUI_ID_BACKPACK_WORN:
                 return new ContainerBackpack(player.inventory, inventory, backpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK:
-                return new ContainerWorkbenchBackpack(player.inventory, inventory, backpack);
             case Constants.GUI_ID_WORKBENCH_BACKPACK_WORN:
                 return new ContainerWorkbenchBackpack(player.inventory, inventory, backpack);
             case Constants.GUI_ID_COMBINED:
