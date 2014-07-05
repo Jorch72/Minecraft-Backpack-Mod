@@ -1,5 +1,6 @@
 package de.eydamos.backpack;
 
+import de.eydamos.backpack.helper.BackpackHelper;
 import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.common.FMLLog;
@@ -30,6 +31,7 @@ public class Backpack {
 
     public static PacketHandlerBackpack packetHandler = new PacketHandlerBackpack();
     public static SaveFileHandler saveFileHandler = new SaveFileHandler();
+    public static BackpackHelper backpackHelper = new BackpackHelper();
 
     public static boolean valid = true;
 

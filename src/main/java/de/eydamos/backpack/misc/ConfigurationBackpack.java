@@ -7,10 +7,10 @@ import net.minecraftforge.common.config.Configuration;
 public class ConfigurationBackpack {
     public static Configuration config;
 
-    public static int ENDER_RECIPE;
     public static int BACKPACK_SLOTS_S;
     public static int BACKPACK_SLOTS_L;
     public static int MAX_BACKPACK_AMOUNT;
+    public static boolean ENDER_RECIPE;
     public static boolean RENDER_BACKPACK_MODEL;
     public static boolean OPEN_ONLY_PERSONAL_BACKPACK;
     public static boolean AIRSHIP_MOD_COMPATIBILITY;
@@ -20,8 +20,10 @@ public class ConfigurationBackpack {
     public static boolean DISABLE_WORKBENCH_BACKPACKS;
     public static boolean BIG_BY_UPGRADE_ONLY;
     public static String DISALLOW_ITEMS;
-
-    public static boolean NEISupport = false;
+    public static String BACKPACKS_S;
+    public static String BACKPACKS_M;
+    public static String BACKPACKS_L;
+    public static String MATERIALS;
 
     public static void init(File configFile) {
         if(config == null) {
@@ -31,19 +33,16 @@ public class ConfigurationBackpack {
     }
 
     public static void loadConfiguration() {
-        ENDER_RECIPE = config.get(Configuration.CATEGORY_GENERAL, "enderRecipe", 0, getEnderRecipeComment()).getInt();
-        if(ENDER_RECIPE < 0 || ENDER_RECIPE > 1) {
-            ENDER_RECIPE = 0;
-        }
-        BACKPACK_SLOTS_S = config.get(Configuration.CATEGORY_GENERAL, "backpackSlotsS", 27, getBackpackSlotComment()).getInt();
+        ENDER_RECIPE = config.get(Configuration.CATEGORY_GENERAL, "enderRecipe", 0, getEnderRecipeComment()).getBoolean(false);
+        BACKPACK_SLOTS_S = config.get(Configuration.CATEGORY_GENERAL, "backpackSlotsS", 27, getBackpackSlotComment(), 1, 128).getInt();
         if(BACKPACK_SLOTS_S < 1 || BACKPACK_SLOTS_S > 128) {
             BACKPACK_SLOTS_S = 27;
         }
-        BACKPACK_SLOTS_L = config.get(Configuration.CATEGORY_GENERAL, "backpackSlotsL", 54, getBackpackSlotComment()).getInt();
+        BACKPACK_SLOTS_L = config.get(Configuration.CATEGORY_GENERAL, "backpackSlotsL", 54, getBackpackSlotComment(), 1, 128).getInt();
         if(BACKPACK_SLOTS_L < 1 || BACKPACK_SLOTS_L > 128) {
             BACKPACK_SLOTS_L = 54;
         }
-        MAX_BACKPACK_AMOUNT = config.get(Configuration.CATEGORY_GENERAL, "maxBackpackAmount", 0, getMaxBackpackAmountComment()).getInt();
+        MAX_BACKPACK_AMOUNT = config.get(Configuration.CATEGORY_GENERAL, "maxBackpackAmount", 0, getMaxBackpackAmountComment(), 0, 36).getInt();
         if(MAX_BACKPACK_AMOUNT < 0 || MAX_BACKPACK_AMOUNT > 36) {
             MAX_BACKPACK_AMOUNT = 0;
         }
@@ -57,6 +56,10 @@ public class ConfigurationBackpack {
         BIG_BY_UPGRADE_ONLY = config.get(Configuration.CATEGORY_GENERAL, "bigByUpgradeOnly", false, getBigByUpgradeOnlyComment()).getBoolean(false);
 
         DISALLOW_ITEMS = config.get(Configuration.CATEGORY_GENERAL, "disallowItems", "", getDisallowItemsComment()).getString();
+        BACKPACKS_S = config.get(Configuration.CATEGORY_GENERAL, "backpacks_small", "18,36").getString();
+        BACKPACKS_M = config.get(Configuration.CATEGORY_GENERAL, "backpacks_medium", "36,54").getString();
+        BACKPACKS_L = config.get(Configuration.CATEGORY_GENERAL, "backpacks_large", "54").getString();
+        MATERIALS = config.get(Configuration.CATEGORY_GENERAL, "backpack_materials", "iron").getString();
 
         if(config.hasChanged()) {
             config.save();
