@@ -53,6 +53,7 @@ public class Constants {
         public static final String INTELLIGENT = "intelligent";
         public static final String TYPE = "type";
         public static final String PERSONAL_BACKPACK_OPEN = "personalBackpackOpen";
+        public static final String MATERIAL = "material";
     }
 
     public class NBTTypes extends net.minecraftforge.common.util.Constants.NBT {}

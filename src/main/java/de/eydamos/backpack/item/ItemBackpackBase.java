@@ -2,6 +2,8 @@ package de.eydamos.backpack.item;
 
 import java.util.List;
 
+import de.eydamos.backpack.Backpack;
+import de.eydamos.backpack.helper.BackpackHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,11 +38,11 @@ public class ItemBackpackBase extends Item {
     /**
      * Returns the sub items.
      * 
-     * @param itemId
+     * @param item
      *            the id of the item
      * @param tab
      *            A creative tab.
-     * @param A
+     * @param subItems
      *            List which stores the sub items.
      */
     @Override
@@ -82,7 +84,7 @@ public class ItemBackpackBase extends Item {
      *            The x position on the block which got clicked
      * @param hitY
      *            The y position on the block which got clicked
-     * @param hitz
+     * @param hitZ
      *            The z position on the block which got clicked
      */
     @Override
@@ -154,9 +156,9 @@ public class ItemBackpackBase extends Item {
      *            The ItemStack which is right clicked.
      * @param world
      *            The world in which the player is.
-     * @param player
+     * @param entityPlayer
      *            The player who right clicked the item.
-     * @param Returns
+     * @return ItemStack
      *            the ItemStack after the process.
      */
     @Override
@@ -188,12 +190,11 @@ public class ItemBackpackBase extends Item {
     public String getUnlocalizedName(ItemStack itemStack) {
         String name = super.getUnlocalizedName();
 
-        int damage = itemStack.getItemDamage();
-        int tier = damage / 100 < 3 ? damage / 100 : 0;
-        int meta = damage % 100;
+        int tier = Backpack.backpackHelper.getTier(itemStack);
+        int meta = Backpack.backpackHelper.getMeta(itemStack);
         name += (tier == 0 ? "" : '.') + ItemsBackpack.BACKPACK_TIERS[tier];
         if(meta > 0 && meta < 17) { // add color
-            name += (tier == 0 ? '.' : '_') + ItemsBackpack.BACKPACK_COLORS[damage % 100];
+            name += (tier == 0 ? '.' : '_') + ItemsBackpack.BACKPACK_COLORS[meta];
         }
         if(meta == 99) { // ender backpack
             name += (tier == 0 ? '.' : '_') + ItemsBackpack.BACKPACK_COLORS[17];
@@ -204,7 +205,7 @@ public class ItemBackpackBase extends Item {
     /**
      * Returns the item name to display in the tooltip.
      * 
-     * @param itemstack
+     * @param itemStack
      *            The ItemStack to use for check.
      * @return The name of the backpack for the tooltip.
      */
@@ -232,12 +233,11 @@ public class ItemBackpackBase extends Item {
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List information, boolean advancedTooltip) {
         if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
             if(itemStack.getItemDamage() != ItemsBackpack.ENDERBACKPACK) {
-                // TODO BackpackUtil.getTier()
                 information.add(
                         EnumChatFormatting.YELLOW + 
                         StatCollector.translateToLocal(Localizations.TIER) + 
                         " " + 
-                        (itemStack.getItemDamage() / 100 + 1)
+                        (Backpack.backpackHelper.getTier(itemStack) + 1)
                 );
                 BackpackSave backpackSave = new BackpackSave(itemStack);
                 NBTTagList itemList = backpackSave.getInventory(Constants.NBT.INVENTORY_BACKPACK);

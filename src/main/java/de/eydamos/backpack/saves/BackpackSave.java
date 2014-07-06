@@ -56,22 +56,7 @@ public class BackpackSave extends AbstractSave {
                 NBTItemStackUtil.setString(backpack, Constants.NBT.UID, UID);
             }
 
-            int size = 0;
-            int damage = backpack.getItemDamage();
-            int tier = damage / 100 < 3 ? damage / 100 : 0;
-            int meta = damage % 100;
-            // TODO change BackpackUtil.getSize(tier, color) [multidimensional array build from config]
-            if(meta == 99) { // ender
-                size = 27;
-            } else if(meta < 17 && tier == 2) { // big
-                size = ConfigurationBackpack.BACKPACK_SLOTS_L;
-            } else if(meta < 17 && tier == 0) { // normal
-                size = ConfigurationBackpack.BACKPACK_SLOTS_S;
-            } else if(meta == 17 && tier == 0) { // workbench
-                size = 9;
-            } else if(meta == 17 && tier == 2) { // big workbench
-                size = 18;
-            }
+            int size = Backpack.backpackHelper.getSize(backpack).slots;
 
             setManualSaving();
 
