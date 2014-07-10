@@ -101,8 +101,8 @@ public class BackpackHelper {
         int tier = getTier(itemStack);
         int material;
         BackpackSave backpackSave = new BackpackSave(itemStack);
-        if(NBTItemStackUtil.hasTag(itemStack, Constants.NBT.MATERIAL)) {
-            material = getMaterialId(NBTItemStackUtil.getString(itemStack, Constants.NBT.MATERIAL));
+        if(!backpackSave.getMaterial().isEmpty()) {
+            material = getMaterialId(backpackSave.getMaterial());
         } else {
             int meta = getMeta(itemStack);
             if(meta == 99) { // ender

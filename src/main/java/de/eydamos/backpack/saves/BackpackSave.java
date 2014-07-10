@@ -147,6 +147,18 @@ public class BackpackSave extends AbstractSave {
         }
     }
 
+    public String getMaterial() {
+        return NBTUtil.getString(nbtTagCompound, Constants.NBT.MATERIAL);
+    }
+
+    public void setMaterial(String material) {
+        NBTUtil.setString(nbtTagCompound, Constants.NBT.MATERIAL, material);
+
+        if(!manualSaving) {
+            save();
+        }
+    }
+
     @Override
     public void save() {
         if(UID != null && BackpackUtil.isServerSide()) {

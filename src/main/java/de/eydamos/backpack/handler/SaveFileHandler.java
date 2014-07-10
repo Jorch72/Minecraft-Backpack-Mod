@@ -32,6 +32,14 @@ public class SaveFileHandler {
         }
     }
 
+    public File getBackpackDir() {
+        return backpackDir;
+    }
+
+    public File getPlayerDir() {
+        return playerDir;
+    }
+
     public NBTTagCompound loadBackpack(String UUID) {
         if(!backpackSaveExists(UUID)) {
             return new NBTTagCompound();

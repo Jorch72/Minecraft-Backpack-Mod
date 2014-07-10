@@ -1,6 +1,7 @@
 package de.eydamos.backpack;
 
 import de.eydamos.backpack.helper.BackpackHelper;
+import de.eydamos.backpack.misc.Upgrader;
 import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.common.FMLLog;

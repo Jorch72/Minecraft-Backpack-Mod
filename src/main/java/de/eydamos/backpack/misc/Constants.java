@@ -54,6 +54,7 @@ public class Constants {
         public static final String TYPE = "type";
         public static final String PERSONAL_BACKPACK_OPEN = "personalBackpackOpen";
         public static final String MATERIAL = "material";
+        public static final String VERSION = "backpackVersion";
     }
 
     public class NBTTypes extends net.minecraftforge.common.util.Constants.NBT {}

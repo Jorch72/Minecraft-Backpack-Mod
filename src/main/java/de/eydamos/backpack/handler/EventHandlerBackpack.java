@@ -1,6 +1,7 @@
 package de.eydamos.backpack.handler;
 
 import de.eydamos.backpack.helper.BackpackHelper;
+import de.eydamos.backpack.misc.Upgrader;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -69,6 +70,7 @@ public class EventHandlerBackpack {
     @SubscribeEvent
     public void worldLoad(WorldEvent.Load event) {
         Backpack.saveFileHandler.init();
+        Upgrader.check();
         BackpackHelper.init();
     }
 
