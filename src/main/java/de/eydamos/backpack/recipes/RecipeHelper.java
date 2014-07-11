@@ -48,7 +48,7 @@ public class RecipeHelper {
 
         if(!ConfigurationBackpack.DISABLE_ENDER_BACKPACKS) {
             // ender Backpack
-            if(ConfigurationBackpack.ENDER_RECIPE == 0) {
+            if(!ConfigurationBackpack.ALTERNATIVE_ENDER_RECIPE) {
                 backpackStack = new ItemStack(ItemsBackpack.backpack, 1, ItemsBackpack.ENDERBACKPACK);
                 GameRegistry.addRecipe(backpackStack, "LLL", "LEL", "LLL", 'L', Items.leather, 'E', Blocks.ender_chest);
             } else {

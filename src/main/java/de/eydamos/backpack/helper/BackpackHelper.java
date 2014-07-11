@@ -26,12 +26,12 @@ public class BackpackHelper {
 
     public static void init() {
         // materials
-        Backpack.backpackHelper.setMaterials(ConfigurationBackpack.MATERIALS.split("/,/"));
+        Backpack.backpackHelper.setMaterials(ConfigurationBackpack.MATERIALS.split(","));
 
         // backpacks
-        Backpack.backpackHelper.addSizes(0, ConfigurationBackpack.BACKPACKS_S.split("/,/"));
-        Backpack.backpackHelper.addSizes(1, ConfigurationBackpack.BACKPACKS_M.split("/,/"));
-        Backpack.backpackHelper.addSizes(2, ConfigurationBackpack.BACKPACKS_L.split("/,/"));
+        Backpack.backpackHelper.addSizes(0, ConfigurationBackpack.BACKPACKS_S.split(","));
+        Backpack.backpackHelper.addSizes(1, ConfigurationBackpack.BACKPACKS_M.split(","));
+        Backpack.backpackHelper.addSizes(2, ConfigurationBackpack.BACKPACKS_L.split(","));
 
         // workbench backpacks
         Backpack.backpackHelper.addSize(0, Backpack.backpackHelper.getMaterialId("workbench"), new Size(9));
@@ -52,7 +52,7 @@ public class BackpackHelper {
 
     protected void addSizes(int tier, String[] sizesArr) {
         for(int i = 0; i < sizesArr.length; i++) {
-            String[] sizeArr = sizesArr[i].split("/:/");
+            String[] sizeArr = sizesArr[i].split(":");
             Size size = new Size(Integer.valueOf(sizeArr[0].trim()));
 
             if(sizeArr.length >= 2 && !sizeArr[1].trim().isEmpty()) {

@@ -70,7 +70,9 @@ public class EventHandlerBackpack {
     @SubscribeEvent
     public void worldLoad(WorldEvent.Load event) {
         Backpack.saveFileHandler.init();
-        Upgrader.check();
+        if(!Upgrader.check()) {
+            event.setCanceled(true);
+        }
         BackpackHelper.init();
     }
 

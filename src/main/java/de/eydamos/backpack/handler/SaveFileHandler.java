@@ -40,6 +40,10 @@ public class SaveFileHandler {
         return playerDir;
     }
 
+    public File getWorldDir() {
+        return worldDir;
+    }
+
     public NBTTagCompound loadBackpack(String UUID) {
         if(!backpackSaveExists(UUID)) {
             return new NBTTagCompound();

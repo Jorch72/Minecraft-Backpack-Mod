@@ -1,31 +1,79 @@
 package de.eydamos.backpack.misc;
 
 import de.eydamos.backpack.Backpack;
+import de.eydamos.backpack.helper.LogHelper;
 import de.eydamos.backpack.saves.BackpackSave;
+import de.eydamos.backpack.util.NBTItemStackUtil;
+import de.eydamos.backpack.util.NBTUtil;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.DimensionManager;
 
 import java.io.File;
+import java.lang.reflect.Method;
 
 public class Upgrader {
-    public static void check() {
-        File backpackDir = Backpack.saveFileHandler.getBackpackDir();
+    /**
+     * Will check if upgrades have to be applied to the backpacks.
+     *
+     * @return Returns true if no upgrade was neccessary or if all upgrades were successfull.
+     * Returns false otherwise.
+     */
+    public static boolean check() {
+        File worldDir = Backpack.saveFileHandler.getWorldDir();
 
-        BackpackSave backpackSave;
-        if(backpackDir.exists() && backpackDir.isDirectory()) {
-            for(File backpackFile : backpackDir.listFiles()) {
-                if(!backpackFile.getName().endsWith(".dat_old")) {
-                    backpackSave = new BackpackSave(backpackFile.getName().substring(-4))
-                }
+        String version = "2.0.0";
+        NBTTagCompound versionTag = Backpack.saveFileHandler.load(worldDir, "backpacks/version");
+        if (NBTUtil.hasTag(versionTag, Constants.NBT.VERSION)) {
+            version = NBTUtil.getString(versionTag, Constants.NBT.VERSION);
+        }
+
+        if (version.equals(Constants.MOD_VERSION)) {
+            return true;
+        }
+
+        while (!version.equals(Constants.MOD_VERSION)) {
+            try {
+                String strippedVersion = version.replaceAll("\\.", "");
+                Class upgradeClass = Class.forName("de.eydamos.backpack.upgrade.upgradeFrom" + strippedVersion);
+
+                Method upgradeMethod = upgradeClass.getDeclaredMethod("upgradeSaves");
+
+                version = upgradeMethod.invoke(upgradeClass).toString();
+            } catch (Exception e) {
+                LogHelper.warn("Upgrade failed");
+                return false;
             }
         }
-        // go trough all files
-        // check version
-        // if no version or lower than current
-        // create upgrade class and run it
+
+        NBTUtil.setString(versionTag, Constants.NBT.VERSION, version);
+        // TODO aktivate after testing
+        //Backpack.saveFileHandler.save(versionTag, worldDir, "backpacks/version");
+        return true;
     }
 
-    protected static String getUUID(File file) {
+    public static boolean upgradeItemStack(ItemStack itemStack) {
+        BackpackSave backpackSave = new BackpackSave(itemStack);
+        if(backpackSave.hasVersion()) {
+            String version = backpackSave.getVersion();
 
+            while (!version.equals(Constants.MOD_VERSION)) {
+                try {
+                    String strippedVersion = version.replaceAll("\\.", "");
+                    Class upgradeClass = Class.forName("de.eydamos.backpack.upgrade.upgradeFrom" + strippedVersion);
+
+                    Method upgradeMethod = upgradeClass.getDeclaredMethod("upgradeItemStack", new Class[] { ItemStack.class});
+
+                    version = upgradeMethod.invoke(upgradeClass, new Object[] { itemStack }).toString();
+                } catch (Exception e) {
+                    LogHelper.warn("Upgrade of Backpack failed");
+                    return true;
+                }
+            }
+
+            backpackSave.removeVersion();
+            return true;
+        }
+
+        return false;
     }
 }

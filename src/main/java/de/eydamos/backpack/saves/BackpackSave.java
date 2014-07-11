@@ -44,10 +44,6 @@ public class BackpackSave extends AbstractSave {
         }
     }
 
-    public boolean isUninitialized() {
-        return nbtTagCompound.hasNoTags();
-    }
-
     public void initialize(ItemStack backpack) {
         if(backpack.getItem() instanceof ItemBackpackBase && BackpackUtil.isServerSide()) {
             NBTItemStackUtil.setString(backpack, Constants.NBT.NAME, backpack.getItem().getUnlocalizedName(backpack) + ".name");
@@ -153,6 +149,30 @@ public class BackpackSave extends AbstractSave {
 
     public void setMaterial(String material) {
         NBTUtil.setString(nbtTagCompound, Constants.NBT.MATERIAL, material);
+
+        if(!manualSaving) {
+            save();
+        }
+    }
+
+    public boolean hasVersion() {
+        return NBTUtil.hasTag(nbtTagCompound, Constants.NBT.VERSION);
+    }
+
+    public String getVersion() {
+        return NBTUtil.getString(nbtTagCompound, Constants.NBT.VERSION);
+    }
+
+    public void setVersion(String version) {
+        NBTUtil.setString(nbtTagCompound, Constants.NBT.VERSION, version);
+
+        if(!manualSaving) {
+            save();
+        }
+    }
+
+    public void removeVersion() {
+        NBTUtil.removeTag(nbtTagCompound, Constants.NBT.VERSION);
 
         if(!manualSaving) {
             save();

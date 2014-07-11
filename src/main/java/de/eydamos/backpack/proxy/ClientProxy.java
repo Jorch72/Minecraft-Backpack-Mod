@@ -41,8 +41,6 @@ public class ClientProxy extends CommonProxy {
 
             registerGuiOverlayHandler.invoke(API, new Object[] { GuiWorkbenchBackpack.class, new OverlayHandlerBackpack(), "crafting" });
 
-            ConfigurationBackpack.NEISupport = true;
-
             FMLLog.log(Constants.MOD_ID, Level.INFO, "[Backpacks] NEI Support enabled");
         }
         catch (Exception e) {

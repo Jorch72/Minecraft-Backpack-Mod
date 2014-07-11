@@ -10,7 +10,7 @@ public class ConfigurationBackpack {
     public static int BACKPACK_SLOTS_S;
     public static int BACKPACK_SLOTS_L;
     public static int MAX_BACKPACK_AMOUNT;
-    public static boolean ENDER_RECIPE;
+    public static boolean ALTERNATIVE_ENDER_RECIPE;
     public static boolean RENDER_BACKPACK_MODEL;
     public static boolean OPEN_ONLY_PERSONAL_BACKPACK;
     public static boolean AIRSHIP_MOD_COMPATIBILITY;
@@ -33,7 +33,7 @@ public class ConfigurationBackpack {
     }
 
     public static void loadConfiguration() {
-        ENDER_RECIPE = config.get(Configuration.CATEGORY_GENERAL, "enderRecipe", 0, getEnderRecipeComment()).getBoolean(false);
+        ALTERNATIVE_ENDER_RECIPE = config.get(Configuration.CATEGORY_GENERAL, "enderRecipe", false, getEnderRecipeComment()).getBoolean(false);
         BACKPACK_SLOTS_S = config.get(Configuration.CATEGORY_GENERAL, "backpackSlotsS", 27, getBackpackSlotComment(), 1, 128).getInt();
         if(BACKPACK_SLOTS_S < 1 || BACKPACK_SLOTS_S > 128) {
             BACKPACK_SLOTS_S = 27;
