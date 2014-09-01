@@ -1,18 +1,18 @@
 package de.eydamos.backpack.saves;
 
-import java.util.UUID;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants.NBT;
 import de.eydamos.backpack.Backpack;
 import de.eydamos.backpack.item.ItemBackpackBase;
-import de.eydamos.backpack.misc.ConfigurationBackpack;
 import de.eydamos.backpack.misc.Constants;
 import de.eydamos.backpack.util.BackpackUtil;
 import de.eydamos.backpack.util.NBTItemStackUtil;
 import de.eydamos.backpack.util.NBTUtil;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.common.util.Constants.NBT;
+
+import java.util.UUID;
 
 public class BackpackSave extends AbstractSave {
     public BackpackSave(String uuid) {
@@ -56,6 +56,7 @@ public class BackpackSave extends AbstractSave {
 
             setManualSaving();
 
+            setVersion(Constants.MOD_VERSION);
             setSlotsPerRow(9);
             setSize(size);
             setType(BackpackUtil.getType(backpack));
@@ -171,11 +172,55 @@ public class BackpackSave extends AbstractSave {
         }
     }
 
-    public void removeVersion() {
-        NBTUtil.removeTag(nbtTagCompound, Constants.NBT.VERSION);
+    public boolean hasTasks() {
+        return NBTUtil.hasTag(nbtTagCompound, Constants.NBT.TASKS);
+    }
 
-        if(!manualSaving) {
-            save();
+    public NBTTagList getTasks() {
+        return NBTUtil.getTagList(nbtTagCompound, Constants.NBT.TASKS, Constants.NBTTypes.TAG_STRING);
+    }
+
+    public void addTask(NBTTagString task) {
+        if(!hasTasks()) {
+            NBTUtil.setTagList(nbtTagCompound, Constants.NBT.TASKS, new NBTTagList());
+        }
+        NBTTagList tasks = getTasks();
+
+        boolean duplicate = false;
+        for(int i = 0; i < tasks.tagCount(); i++) {
+            if(tasks.getStringTagAt(i).equals(task.func_150285_a_())) {
+                duplicate = true;
+                break;
+            }
+        }
+
+        if(!duplicate) {
+            tasks.appendTag(task);
+
+            if(!manualSaving) {
+                save();
+            }
+        }
+    }
+
+    public void removeTask(NBTTagString taskToRemove) {
+        if(hasTasks()) {
+            NBTTagList tasks = getTasks();
+            for(int i = 0; i < tasks.tagCount(); i++) {
+                String task = tasks.getStringTagAt(i);
+                if(task.equals(taskToRemove.func_150285_a_())) {
+                    tasks.removeTag(i);
+                    break;
+                }
+            }
+
+            if(tasks.tagCount() == 0) {
+                NBTUtil.removeTag(nbtTagCompound, Constants.NBT.TASKS);
+            }
+
+            if(!manualSaving) {
+                save();
+            }
         }
     }
 

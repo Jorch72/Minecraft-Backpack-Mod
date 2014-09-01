@@ -1,10 +1,19 @@
 package de.eydamos.backpack.item;
 
-import java.util.List;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.eydamos.backpack.Backpack;
-import de.eydamos.backpack.helper.BackpackHelper;
+import de.eydamos.backpack.helper.GuiHelper;
+import de.eydamos.backpack.inventory.InventoryBackpack;
+import de.eydamos.backpack.misc.ConfigurationBackpack;
+import de.eydamos.backpack.misc.Constants;
+import de.eydamos.backpack.misc.Localizations;
+import de.eydamos.backpack.misc.Upgrader;
+import de.eydamos.backpack.saves.BackpackSave;
+import de.eydamos.backpack.util.BackpackUtil;
+import de.eydamos.backpack.util.NBTItemStackUtil;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -14,19 +23,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-
 import org.lwjgl.input.Keyboard;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.eydamos.backpack.helper.GuiHelper;
-import de.eydamos.backpack.inventory.InventoryBackpack;
-import de.eydamos.backpack.misc.ConfigurationBackpack;
-import de.eydamos.backpack.misc.Constants;
-import de.eydamos.backpack.misc.Localizations;
-import de.eydamos.backpack.saves.BackpackSave;
-import de.eydamos.backpack.util.BackpackUtil;
-import de.eydamos.backpack.util.NBTItemStackUtil;
+import java.util.List;
 
 public class ItemBackpackBase extends Item {
     public ItemBackpackBase() {
@@ -260,5 +259,12 @@ public class ItemBackpackBase extends Item {
         InventoryBackpack inventory = new InventoryBackpack(defaultName, customName);
 
         return inventory;
+    }
+
+    @Override
+    public void onUpdate(ItemStack itemStack, World world, Entity entityPlayer, int slotPos, boolean isCurrentItem) {
+        if(BackpackUtil.isServerSide()) {
+            Upgrader.upgradeItemStack(itemStack);
+        }
     }
 }

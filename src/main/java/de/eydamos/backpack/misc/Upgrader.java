@@ -18,7 +18,7 @@ public class Upgrader {
      * @return Returns true if no upgrade was neccessary or if all upgrades were successfull.
      * Returns false otherwise.
      */
-    public static boolean check() {
+    public static void check() {
         File worldDir = Backpack.saveFileHandler.getWorldDir();
 
         String version = "2.0.0";
@@ -28,7 +28,7 @@ public class Upgrader {
         }
 
         if (version.equals(Constants.MOD_VERSION)) {
-            return true;
+            return;
         }
 
         while (!version.equals(Constants.MOD_VERSION)) {
@@ -41,19 +41,17 @@ public class Upgrader {
                 version = upgradeMethod.invoke(upgradeClass).toString();
             } catch (Exception e) {
                 LogHelper.warn("Upgrade failed");
-                return false;
+                return;
             }
         }
 
         NBTUtil.setString(versionTag, Constants.NBT.VERSION, version);
-        // TODO aktivate after testing
-        //Backpack.saveFileHandler.save(versionTag, worldDir, "backpacks/version");
-        return true;
+        Backpack.saveFileHandler.save(versionTag, worldDir, "backpacks/version");
     }
 
-    public static boolean upgradeItemStack(ItemStack itemStack) {
+    public static void upgradeItemStack(ItemStack itemStack) {
         BackpackSave backpackSave = new BackpackSave(itemStack);
-        if(backpackSave.hasVersion()) {
+        if(backpackSave.hasTasks()) {
             String version = backpackSave.getVersion();
 
             while (!version.equals(Constants.MOD_VERSION)) {
@@ -66,14 +64,9 @@ public class Upgrader {
                     version = upgradeMethod.invoke(upgradeClass, new Object[] { itemStack }).toString();
                 } catch (Exception e) {
                     LogHelper.warn("Upgrade of Backpack failed");
-                    return true;
+                    return;
                 }
             }
-
-            backpackSave.removeVersion();
-            return true;
         }
-
-        return false;
     }
 }

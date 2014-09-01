@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import de.eydamos.backpack.helper.LogHelper;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.DimensionManager;
@@ -14,8 +15,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class SaveFileHandler {
-    protected Logger logger = LogManager.getLogger();
-
     protected File worldDir = null;
     protected File backpackDir = null;
     protected File playerDir = null;
@@ -95,7 +94,7 @@ public class SaveFileHandler {
             }
         }
 
-        logger.info("[Backpack] Couldn't load data. Using fallback file.");
+        LogHelper.info("Couldn't load data from '" + fileName + ".dat'. Using fallback file.");
 
         file = new File(directory, fileName + ".dat_old");
 
@@ -105,7 +104,7 @@ public class SaveFileHandler {
             }
             catch (IOException ioException) {
                 ioException.printStackTrace();
-                logger.warn("[Backpack] Couldn't load data at all.");
+                LogHelper.warn("Couldn't load data at all.");
             }
         }
 
@@ -138,11 +137,11 @@ public class SaveFileHandler {
         }
         catch (FileNotFoundException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
-            logger.warn("[Backpack] Couldn't save data.");
+            LogHelper.warn("Couldn't save data.");
         }
         catch (IOException ioException) {
             ioException.printStackTrace();
-            logger.warn("[Backpack] Couldn't save data.");
+            LogHelper.warn("[Backpack] Couldn't save data.");
         }
     }
 

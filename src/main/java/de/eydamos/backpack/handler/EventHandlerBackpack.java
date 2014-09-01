@@ -1,7 +1,21 @@
 package de.eydamos.backpack.handler;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import cpw.mods.fml.relauncher.Side;
+import de.eydamos.backpack.Backpack;
 import de.eydamos.backpack.helper.BackpackHelper;
+import de.eydamos.backpack.item.ItemBackpackBase;
+import de.eydamos.backpack.item.ItemsBackpack;
+import de.eydamos.backpack.misc.ConfigurationBackpack;
+import de.eydamos.backpack.misc.Constants;
+import de.eydamos.backpack.misc.Localizations;
 import de.eydamos.backpack.misc.Upgrader;
+import de.eydamos.backpack.saves.BackpackSave;
+import de.eydamos.backpack.saves.PlayerSave;
+import de.eydamos.backpack.util.BackpackUtil;
+import de.eydamos.backpack.util.NBTItemStackUtil;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -12,20 +26,6 @@ import net.minecraft.util.IChatComponent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import cpw.mods.fml.relauncher.Side;
-import de.eydamos.backpack.Backpack;
-import de.eydamos.backpack.item.ItemBackpackBase;
-import de.eydamos.backpack.item.ItemsBackpack;
-import de.eydamos.backpack.misc.ConfigurationBackpack;
-import de.eydamos.backpack.misc.Constants;
-import de.eydamos.backpack.misc.Localizations;
-import de.eydamos.backpack.saves.BackpackSave;
-import de.eydamos.backpack.saves.PlayerSave;
-import de.eydamos.backpack.util.BackpackUtil;
-import de.eydamos.backpack.util.NBTItemStackUtil;
 
 public class EventHandlerBackpack {
     @SubscribeEvent
@@ -70,9 +70,7 @@ public class EventHandlerBackpack {
     @SubscribeEvent
     public void worldLoad(WorldEvent.Load event) {
         Backpack.saveFileHandler.init();
-        if(!Upgrader.check()) {
-            event.setCanceled(true);
-        }
+        Upgrader.check();
         BackpackHelper.init();
     }
 
