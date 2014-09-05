@@ -21,10 +21,12 @@ public class BackpackHelper {
         }
     }
 
-    protected List<String> materials = new ArrayList<String>();
-    protected Map<Integer, HashMap<Integer, Size>> sizes = new HashMap<Integer, HashMap<Integer, Size>>();
+    protected List<String> materials;
+    protected Map<Integer, HashMap<Integer, Size>> sizes;
 
     public static void init() {
+        Backpack.backpackHelper.clear();
+
         // materials
         Backpack.backpackHelper.setMaterials(ConfigurationBackpack.MATERIALS.split(","));
 
@@ -33,25 +35,37 @@ public class BackpackHelper {
         Backpack.backpackHelper.addSizes(1, ConfigurationBackpack.BACKPACKS_M.split(","));
         Backpack.backpackHelper.addSizes(2, ConfigurationBackpack.BACKPACKS_L.split(","));
 
+        Backpack.backpackHelper.checkSizes();
+
         // workbench backpacks
+        Backpack.backpackHelper.addMaterial("workbench");
         Backpack.backpackHelper.addSize(0, Backpack.backpackHelper.getMaterialId("workbench"), new Size(9));
-        Backpack.backpackHelper.addSize(0, Backpack.backpackHelper.getMaterialId("workbench"), new Size(18));
+        Backpack.backpackHelper.addSize(2, Backpack.backpackHelper.getMaterialId("workbench"), new Size(18));
 
         // enderbackpack
+        Backpack.backpackHelper.addMaterial("ender");
         Backpack.backpackHelper.addSize(0, Backpack.backpackHelper.getMaterialId("ender"), new Size(27));
-
-        Backpack.backpackHelper.checkSizes();
     }
 
     protected void setMaterials(String[] materialArray) {
         materials.add("%leather");
-        materials.add("workbench");
-        materials.add("ender");
-        materials.addAll(Arrays.asList(materialArray));
+        for(String material : materialArray) {
+            materials.add(material.trim());
+        }
+    }
+
+    protected void addMaterial(String material) {
+        if(!material.trim().isEmpty()) {
+            materials.add(material.trim());
+        }
     }
 
     protected void addSizes(int tier, String[] sizesArr) {
         for(int i = 0; i < sizesArr.length; i++) {
+            if(i >= materials.size()) {
+                break;
+            }
+
             String[] sizeArr = sizesArr[i].split(":");
             Size size = new Size(Integer.valueOf(sizeArr[0].trim()));
 
@@ -72,13 +86,30 @@ public class BackpackHelper {
     }
 
     protected void checkSizes() {
-        for(int tier = 2; tier >= 0; tier--) {
+        for(int tier = 0; tier < sizes.size(); tier++) {
             HashMap<Integer, Size> tierData = getTierData(tier);
-            // TODO implement
+
+            for(int material = 0; material < tierData.size(); material++) {
+                // next material must have more slots as current material
+                if(tierData.containsKey(material + 1) && tierData.get(material + 1).slots <= tierData.get(material).slots) {
+                    tierData.get(material + 1).slots = tierData.get(material).slots + 1;
+                }
+
+                if(tier != sizes.size() - 1) {
+                    // same material in next tier must have at least the same a mount of slots
+                    HashMap<Integer, Size> nextTier = getTierData(tier + 1);
+                    if(nextTier.containsKey(material) && nextTier.get(material).slots < tierData.get(material).slots) {
+                        nextTier.get(material).slots = tierData.get(material).slots;
+                    }
+                }
+            }
         }
     }
 
     protected HashMap<Integer, Size> getTierData(int tier) {
+        if(null == sizes) {
+            init();
+        }
         if(!sizes.containsKey(tier)) {
             sizes.put(tier, new HashMap<Integer, Size>());
         }
@@ -86,6 +117,9 @@ public class BackpackHelper {
     }
 
     protected int getMaterialId(String material) {
+        if(null == materials) {
+            init();
+        }
         return materials.indexOf(material);
     }
 
@@ -123,5 +157,10 @@ public class BackpackHelper {
         } else {
             return new Size(18);
         }
+    }
+
+    protected void clear() {
+        materials = new ArrayList<String>();
+        sizes = new HashMap<Integer, HashMap<Integer, Size>>();
     }
 }

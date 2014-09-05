@@ -2,6 +2,7 @@ package de.eydamos.backpack.misc;
 
 import java.io.File;
 
+import de.eydamos.backpack.helper.BackpackHelper;
 import net.minecraftforge.common.config.Configuration;
 
 public class ConfigurationBackpack {
@@ -15,10 +16,14 @@ public class ConfigurationBackpack {
     public static boolean OPEN_ONLY_PERSONAL_BACKPACK;
     public static boolean AIRSHIP_MOD_COMPATIBILITY;
     public static boolean DISABLE_BACKPACKS;
+    public static boolean DISABLE_MEDIUM_BACKPACKS;
     public static boolean DISABLE_BIG_BACKPACKS;
     public static boolean DISABLE_ENDER_BACKPACKS;
     public static boolean DISABLE_WORKBENCH_BACKPACKS;
     public static boolean BIG_BY_UPGRADE_ONLY;
+    public static boolean DIRECT_HIGHER_TIER;
+    public static boolean DIRECT_HIGHER_MATERIAL;
+    public static boolean SKIP_UPGRADE;
     public static String DISALLOW_ITEMS;
     public static String BACKPACKS_S;
     public static String BACKPACKS_M;
@@ -34,10 +39,12 @@ public class ConfigurationBackpack {
 
     public static void loadConfiguration() {
         ALTERNATIVE_ENDER_RECIPE = config.get(Configuration.CATEGORY_GENERAL, "enderRecipe", false, getEnderRecipeComment()).getBoolean(false);
+        // TODO remove config option
         BACKPACK_SLOTS_S = config.get(Configuration.CATEGORY_GENERAL, "backpackSlotsS", 27, getBackpackSlotComment(), 1, 128).getInt();
         if(BACKPACK_SLOTS_S < 1 || BACKPACK_SLOTS_S > 128) {
             BACKPACK_SLOTS_S = 27;
         }
+        // TODO remove config option
         BACKPACK_SLOTS_L = config.get(Configuration.CATEGORY_GENERAL, "backpackSlotsL", 54, getBackpackSlotComment(), 1, 128).getInt();
         if(BACKPACK_SLOTS_L < 1 || BACKPACK_SLOTS_L > 128) {
             BACKPACK_SLOTS_L = 54;
@@ -49,11 +56,16 @@ public class ConfigurationBackpack {
         RENDER_BACKPACK_MODEL = config.get(Configuration.CATEGORY_GENERAL, "renderBackpackModel", true, getRenderBackpackModelComment()).getBoolean(true);
         OPEN_ONLY_PERSONAL_BACKPACK = config.get(Configuration.CATEGORY_GENERAL, "openOnlyWornBackpacks", false, getOpenOnlyPersonalBackpacksComment()).getBoolean(false);
         AIRSHIP_MOD_COMPATIBILITY = config.get(Configuration.CATEGORY_GENERAL, "airshipModCompatibility", false, getAirshipModCompatibilityComment()).getBoolean(false);
+
         DISABLE_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableBackpacks", false, getDisableBackpacksComment()).getBoolean(false);
+        DISABLE_MEDIUM_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableMediumBackpacks", false, getDisableMediumBackpacksComment()).getBoolean(false);
         DISABLE_BIG_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableBigBackpacks", false, getDisableBigBackpacksComment()).getBoolean(false);
         DISABLE_ENDER_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableEnderBackpack", false, getDisableEnderBackpacksComment()).getBoolean(false);
         DISABLE_WORKBENCH_BACKPACKS = config.get(Configuration.CATEGORY_GENERAL, "disableWorkbenchBackpack", false, getDisableWorkbenchBackpacksComment()).getBoolean(false);
-        BIG_BY_UPGRADE_ONLY = config.get(Configuration.CATEGORY_GENERAL, "bigByUpgradeOnly", false, getBigByUpgradeOnlyComment()).getBoolean(false);
+
+        DIRECT_HIGHER_TIER = config.get(Configuration.CATEGORY_GENERAL, "directHigherTier", false, getDirectHigherTierComment()).getBoolean(false);
+        DIRECT_HIGHER_MATERIAL = config.get(Configuration.CATEGORY_GENERAL, "directHigherMaterial", false, getDirectHigherMaterialComment()).getBoolean(false);
+        SKIP_UPGRADE = config.get(Configuration.CATEGORY_GENERAL, "skipUpgrade", false, getSkipUpgradeComment()).getBoolean(false);
 
         DISALLOW_ITEMS = config.get(Configuration.CATEGORY_GENERAL, "disallowItems", "", getDisallowItemsComment()).getString();
         BACKPACKS_S = config.get(Configuration.CATEGORY_GENERAL, "backpacks_small", "18,36").getString();
@@ -64,6 +76,8 @@ public class ConfigurationBackpack {
         if(config.hasChanged()) {
             config.save();
         }
+
+        BackpackHelper.init();
     }
 
     private static String getEnderRecipeComment() {
@@ -94,6 +108,10 @@ public class ConfigurationBackpack {
         return "##############\n" + "If true small backpacks are not craftable\n" + "##############";
     }
 
+    private static String getDisableMediumBackpacksComment() {
+        return "##############\n" + "If true medium backpacks are not craftable\n" + "##############";
+    }
+
     private static String getDisableBigBackpacksComment() {
         return "##############\n" + "If true big backpacks are not craftable\n" + "##############";
     }
@@ -106,8 +124,16 @@ public class ConfigurationBackpack {
         return "##############\n" + "If true workbench backpacks are not craftable\n" + "##############";
     }
 
-    private static String getBigByUpgradeOnlyComment() {
-        return "##############\n" + "If true big backpacks can only crafted by upgrading a small one\n" + "##############";
+    private static String getDirectHigherTierComment() {
+        return "##############\n" + "If false medium and big backpacks can only be crafted by upgrading the previous size\n" + "##############";
+    }
+
+    private static String getDirectHigherMaterialComment() {
+        return "##############\n" + "If false backpacks with a higher material can only crafted by upgrading the previous material\n" + "##############";
+    }
+
+    private static String getSkipUpgradeComment() {
+        return "##############\n" + "If true you can skip a size or material to upgrade a backpack\n" + "##############";
     }
 
     private static String getDisallowItemsComment() {
